@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Raport vanzare lunar{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Raport vanzare lunar</h1>
+
+        <table class="table" border="1" width="100%" cellpadding="3">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Zi</th>
+                <th scope="col">Vanzare zi</th>
+                <th scope="col">Monetar</th>
+                <th scope="col">Iesiri diverse</th>
+                <th scope="col">Marfa facturi</th>
+                <th scope="col">Marfa bonuri</th>
+                <th scope="col">Profit Brut</th>
+                <th scope="col">Intrare marfa</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for index, day in month.days %}
+                <tr>
+                    <th scope="row">{{ index }}</th>
+                    <td>{{ day.totalSales|number_format(2) }}</td>
+                    <td>{{ day.totalMoney|number_format(2) }}</td>
+                    <td>{{ day.totalExpenses|number_format(2) }}</td>
+                    <td>{{ day.totalMerchandisePaymentsInvoice|number_format(2) }}</td>
+                    <td>{{ day.totalMerchandisePaymentsBill|number_format(2) }}</td>
+                    <td>{{ day.totalMerchandiseGrossProfit|number_format(2) }}</td>
+                    <td>{{ day.totalMerchandiseEnterValue|number_format(2) }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

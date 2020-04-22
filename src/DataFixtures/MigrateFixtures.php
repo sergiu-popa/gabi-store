@@ -186,7 +186,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
                 $payment->setProvider($provider);
                 $payment->setAmount($row['suma']);
                 $payment->setDate(new \DateTime($row['data']));
-                $payment->setInvoiceType($row['tip_factura']);
+                $payment->setType($row['tip_factura']);
 
                 $manager->persist($payment);
             } catch (\OutOfBoundsException $e) {

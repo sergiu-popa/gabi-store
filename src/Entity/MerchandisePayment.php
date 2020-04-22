@@ -12,6 +12,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MerchandisePayment
 {
+    public const TYPE_INVOICE = 1;
+    public const TYPE_BILL = 2;
+
     use IdTrait;
     use AmountTrait;
     use DateTrait;
@@ -19,7 +22,7 @@ class MerchandisePayment
     /**
      * @ORM\Column(type="smallint")
      */
-    private $invoiceType;
+    private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Provider", inversedBy="merchandisePayments")
@@ -27,14 +30,24 @@ class MerchandisePayment
      */
     private $provider;
 
-    public function getInvoiceType(): ?int
+    public function withInvoice()
     {
-        return $this->invoiceType;
+        return $this->type === self::TYPE_INVOICE;
     }
 
-    public function setInvoiceType(int $invoiceType): self
+    public function withBill()
     {
-        $this->invoiceType = $invoiceType;
+        return $this->type === self::TYPE_BILL;
+    }
+
+    public function getType(): ?int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): self
+    {
+        $this->type = $type;
 
         return $this;
     }

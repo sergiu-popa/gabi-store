@@ -20,11 +20,6 @@ class Merchandise
     use DateTrait;
     use AmountTrait;
 
-    public function __construct()
-    {
-        $this->merchandisePayments = new ArrayCollection();
-    }
-
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Provider", inversedBy="merchandises")
      * @ORM\JoinColumn(nullable=false)
@@ -41,10 +36,22 @@ class Merchandise
      */
     private $exitPrice;
 
-    /**
-     * @ORM\OneToMany(targetEntity="App\Entity\MerchandisePayment", mappedBy="merchandise")
-     */
-    private $merchandisePayments;
+    public function getTotalEnterValue()
+    {
+        return $this->amount * $this->enterPrice;
+    }
+
+    public function getTotalExitValue()
+    {
+        return $this->amount * $this->exitPrice;
+    }
+
+    public function getGrossProfit()
+    {
+        return $this->exitPrice - $this->enterPrice;
+    }
+
+    // TODO getGrossProfitPercentage
 
     public function getProvider(): ?Provider
     {
@@ -78,37 +85,6 @@ class Merchandise
     public function setExitPrice(float $exitPrice): self
     {
         $this->exitPrice = $exitPrice;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|MerchandisePayment[]
-     */
-    public function getMerchandisePayments(): Collection
-    {
-        return $this->merchandisePayments;
-    }
-
-    public function addMerchandisePayment(MerchandisePayment $merchandisePayment): self
-    {
-        if (!$this->merchandisePayments->contains($merchandisePayment)) {
-            $this->merchandisePayments[] = $merchandisePayment;
-            $merchandisePayment->setMerchandise($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMerchandisePayment(MerchandisePayment $merchandisePayment): self
-    {
-        if ($this->merchandisePayments->contains($merchandisePayment)) {
-            $this->merchandisePayments->removeElement($merchandisePayment);
-            // set the owning side to null (unless already changed)
-            if ($merchandisePayment->getMerchandise() === $this) {
-                $merchandisePayment->setMerchandise(null);
-            }
-        }
 
         return $this;
     }

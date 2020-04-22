@@ -14,37 +14,21 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ExpenseRepository extends ServiceEntityRepository
 {
+    use FilterTrait;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Expense::class);
     }
 
-    // /**
-    //  * @return Expense[] Returns an array of Expense objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return Expense[] Returns an array of Money objects
+     */
+    public function getForYearAndMonth(int $year, string $month)
     {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('e.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $qb = $this->createQueryBuilder('e');
+        $this->applyYearAndMonthFilter($year, $month, $qb, 'e');
 
-    /*
-    public function findOneBySomeField($value): ?Expense
-    {
-        return $this->createQueryBuilder('e')
-            ->andWhere('e.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $qb->getQuery()->getResult();
     }
-    */
 }
