@@ -20,6 +20,7 @@ class Provider
     {
         $this->debts = new ArrayCollection();
         $this->merchandises = new ArrayCollection();
+        $this->merchandisePayments = new ArrayCollection();
     }
 
     /**
@@ -56,6 +57,11 @@ class Provider
      * @ORM\OneToMany(targetEntity="App\Entity\Merchandise", mappedBy="provider")
      */
     private $merchandises;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\MerchandisePayment", mappedBy="provider")
+     */
+    private $merchandisePayments;
 
     public function getCui(): ?string
     {
@@ -173,6 +179,37 @@ class Provider
             // set the owning side to null (unless already changed)
             if ($merchandise->getProvider() === $this) {
                 $merchandise->setProvider(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|MerchandisePayment[]
+     */
+    public function getMerchandisePayments(): Collection
+    {
+        return $this->merchandisePayments;
+    }
+
+    public function addMerchandisePayment(MerchandisePayment $merchandisePayment): self
+    {
+        if (!$this->merchandisePayments->contains($merchandisePayment)) {
+            $this->merchandisePayments[] = $merchandisePayment;
+            $merchandisePayment->setProvider($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMerchandisePayment(MerchandisePayment $merchandisePayment): self
+    {
+        if ($this->merchandisePayments->contains($merchandisePayment)) {
+            $this->merchandisePayments->removeElement($merchandisePayment);
+            // set the owning side to null (unless already changed)
+            if ($merchandisePayment->getProvider() === $this) {
+                $merchandisePayment->setProvider(null);
             }
         }
 

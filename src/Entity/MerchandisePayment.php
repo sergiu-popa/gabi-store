@@ -17,27 +17,15 @@ class MerchandisePayment
     use DateTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Merchandise", inversedBy="merchandisePayments")
-     * @ORM\JoinColumn(nullable=false)
-     */
-    private $merchandise;
-
-    /**
      * @ORM\Column(type="smallint")
      */
     private $invoiceType;
 
-    public function getMerchandise(): ?Merchandise
-    {
-        return $this->merchandise;
-    }
-
-    public function setMerchandise(?Merchandise $merchandise): self
-    {
-        $this->merchandise = $merchandise;
-
-        return $this;
-    }
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Provider", inversedBy="merchandisePayments")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $provider;
 
     public function getInvoiceType(): ?int
     {
@@ -47,6 +35,18 @@ class MerchandisePayment
     public function setInvoiceType(int $invoiceType): self
     {
         $this->invoiceType = $invoiceType;
+
+        return $this;
+    }
+
+    public function getProvider(): ?Provider
+    {
+        return $this->provider;
+    }
+
+    public function setProvider(?Provider $provider): self
+    {
+        $this->provider = $provider;
 
         return $this;
     }

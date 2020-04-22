@@ -4,7 +4,11 @@ namespace App\DataFixtures;
 
 use App\Entity\Balance;
 use App\Entity\Category;
+use App\Entity\Debt;
+use App\Entity\DebtPayment;
 use App\Entity\Expense;
+use App\Entity\Merchandise;
+use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use App\Entity\Provider;
 use App\Entity\User;
@@ -41,6 +45,10 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
         $this->createUsers($manager);
 
         $this->migrateFurnizoriToProviders($manager);
+        $this->migrateDatoriiToDebt($manager);
+        $this->migrateIstoricPlatitToDebtPayment($manager);
+        $this->migrateIntrareMarfaToMerchandise($manager);
+        $this->migrateMarfaAchitataToMerchandisePayment($manager);
 
         $this->migrateSabloaneToCategories($manager);
         $this->migrateIesiriDiverseToExpenses($manager);
@@ -94,6 +102,104 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
 
             $this->addReference('Provider'.$row['id'], $provider);
         }
+    }
+
+    private function migrateDatoriiToDebt(ObjectManager $manager)
+    {
+        $stmt = $this->conn->query('SELECT * FROM datorii');
+
+        foreach ($stmt->fetchAll() as $row) {
+            try {
+                $provider = $this->getReference('Provider' . $row['id_firma']);
+
+                $debt = new Debt();
+                $debt->setProvider($provider);
+                $debt->setAmount($row['suma']);
+                $debt->setDate(new \DateTime($row['data']));
+                $debt->setPaidFully($row['platit_integral'] == 1);
+                $debt->setPaidPartially($row['platit_partial'] == 1);
+
+                $manager->persist($debt);
+                $this->addReference('Debt'.$row['id'], $debt);
+            } catch (\OutOfBoundsException $e) {
+                print 'Datorii (Debt): ' . $e->getMessage() . "\n";
+            }
+        }
+    }
+
+    private function migrateIstoricPlatitToDebtPayment(ObjectManager $manager)
+    {
+        $stmt = $this->conn->query('SELECT * FROM istoric_plati');
+
+        foreach ($stmt->fetchAll() as $row) {
+            try {
+                $debt = $this->getReference('Debt' . $row['id_datorie']);
+
+                $payment = new DebtPayment();
+                $payment->setDebt($debt);
+                $payment->setAmount($row['suma']);
+                $payment->setDate(new \DateTime($row['data']));
+                $payment->setPaidPartially($row['plata_partial'] == 1);
+
+                $manager->persist($payment);
+            } catch (\OutOfBoundsException $e) {
+                print 'Istoric plati (DebtPayment): ' . $e->getMessage() . "\n";
+            }
+        }
+
+        $manager->flush();
+    }
+
+    private function migrateIntrareMarfaToMerchandise(ObjectManager $manager)
+    {
+        $stmt = $this->conn->query('SELECT * FROM intrare_marfa');
+
+        foreach ($stmt->fetchAll() as $row) {
+            try {
+                $provider = $this->getReference('Provider' . $row['id_firma']);
+
+                $merchandise = new Merchandise();
+                $merchandise->setProvider($provider);
+                $merchandise->setName($row['denumire']);
+                $merchandise->setAmount($row['cantitate']);
+                $merchandise->setDate(new \DateTime($row['data']));
+                $merchandise->setEnterPrice($row['pret_intrare']);
+                $merchandise->setExitPrice($row['pret_iesire']);
+
+                $manager->persist($merchandise);
+                $this->addReference('Merchandise-' . $this->merchandiseId($row), $merchandise);
+            } catch (\OutOfBoundsException $e) {
+                print 'Intrare marfa (MerchandisePayment): ' . $e->getMessage() . "\n";
+            }
+        }
+    }
+
+    private function migrateMarfaAchitataToMerchandisePayment(ObjectManager $manager)
+    {
+        $stmt = $this->conn->query('SELECT * FROM marfa_achitata');
+
+        foreach ($stmt->fetchAll() as $row) {
+            try {
+                $provider = $this->getReference('Provider' . $row['id_firma']);
+
+                $payment = new MerchandisePayment();
+                $payment->setProvider($provider);
+                $payment->setAmount($row['suma']);
+                $payment->setDate(new \DateTime($row['data']));
+                $payment->setInvoiceType($row['tip_factura']);
+
+                $manager->persist($payment);
+            } catch (\OutOfBoundsException $e) {
+                print 'Marfa achitate (MerchandisePayment): ' . $e->getMessage() . "\n";
+            }
+        }
+
+        $manager->flush();
+    }
+
+    private function merchandiseId($row)
+    {
+        return $row['id'] . '-' . $row['data'];
     }
 
     private function migrateSabloaneToCategories(ObjectManager $manager)
@@ -161,9 +267,6 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
         }
     }
 
-    /**
-     * @return string[]
-     */
     public static function getGroups(): array
     {
         return ['migration'];
