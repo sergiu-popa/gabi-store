@@ -24,9 +24,15 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
     /**
      * @return MerchandisePayment[] Returns an array of Money objects
      */
-    public function getForYearAndMonth(int $year, string $month)
+    public function getForYearAndMonth(int $year, string $month, $provider = null)
     {
         $qb = $this->createQueryBuilder('m');
+
+        if ($provider !== null) {
+            $qb->andWhere('m.provider = :provider')
+                ->setParameter('provider', $provider);
+        }
+
         $this->applyYearAndMonthFilter($year, $month, $qb, 'm');
 
         return $qb->getQuery()->getResult();

@@ -9,6 +9,7 @@ use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use App\Domain\Month;
+use App\Entity\Provider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -26,7 +27,8 @@ class ReportsController extends AbstractController
         $money = $em->getRepository(Money::class)->getForYearAndMonth($year, $month);
         $expenses = $em->getRepository(Expense::class)->getForYearAndMonth($year, $month);
         $merchandise = $em->getRepository(Merchandise::class)->getForYearAndMonth($year, $month);
-        $merchandisePayments = $em->getRepository(MerchandisePayment::class)->getForYearAndMonth($year, $month);
+        $merchandisePayments = $em->getRepository(MerchandisePayment::class)
+            ->getForYearAndMonth($year, $month);
 
         // Foreach day set expenses, set merchandise, set merchandise payments, set money
         $month = new Month($year, $month);
@@ -59,4 +61,25 @@ class ReportsController extends AbstractController
             'month' => $month
         ]);
     }
+
+    /**
+     * @Route("/reports/providers/{provider}/{year}/{month}", name="reports_providers")
+     */
+    public function payments($provider, $year = '2020', $month = '04')
+    {
+        $em = $this->getDoctrine()->getManager();
+        $provider = $em->getRepository(Provider::class)->find($provider);
+        $merchandisePayments = $em->getRepository(MerchandisePayment::class)
+            ->getForYearAndMonth($year, $month, $provider);
+
+        $month = new Month($year, $month);
+        $month->addItemsInEachDay('merchandisePayments', $merchandisePayments);
+
+        // TODO chart
+        return $this->render('reports/providers.html.twig', [
+            'month' => $month
+        ]);
+    }
+
+
 }
