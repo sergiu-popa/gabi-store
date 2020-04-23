@@ -12,8 +12,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class MerchandisePayment
 {
-    public const TYPE_INVOICE = 1;
-    public const TYPE_BILL = 2;
+    public const TYPE_BILL = 1;
+    public const TYPE_INVOICE = 2;
 
     use IdTrait;
     use AmountTrait;

@@ -22,7 +22,7 @@ class ExpenseRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Expense[] Returns an array of Money objects
+     * @return Expense[]
      */
     public function getForYearAndMonth(int $year, string $month)
     {

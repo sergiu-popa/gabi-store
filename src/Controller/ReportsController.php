@@ -16,7 +16,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ReportsController extends AbstractController
 {
     /**
-     * @Route("/reports/{year}/{month}", name="reports_sales")
+     * @Route("/reports/{year}/{month}", name="reports_sales", requirements={"year":"\d+"})
      */
     public function sales($year = '2020', $month = '04')
     {
@@ -80,6 +80,17 @@ class ReportsController extends AbstractController
             'month' => $month
         ]);
     }
+    /**
+     * @Route("/reports/merchandise/{name}", name="reports_merchandise")
+     */
+    public function merchandise($name)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $merchandise = $em->getRepository(Merchandise::class)->searchMerchandise($name);
 
-
+        // TODO pagination
+        return $this->render('reports/merchandise.html.twig', [
+            'merchandise' => $merchandise
+        ]);
+    }
 }

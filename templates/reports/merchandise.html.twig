@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Raport marfa{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper table { width: 100% }
+        .example-wrapper table td { border: 1px solid #eaeaea; padding: 3px; }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Raport marfa</h1>
+
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Data intrare</th>
+                <th scope="col">Firma</th>
+                <th scope="col">Denumire</th>
+                <th scope="col">Cantiate</th>
+                <th scope="col">Pret intrare</th>
+                <th scope="col">Pret iesire</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for m in merchandise %}
+                <tr>
+                    <td>{{ m.date|date('j F Y') }}</td>
+                    <td>{{ m.provider.name }}</td>
+                    <td>{{ m.name }}</td>
+                    <td>{{ m.amount }}</td>
+                    <td>{{ m.enterPrice }}</td>
+                    <td>{{ m.exitPrice }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

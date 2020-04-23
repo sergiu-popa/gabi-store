@@ -22,7 +22,7 @@ class MerchandiseRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return Merchandise[] Returns an array of Money objects
+     * @return Merchandise[]
      */
     public function getForYearAndMonth(int $year, string $month)
     {
@@ -30,5 +30,21 @@ class MerchandiseRepository extends ServiceEntityRepository
         $this->applyYearAndMonthFilter($year, $month, $qb, 'm');
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * @return Merchandise[]
+     */
+    public function searchMerchandise($name)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m, p')
+            ->join('m.provider', 'p')
+            ->andWhere('m.name LIKE :name')
+            ->setParameter('name', "%$name%")
+            ->orderBy('m.date', 'DESC')
+            ->setMaxResults(50)
+            ->getQuery()
+            ->getResult();
     }
 }

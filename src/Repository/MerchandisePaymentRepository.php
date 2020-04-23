@@ -22,7 +22,7 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
     }
 
     /**
-     * @return MerchandisePayment[] Returns an array of Money objects
+     * @return MerchandisePayment[]
      */
     public function getForYearAndMonth(int $year, string $month, $provider = null)
     {
