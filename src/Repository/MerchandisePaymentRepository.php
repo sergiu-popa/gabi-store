@@ -46,16 +46,40 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
     // SELECT DATE_FORMAT(date, '%M') as month, SUM(amount) as total, type FROM merchandise_payment WHERE date > '2020-01-01' GROUP BY month, type ORDER BY date ASC;
     public function getYearlySum()
     {
-        $results = $this->conn
-            ->executeQuery("SELECT DATE_FORMAT(date, '%Y') as year, SUM(amount) as total, type " .
-                "FROM merchandise_payment GROUP BY year, type ORDER BY year DESC")
+        $results = $this->conn->createQueryBuilder()
+            ->select("DATE_FORMAT(date, '%Y') as year, SUM(amount) as total, type")
+            ->from('merchandise_payment')
+            ->groupBy('year, type')
+            ->orderBy('year', 'DESC')
+            ->execute()
             ->fetchAll();
 
+        return $this->reindex($results, 'year');
+    }
+
+    public function getMonthlySum(int $year)
+    {
+        $results = $this->conn->createQueryBuilder()
+            ->select("DATE_FORMAT(date, '%m') as month, SUM(amount) as total, type")
+            ->from('merchandise_payment')
+            ->where("date BETWEEN ? and ?")
+            ->groupBy('month, type')
+            ->orderBy('date', 'ASC')
+            ->setParameter(0, $year . '-01-01')
+            ->setParameter(1, $year . '-12-31')
+            ->execute()
+            ->fetchAll();
+
+        return $this->reindex($results, 'month');
+    }
+
+    private function reindex(array $results, $periodKey)
+    {
         $payments = [];
 
         foreach ($results as $row) {
             $type = $row['type'];
-            $year = $row['year'];
+            $year = $row[$periodKey];
 
             $payments[$year][$type] = $row['total'];
         }

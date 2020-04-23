@@ -1,20 +1,43 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MonthlyController!{% endblock %}
+{% block title %}Raport anual{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper table { width: 100% }
+        .example-wrapper table td { border: 1px solid #eaeaea; padding: 3px; }
+    </style>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ '/home/sergio/Code/magazin-gabi/src/Controller/MonthlyController.php'|file_link(0) }}">src/Controller/MonthlyController.php</a></code></li>
-        <li>Your template at <code><a href="{{ '/home/sergio/Code/magazin-gabi/templates/monthly/index.html.twig'|file_link(0) }}">templates/monthly/index.html.twig</a></code></li>
-    </ul>
-</div>
+    <div class="example-wrapper">
+        <h1>Raport lunar</h1>
+
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Zi</th>
+                <th scope="col">Vanzare zi</th>
+                <th scope="col">Monetar</th>
+                <th scope="col">Iesiri diverse</th>
+                <th scope="col">Marfa facturi</th>
+                <th scope="col">Marfa bonuri</th>
+                <th scope="col">Profit Brut</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for month, data in data %}
+                <tr>
+                    <th scope="row">{{ month }}</th>
+                    <td>{{ data.sales|number_format(2, '.', ' ')|dash }}</td>
+                    <td>{{ data.money|number_format(2, '.', ' ')|dash }}</td>
+                    <td>{{ data.expenses|number_format(2, '.', ' ')|dash }}</td>
+                    <td>{{ data.payments_invoice|number_format(2, '.', ' ')|dash }}</td>
+                    <td>{{ data.payments_bill|number_format(2, '.', ' ')|dash }}</td>
+                    <td>{{ data.profit|number_format(2, '.', ' ')|dash }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

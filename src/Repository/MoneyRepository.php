@@ -38,13 +38,32 @@ class MoneyRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    // SELECT DATE_FORMAT(date, '%M') as month, SUM(amount) as total FROM money WHERE date > '2020-01-01' GROUP BY month ORDER BY date ASC;
     public function getYearlySum()
     {
-        $result = $this->conn
-            ->executeQuery("SELECT DATE_FORMAT(date, '%Y') as year, SUM(amount) as total FROM money GROUP BY year ORDER BY year DESC")
+        $result = $this->conn->createQueryBuilder()
+            ->select("DATE_FORMAT(date, '%Y') as year, SUM(amount) as total")
+            ->from('money')
+            ->groupBy('year')
+            ->orderBy('year', 'DESC')
+            ->execute()
             ->fetchAll();
 
         return array_column($result, 'total', 'year');
+    }
+
+    public function getMonthlySum(int $year)
+    {
+        $result = $this->conn->createQueryBuilder()
+            ->select("DATE_FORMAT(date, '%m') as month, SUM(amount) as total")
+            ->from('money')
+            ->where("date BETWEEN ? and ?")
+            ->groupBy('month')
+            ->orderBy('date', 'ASC')
+            ->setParameter(0, $year . '-01-01')
+            ->setParameter(1, $year . '-12-31')
+            ->execute()
+            ->fetchAll();
+
+        return array_column($result, 'total', 'month');
     }
 }

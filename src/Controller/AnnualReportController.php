@@ -14,7 +14,7 @@ class AnnualReportController extends AbstractController
     /**
      * @Route("/reports/annual", name="annual_report")
      */
-    public function index()
+    public function report()
     {
         $years = range(date('Y'), 2016);
         $data = [];
