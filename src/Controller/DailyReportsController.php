@@ -13,10 +13,10 @@ use App\Entity\Provider;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
 
-class ReportsController extends AbstractController
+class DailyReportsController extends AbstractController
 {
     /**
-     * @Route("/reports/{year}/{month}", name="reports_sales", requirements={"year":"\d+"})
+     * @Route("/reports/daily/{year}/{month}", name="reports_sales", requirements={"year":"\d+"})
      */
     public function sales($year = '2020', $month = '04')
     {
@@ -44,7 +44,7 @@ class ReportsController extends AbstractController
     }
 
     /**
-     * @Route("/reports/expenses/{year}/{month}", name="reports_expenses")
+     * @Route("/reports/daily/expenses/{year}/{month}", name="reports_expenses")
      */
     public function expenses($year = '2020', $month = '04')
     {
@@ -63,7 +63,7 @@ class ReportsController extends AbstractController
     }
 
     /**
-     * @Route("/reports/providers/{provider}/{year}/{month}", name="reports_providers")
+     * @Route("/reports/daily/providers/{provider}/{year}/{month}", name="reports_providers")
      */
     public function payments($provider, $year = '2020', $month = '04')
     {
@@ -80,8 +80,9 @@ class ReportsController extends AbstractController
             'month' => $month
         ]);
     }
+
     /**
-     * @Route("/reports/merchandise/{name}", name="reports_merchandise")
+     * @Route("/reports/daily/merchandise/{name}", name="reports_merchandise")
      */
     public function merchandise($name)
     {
