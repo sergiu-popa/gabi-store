@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Raport iesiri{% endblock %}
+
+{% block body %}
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Raport vanzare lunar</h1>
+
+        <table class="table" border="1" width="100%" cellpadding="3">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">Zi</th>
+                {% for c in categories %}
+                <th scope="col">{{ c.name }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for index, day in month.days %}
+                <tr>
+                    <th scope="row">{{ index }}</th>
+                    {% for c in categories %}
+                    <td>{{ day.categories[c.id] is defined ? day.categories[c.id]|number_format(2) : '–' }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

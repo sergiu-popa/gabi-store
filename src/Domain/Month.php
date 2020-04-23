@@ -2,27 +2,14 @@
 
 namespace App\Domain;
 
-use App\Entity\Merchandise;
-
 class Month
 {
+    /** @var Day[] */
     private $days;
-
-    // TODO calculate todals when adding days
 
     public function __construct($year, $month)
     {
-        $date = new \DateTime("$year-$month-01");
-        $lastDay = $date->format('t');
-
-        // For current month of this year, show today as the last day
-        if ($year === date('Y') && $month === date('m')) {
-            $lastDay = date('j');
-        }
-
-        for ($i = 1; $i <= $lastDay; $i++) {
-            $this->days[$i] = new Day();
-        }
+        $this->days = self::generateDays($year, $month);
     }
 
     public function addItemsInEachDay($property, $items)
@@ -36,10 +23,28 @@ class Month
     }
 
     /**
-     * @return array []Day
+     * @return Day[]
      */
     public function getDays(): array
     {
         return $this->days;
+    }
+
+    public static function generateDays($year, $month, $class = Day::class)
+    {
+        $days = [];
+        $date = new \DateTime("$year-$month-01");
+        $lastDay = $date->format('t');
+
+        // For current month of this year, show today as the last day
+        if ($year === date('Y') && $month === date('m')) {
+            $lastDay = date('j');
+        }
+
+        for ($i = 1; $i <= $lastDay; $i++) {
+            $days[$i] = new $class();
+        }
+
+        return $days;
     }
 }

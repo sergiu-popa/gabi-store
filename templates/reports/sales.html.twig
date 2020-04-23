@@ -28,13 +28,13 @@
             {% for index, day in month.days %}
                 <tr>
                     <th scope="row">{{ index }}</th>
-                    <td>{{ day.totalSales|number_format(2) }}</td>
-                    <td>{{ day.totalMoney|number_format(2) }}</td>
-                    <td>{{ day.totalExpenses|number_format(2) }}</td>
-                    <td>{{ day.totalMerchandisePaymentsInvoice|number_format(2) }}</td>
-                    <td>{{ day.totalMerchandisePaymentsBill|number_format(2) }}</td>
-                    <td>{{ day.totalMerchandiseGrossProfit|number_format(2) }}</td>
-                    <td>{{ day.totalMerchandiseEnterValue|number_format(2) }}</td>
+                    <td>{{ day.totalSales|number_format(2)|dash }}</td>
+                    <td>{{ day.totalMoney|number_format(2)|dash }}</td>
+                    <td>{{ day.totalExpenses|number_format(2)|dash }}</td>
+                    <td>{{ day.totalMerchandisePaymentsInvoice|number_format(2)|dash }}</td>
+                    <td>{{ day.totalMerchandisePaymentsBill|number_format(2)|dash }}</td>
+                    <td>{{ day.totalMerchandiseGrossProfit|number_format(2)|dash }}</td>
+                    <td>{{ day.totalMerchandiseEnterValue|number_format(2)|dash }}</td>
                 </tr>
             {% endfor %}
             </tbody>

@@ -26,7 +26,10 @@ class ExpenseRepository extends ServiceEntityRepository
      */
     public function getForYearAndMonth(int $year, string $month)
     {
-        $qb = $this->createQueryBuilder('e');
+        $qb = $this->createQueryBuilder('e')
+            ->select('e, c')
+            ->join('e.category', 'c');
+
         $this->applyYearAndMonthFilter($year, $month, $qb, 'e');
 
         return $qb->getQuery()->getResult();
