@@ -7,6 +7,7 @@ use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MerchandiseRepository")
@@ -18,6 +19,11 @@ class Merchandise
     use DateTrait;
     use AmountTrait;
 
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
+
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Provider", inversedBy="merchandises")
      * @ORM\JoinColumn(nullable=false)
@@ -26,11 +32,14 @@ class Merchandise
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive()
      */
     private $enterPrice;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\Positive()
+     * @Assert\GreaterThan(propertyPath="enterPrice")
      */
     private $exitPrice;
 

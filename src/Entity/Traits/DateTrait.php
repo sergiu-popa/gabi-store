@@ -9,7 +9,7 @@ trait DateTrait
 {
     /**
      * @ORM\Column(type="date")
-     * @Assert\Date()
+     * @Assert\Type("\DateTimeInterface")
      */
     private $date;
 

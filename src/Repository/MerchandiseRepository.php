@@ -10,7 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method Merchandise|null find($id, $lockMode = null, $lockVersion = null)
  * @method Merchandise|null findOneBy(array $criteria, array $orderBy = null)
- * @method Merchandise[]    findAll()
  * @method Merchandise[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class MerchandiseRepository extends ServiceEntityRepository
@@ -24,6 +23,22 @@ class MerchandiseRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Merchandise::class);
         $this->conn = $registry->getConnection();
+    }
+
+    /**
+     * @return Merchandise[]
+     */
+    public function findAll()
+    {
+        // TODO pagination please
+        return $this->createQueryBuilder('m')
+            ->select('m, p, c')
+            ->join('m.provider', 'p')
+            ->join('m.category', 'c')
+            ->setMaxResults(25)
+            ->orderBy('m.date', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**

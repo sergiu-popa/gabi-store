@@ -11,6 +11,7 @@ trait AmountTrait
      * @ORM\Column(type="float")
      * @Assert\NotBlank()
      * @Assert\Type("numeric")
+     * @Assert\Positive()
      */
     private $amount;
 
