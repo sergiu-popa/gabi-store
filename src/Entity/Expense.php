@@ -19,17 +19,17 @@ class Expense
     use NotesTrait;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="expenses")
+     * @ORM\ManyToOne(targetEntity="ExpenseCategory", inversedBy="expenses")
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
 
-    public function getCategory(): ?Category
+    public function getCategory(): ?ExpenseCategory
     {
         return $this->category;
     }
 
-    public function setCategory(?Category $category): self
+    public function setCategory(?ExpenseCategory $category): self
     {
         $this->category = $category;
 

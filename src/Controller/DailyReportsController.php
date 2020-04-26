@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Domain\Reports\MonthlyExpenses;
-use App\Entity\Category;
+use App\Entity\ExpenseCategory;
 use App\Entity\Expense;
 use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
@@ -50,7 +50,7 @@ class DailyReportsController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
         $expenses = $em->getRepository(Expense::class)->getForYearAndMonth($year, $month);
-        $categories = $em->getRepository(Category::class)->findAll();
+        $categories = $em->getRepository(ExpenseCategory::class)->findAll();
 
         $month = new MonthlyExpenses($year, $month);
         $month->addExpensesInEachDay($expenses);

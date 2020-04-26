@@ -3,7 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Balance;
-use App\Entity\Category;
+use App\Entity\ExpenseCategory;
 use App\Entity\Debt;
 use App\Entity\DebtPayment;
 use App\Entity\Expense;
@@ -207,7 +207,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
         $stmt = $this->conn->query('SELECT * FROM sabloane');
 
         foreach ($stmt->fetchAll() as $row) {
-            $category = new Category();
+            $category = new ExpenseCategory();
             $category->setName(empty($row['nume_sablon']) ? 'Retur marfa' : $row['nume_sablon']);
 
             $manager->persist($category);

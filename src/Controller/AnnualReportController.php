@@ -43,4 +43,6 @@ class AnnualReportController extends AbstractController
             'data' => $data
         ]);
     }
+
+    // TODO expenses categories
 }

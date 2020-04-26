@@ -9,9 +9,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\ExpenseCategoryRepository")
  */
-class Category
+class ExpenseCategory
 {
     use IdTrait;
     use NameTrait;

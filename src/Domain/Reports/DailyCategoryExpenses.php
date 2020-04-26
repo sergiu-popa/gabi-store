@@ -2,12 +2,12 @@
 
 namespace App\Domain\Reports;
 
-use App\Entity\Category;
+use App\Entity\ExpenseCategory;
 use App\Entity\Expense;
 
 class DailyCategoryExpenses
 {
-    /** @var Category[] */
+    /** @var ExpenseCategory[] */
     private $categories = [];
 
     /**
