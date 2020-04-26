@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Expense;
 use App\Entity\Merchandise;
+use App\Entity\MerchandiseCategory;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,7 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class MonthlyReportController extends AbstractController
 {
     /**
-     * @Route("/reports/monthly/{year}", name="monthly_monthly")
+     * @Route("/reports/monthly/{year}", name="monthly_report")
      */
     public function report($year)
     {
@@ -40,10 +41,28 @@ class MonthlyReportController extends AbstractController
                 + $data[$month]['payments_bill'];
         }
 
-        return $this->render('reports/monthly.html.twig', [
+        return $this->render('reports/monthly/general.html.twig', [
             'data' => $data
         ]);
     }
 
-    // TODO expenses categories
+    /**
+     * @Route("/reports/monthly/expenses/{year}", name="monthly_expenses_report")
+     */
+    public function expenses($year)
+    {
+        $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+
+        $em = $this->getDoctrine()->getManager();
+
+        // TODO group inside category the merchandise indexed by month
+        $merchandise = $em->getRepository(Merchandise::class)->getMonthlySum($year, true);
+        $categories = $em->getRepository(MerchandiseCategory::class)->findAll();
+
+        return $this->render('reports/monthly/expenses.html.twig', [
+            'months' => $months,
+            'merchandise' => $merchandise,
+            'categories' => $categories
+        ]);
+    }
 }

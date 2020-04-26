@@ -1,0 +1,37 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Raport anual{% endblock %}
+
+{% block body %}
+
+    <style>
+        .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
+        .example-wrapper table { width: 100% }
+        .example-wrapper table td { border: 1px solid #eaeaea; padding: 3px; }
+    </style>
+
+    <div class="example-wrapper">
+        <h1>Raport anual</h1>
+
+        <table class="table">
+            <thead class="thead-dark">
+            <tr>
+                <th scope="col">An</th>
+                {% for c in categories %}
+                    <th>{{ c.name }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for year in years %}
+                <tr>
+                    <th scope="row">{{ year }}</th>
+                    {% for c in categories %}
+                        <td>{{ merchandise[year] is defined ? merchandise[year][c.id]|number_format(2, '.', ' ') : '-' }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

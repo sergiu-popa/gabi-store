@@ -34,6 +34,12 @@ class Merchandise
      */
     private $exitPrice;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\MerchandiseCategory", inversedBy="merchandise")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $category;
+
     public function getTotalEnterValue()
     {
         return $this->amount * $this->enterPrice;
@@ -83,6 +89,18 @@ class Merchandise
     public function setExitPrice(float $exitPrice): self
     {
         $this->exitPrice = $exitPrice;
+
+        return $this;
+    }
+
+    public function getCategory(): ?MerchandiseCategory
+    {
+        return $this->category;
+    }
+
+    public function setCategory(?MerchandiseCategory $category): self
+    {
+        $this->category = $category;
 
         return $this;
     }

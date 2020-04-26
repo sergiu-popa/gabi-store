@@ -53,24 +53,34 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getYearlySum()
+    public function getYearlySum($groupByCategory = false)
     {
-        $results = $this->conn->createQueryBuilder()
+        $qb = $this->conn->createQueryBuilder()
             ->select("DATE_FORMAT(date, '%Y') as year")
             ->addSelect('SUM(amount * enter_price) as enterTotal')
             ->addSelect('SUM(amount * exit_price) as exitTotal')
             ->from('merchandise')
             ->groupBy('year')
-            ->orderBy('year', 'DESC')
-            ->execute()
-            ->fetchAll();
+            ->orderBy('year', 'DESC');
 
-        return $this->reindex($results, 'year');
+        if ($groupByCategory) {
+            $qb->addSelect('category_id')
+                ->addGroupBy('category_id');
+        }
+
+        // TODO redo this with collections and move outside?
+        $results = $qb->execute()->fetchAll();
+
+        if($groupByCategory) {
+            return $this->groupByCategoryAndReindex($results, 'year');
+        }
+
+        return $this->calculateProfitAndReindex($results, 'year');
     }
 
-    public function getMonthlySum(int $year)
+    public function getMonthlySum(int $year, $groupByCategory = false)
     {
-        $results = $this->conn->createQueryBuilder()
+        $qb = $this->conn->createQueryBuilder()
             ->select("DATE_FORMAT(date, '%m') as month")
             ->addSelect('SUM(amount * enter_price) as enterTotal')
             ->addSelect('SUM(amount * exit_price) as exitTotal')
@@ -79,23 +89,57 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->groupBy('month')
             ->orderBy('date', 'ASC')
             ->setParameter(0, $year . '-01-01')
-            ->setParameter(1, $year . '-12-31')
-            ->execute()
-            ->fetchAll();
+            ->setParameter(1, $year . '-12-31');
 
-        return $this->reindex($results, 'month');
+        if ($groupByCategory) {
+            $qb->addSelect('category_id')
+                ->addGroupBy('category_id');
+        }
+
+        // TODO redo this with collections and move outside?
+        $results = $qb->execute()->fetchAll();
+
+        if($groupByCategory) {
+            return $this->groupByCategoryAndReindex($results, 'month');
+        }
+
+        return $this->calculateProfitAndReindex($results, 'month');
     }
 
-    private function reindex(array $results, string $keyPeriod)
+    private function calculateProfitAndReindex(array $results, string $keyPeriod)
     {
         $merchandise = [];
 
         foreach ($results as $row) {
-            $year = $row[$keyPeriod];
+            $key = $row[$keyPeriod];
 
-            $merchandise[$year] = $row['exitTotal'] - $row['enterTotal'];
+            $merchandise[$key] = $row['exitTotal'] - $row['enterTotal'];
         }
 
         return $merchandise;
+    }
+
+    private function groupBy(array $results, string $key)
+    {
+        $merchandise = [];
+
+        foreach ($results as $row) {
+            $keyValue = $row[$key];
+            $merchandise[$keyValue][] = $row;
+        }
+
+        return $merchandise;
+    }
+
+    private function groupByCategoryAndReindex(array $results, string $key)
+    {
+        $months = $this->groupBy($results, $key);
+
+        $data = [];
+        foreach ($months as $month => $categories) {
+            $data[$month] = $this->calculateProfitAndReindex($categories, 'category_id');
+        }
+
+        return $data;
     }
 }

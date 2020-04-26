@@ -8,6 +8,7 @@ use App\Entity\Debt;
 use App\Entity\DebtPayment;
 use App\Entity\Expense;
 use App\Entity\Merchandise;
+use App\Entity\MerchandiseCategory;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use App\Entity\Provider;
@@ -152,6 +153,17 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
 
     private function migrateIntrareMarfaToMerchandise(ObjectManager $manager)
     {
+        $category = (new MerchandiseCategory())->setName('General');
+
+        /*
+        $categories = [
+            (new MerchandiseCategory())->setName('General'),
+            (new MerchandiseCategory())->setName('Alimente'),
+            (new MerchandiseCategory())->setName('Racoritoare')
+        ];
+        foreach($categories as $category) $manager->persist($category);
+        */
+
         $stmt = $this->conn->query('SELECT * FROM intrare_marfa');
 
         foreach ($stmt->fetchAll() as $row) {
@@ -159,6 +171,8 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
                 $provider = $this->getReference('Provider' . $row['id_firma']);
 
                 $merchandise = new Merchandise();
+                $merchandise->setCategory($category);
+                //$merchandise->setMerchandiseCategory($categories[array_rand($categories)]);
                 $merchandise->setProvider($provider);
                 $merchandise->setName($row['denumire']);
                 $merchandise->setAmount($row['cantitate']);

@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Expense;
 use App\Entity\Merchandise;
+use App\Entity\MerchandiseCategory;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -39,10 +40,26 @@ class AnnualReportController extends AbstractController
                 + $data[$year]['payments_bill'];
         }
 
-        return $this->render('reports/annual.html.twig', [
+        return $this->render('reports/annual/general.html.twig', [
             'data' => $data
         ]);
     }
 
-    // TODO expenses categories
+    /**
+     * @Route("/reports/annual/expenses", name="annual_expenses_report")
+     */
+    public function expenses()
+    {
+        $years = range(date('Y'), 2016);
+
+        $em = $this->getDoctrine()->getManager();
+        $merchandise = $em->getRepository(Merchandise::class)->getYearlySum(true);
+        $categories = $em->getRepository(MerchandiseCategory::class)->findAll();
+
+        return $this->render('reports/annual/expenses.html.twig', [
+            'years' => $years,
+            'merchandise' => $merchandise,
+            'categories' => $categories
+        ]);
+    }
 }
