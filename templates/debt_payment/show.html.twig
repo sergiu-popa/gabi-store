@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DebtPayment{% endblock %}
+
+{% block body %}
+    <h1>DebtPayment</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ debt_payment.id }}</td>
+            </tr>
+            <tr>
+                <th>Amount</th>
+                <td>{{ debt_payment.amount }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ debt_payment.date ? debt_payment.date|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>PaidPartially</th>
+                <td>{{ debt_payment.paidPartially ? 'Yes' : 'No' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('debt_payment_index') }}">back to list</a>
+
+    <a href="{{ path('debt_payment_edit', {'id': debt_payment.id}) }}">edit</a>
+
+    {{ include('debt_payment/_delete_form.html.twig') }}
+{% endblock %}

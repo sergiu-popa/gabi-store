@@ -1,0 +1,34 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Money{% endblock %}
+
+{% block body %}
+    <h1>Money</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ money.id }}</td>
+            </tr>
+            <tr>
+                <th>Amount</th>
+                <td>{{ money.amount }}</td>
+            </tr>
+            <tr>
+                <th>Notes</th>
+                <td>{{ money.notes }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ money.date ? money.date|date('Y-m-d') : '' }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('money_index') }}">back to list</a>
+
+    <a href="{{ path('money_edit', {'id': money.id}) }}">edit</a>
+
+    {{ include('money/_delete_form.html.twig') }}
+{% endblock %}

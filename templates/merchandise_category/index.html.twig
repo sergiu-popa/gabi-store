@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MerchandiseCategory index{% endblock %}
+
+{% block body %}
+    <h1>MerchandiseCategory index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for merchandise_category in merchandise_categories %}
+            <tr>
+                <td>{{ merchandise_category.id }}</td>
+                <td>{{ merchandise_category.name }}</td>
+                <td>
+                    <a href="{{ path('merchandise_category_show', {'id': merchandise_category.id}) }}">show</a>
+                    <a href="{{ path('merchandise_category_edit', {'id': merchandise_category.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="3">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('merchandise_category_new') }}">Create new</a>
+{% endblock %}

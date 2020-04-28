@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}DebtPayment index{% endblock %}
+
+{% block body %}
+    <h1>DebtPayment index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Amount</th>
+                <th>Date</th>
+                <th>PaidPartially</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for debt_payment in debt_payments %}
+            <tr>
+                <td>{{ debt_payment.id }}</td>
+                <td>{{ debt_payment.amount }}</td>
+                <td>{{ debt_payment.date ? debt_payment.date|date('Y-m-d') : '' }}</td>
+                <td>{{ debt_payment.paidPartially ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('debt_payment_show', {'id': debt_payment.id}) }}">show</a>
+                    <a href="{{ path('debt_payment_edit', {'id': debt_payment.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="5">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('debt_payment_new') }}">Create new</a>
+{% endblock %}
