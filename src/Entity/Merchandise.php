@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
+use App\Entity\Traits\DeletedAtTrait;
+use App\Entity\Traits\DeleteTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
 use Doctrine\ORM\Mapping as ORM;
@@ -18,10 +20,15 @@ class Merchandise
     use NameTrait;
     use DateTrait;
     use AmountTrait;
+    use DeleteTrait;
 
-    public function __construct()
+    public function __construct($date = null, $provider = null)
     {
-        $this->date = new \DateTime();
+        $this->date = new \DateTime($date ?? 'now');
+
+        if($this->provider) {
+            $this->provider = $provider;
+        }
     }
 
     /**

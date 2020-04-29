@@ -157,4 +157,17 @@ class MerchandiseRepository extends ServiceEntityRepository
 
         return $data;
     }
+
+    public function findByDay(\DateTimeInterface $date): array
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m, p, c')
+            ->join('m.provider', 'p')
+            ->join('m.category', 'c')
+            ->where('m.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->orderBy('m.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 }

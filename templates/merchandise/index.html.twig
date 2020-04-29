@@ -1,12 +1,20 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Merchandise index{% endblock %}
+{% block title %}Intrare marfă{% endblock %}
 
 {% block body %}
-    <h1>Merchandise index</h1>
+    <h1>Intrare marfă</h1>
 
-    <table class="table">
-        <thead>
+    <a href="{{ path('merchandise_new') }}">adaugă</a> |
+    <a href="{{ path('merchandise_category_index') }}">categorii</a>
+
+    {% for p in providers %}
+        <h2>
+            {{ p.name }}
+            <small style="font-weight: normal;"><a href="{{ path('merchandise_new', {provider: p.id}) }}">adaugă</a></small>
+        </h2>
+        <table class="table">
+            <thead>
             <tr>
                 <th>Furnizor</th>
                 <th>Categorie</th>
@@ -17,29 +25,27 @@
                 <th>Data</th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
-        {% for merchandise in merchandises %}
-            <tr>
-                <td>{{ merchandise.provider }}</td>
-                <td>{{ merchandise.category }}</td>
-                <td>{{ merchandise.name }}</td>
-                <td>{{ merchandise.amount }}</td>
-                <td>{{ merchandise.enterPrice }}</td>
-                <td>{{ merchandise.exitPrice }}</td>
-                <td>{{ merchandise.date ? merchandise.date|date('Y-m-d') : '' }}</td>
-                <td>
-                    <a href="{{ path('merchandise_show', {'id': merchandise.id}) }}">show</a>
-                    <a href="{{ path('merchandise_edit', {'id': merchandise.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('merchandise_new') }}">Create new</a>
+            </thead>
+            <tbody>
+            {% for merchandise in p.merchandises %}
+                <tr>
+                    <td>{{ merchandise.provider }}</td>
+                    <td>{{ merchandise.category }}</td>
+                    <td>{{ merchandise.name }}</td>
+                    <td>{{ merchandise.amount }}</td>
+                    <td>{{ merchandise.enterPrice }}</td>
+                    <td>{{ merchandise.exitPrice }}</td>
+                    <td>{{ merchandise.date ? merchandise.date|date('Y-m-d') : '' }}</td>
+                    <td>
+                        <a href="{{ path('merchandise_edit', {'id': merchandise.id}) }}">edit</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">no records found</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% endfor %}
 {% endblock %}

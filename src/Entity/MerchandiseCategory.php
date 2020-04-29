@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\DeleteTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,6 +18,7 @@ class MerchandiseCategory
 {
     use IdTrait;
     use NameTrait;
+    use DeleteTrait;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Merchandise", mappedBy="category")

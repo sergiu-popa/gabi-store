@@ -1,26 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}MerchandiseCategory index{% endblock %}
+{% block title %}Categorii marfa{% endblock %}
 
 {% block body %}
-    <h1>MerchandiseCategory index</h1>
+    <h1>Categorii marfa</h1>
 
     <table class="table">
         <thead>
             <tr>
                 <th>Id</th>
                 <th>Name</th>
+                <th>Merchandise</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for merchandise_category in merchandise_categories %}
+        {% for merchandise in merchandise_categories %}
             <tr>
-                <td>{{ merchandise_category.id }}</td>
-                <td>{{ merchandise_category.name }}</td>
+                <td>{{ merchandise['category'].id }}</td>
+                <td>{{ merchandise['category'].name }}</td>
+                <td>{{ merchandise.total }}</td>
                 <td>
-                    <a href="{{ path('merchandise_category_show', {'id': merchandise_category.id}) }}">show</a>
-                    <a href="{{ path('merchandise_category_edit', {'id': merchandise_category.id}) }}">edit</a>
+                    <a href="{{ path('merchandise_category_edit', {'id': merchandise['category'].id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}

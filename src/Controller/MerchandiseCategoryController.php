@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\MerchandiseCategory;
 use App\Form\MerchandiseCategoryType;
 use App\Repository\MerchandiseCategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MerchandiseCategoryController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="merchandise_category_index", methods={"GET"})
      */
@@ -35,9 +44,8 @@ class MerchandiseCategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($merchandiseCategory);
-            $entityManager->flush();
+            $this->em->persist($merchandiseCategory);
+            $this->em->flush();
 
             return $this->redirectToRoute('merchandise_category_index');
         }
@@ -45,16 +53,6 @@ class MerchandiseCategoryController extends AbstractController
         return $this->render('merchandise_category/new.html.twig', [
             'merchandise_category' => $merchandiseCategory,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="merchandise_category_show", methods={"GET"})
-     */
-    public function show(MerchandiseCategory $merchandiseCategory): Response
-    {
-        return $this->render('merchandise_category/show.html.twig', [
-            'merchandise_category' => $merchandiseCategory,
         ]);
     }
 
@@ -67,7 +65,7 @@ class MerchandiseCategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('merchandise_category_index');
         }
@@ -84,9 +82,10 @@ class MerchandiseCategoryController extends AbstractController
     public function delete(Request $request, MerchandiseCategory $merchandiseCategory): Response
     {
         if ($this->isCsrfTokenValid('delete'.$merchandiseCategory->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($merchandiseCategory);
-            $entityManager->flush();
+            $merchandiseCategory->delete($this->getUser());
+            $this->em->flush();
+
+            $this->addFlash('success', 'Stergere cu success.');
         }
 
         return $this->redirectToRoute('merchandise_category_index');

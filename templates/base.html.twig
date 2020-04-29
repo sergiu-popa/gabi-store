@@ -6,6 +6,14 @@
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
+        <ul style="list-style-type: none;">
+            <li style="display: inline-block"><a href="#">Foaia zilei</a></li>
+            <li style="display: inline-block"><a href="#">Foaia lunii</a></li>
+            <li style="display: inline-block"><a href="{{ path('merchandise_index')}}">Intrare marfa</a></li>
+            <li style="display: inline-block"><a href="#">Furnizori</a></li>
+            <li style="display: inline-block"><a href="#">Rapoarte</a></li>
+            <li style="display: inline-block"><a href="#" title="Move inside foaia zilei la iesire">Sabloane</a></li>
+        </ul>
         {% block body %}{% endblock %}
         {% block javascripts %}{% endblock %}
     </body>

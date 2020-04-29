@@ -9,7 +9,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method MerchandiseCategory|null find($id, $lockMode = null, $lockVersion = null)
  * @method MerchandiseCategory|null findOneBy(array $criteria, array $orderBy = null)
- * @method MerchandiseCategory[]    findAll()
  * @method MerchandiseCategory[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class MerchandiseCategoryRepository extends ServiceEntityRepository
@@ -19,32 +18,19 @@ class MerchandiseCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, MerchandiseCategory::class);
     }
 
-    // /**
-    //  * @return MerchandiseCategory[] Returns an array of MerchandiseCategory objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+      * @return MerchandiseCategory[] Returns an array of MerchandiseCategory objects
+      */
+    public function findAll()
     {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('m.id', 'ASC')
-            ->setMaxResults(10)
+        return $this->createQueryBuilder('c')
+            ->select('c as category, COUNT(m) as total')
+            ->leftJoin('c.merchandise', 'm')
+            ->andWhere('c.deletedAt IS NULL')
+            ->orderBy('c.name', 'ASC')
+            ->groupBy('c.id')
             ->getQuery()
             ->getResult()
         ;
     }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?MerchandiseCategory
-    {
-        return $this->createQueryBuilder('m')
-            ->andWhere('m.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

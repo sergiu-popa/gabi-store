@@ -4,7 +4,8 @@ namespace App\Controller;
 
 use App\Entity\Merchandise;
 use App\Form\MerchandiseType;
-use App\Repository\MerchandiseRepository;
+use App\Manager\MerchandiseManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,29 +16,35 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MerchandiseController extends AbstractController
 {
-    /**
-     * @Route("/", name="merchandise_index", methods={"GET"})
-     */
-    public function index(MerchandiseRepository $merchandiseRepository): Response
+    /** @var MerchandiseManager */
+    private $manager;
+
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(MerchandiseManager $manager, EntityManagerInterface $em)
     {
-        return $this->render('merchandise/index.html.twig', [
-            'merchandises' => $merchandiseRepository->findAll(),
-        ]);
+        $this->manager = $manager;
+        $this->em = $em;
     }
 
+    // TODO render form with provider already selected, besides global form without any provider
+    // TODO support collection of form and process it using Collections
     /**
      * @Route("/new", name="merchandise_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
-        $merchandise = new Merchandise();
-        $form = $this->createForm(MerchandiseType::class, $merchandise);
+        $merchandise = new Merchandise($request->query->get('date'));
+
+        $form = $this->createForm(MerchandiseType::class, $merchandise, [
+            'provider' => $request->query->get('provider')
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($merchandise);
-            $entityManager->flush();
+            $this->em->persist($merchandise);
+            $this->em->flush();
 
             return $this->redirectToRoute('merchandise_index');
         }
@@ -49,12 +56,14 @@ class MerchandiseController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="merchandise_show", methods={"GET"})
+     * @Route("/{date}", name="merchandise_index", methods={"GET"})
      */
-    public function show(Merchandise $merchandise): Response
+    public function index($date = null): Response
     {
-        return $this->render('merchandise/show.html.twig', [
-            'merchandise' => $merchandise,
+        $date = new \DateTime($date ?? 'now');
+
+        return $this->render('merchandise/index.html.twig', [
+            'providers' => $this->manager->findForDay($date),
         ]);
     }
 
@@ -67,7 +76,7 @@ class MerchandiseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('merchandise_index');
         }
@@ -84,9 +93,10 @@ class MerchandiseController extends AbstractController
     public function delete(Request $request, Merchandise $merchandise): Response
     {
         if ($this->isCsrfTokenValid('delete'.$merchandise->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($merchandise);
-            $entityManager->flush();
+            $merchandise->delete($this->getUser());
+            $this->em->flush();
+
+            $this->addFlash('success', 'Stergere cu success.');
         }
 
         return $this->redirectToRoute('merchandise_index');
