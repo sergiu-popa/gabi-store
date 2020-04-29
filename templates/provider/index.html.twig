@@ -1,35 +1,34 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Provider index{% endblock %}
+{% block title %}Furnizori{% endblock %}
 
 {% block body %}
-    <h1>Provider index</h1>
+    <h1>Furnizori</h1>
+
+    <a href="{{ path('debt_index') }}">Datorii</a> / Furnizori
 
     <table class="table">
         <thead>
             <tr>
-                <th>Cui</th>
-                <th>Town</th>
-                <th>PhoneNumber</th>
+                <th>Nume</th>
                 <th>Agent</th>
-                <th>MobileNumber</th>
-                <th>Id</th>
-                <th>Name</th>
-                <th>actions</th>
+                <th>Mobil</th>
+                <th>CUI</th>
+                <th>Town</th>
+                <th>Telefon</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         {% for provider in providers %}
             <tr>
+                <td>{{ provider.name }}</td>
+                <td>{{ provider.agent }}</td>
+                <td>{{ provider.mobileNumber }}</td>
                 <td>{{ provider.cui }}</td>
                 <td>{{ provider.town }}</td>
                 <td>{{ provider.phoneNumber }}</td>
-                <td>{{ provider.agent }}</td>
-                <td>{{ provider.mobileNumber }}</td>
-                <td>{{ provider.id }}</td>
-                <td>{{ provider.name }}</td>
                 <td>
-                    <a href="{{ path('provider_show', {'id': provider.id}) }}">show</a>
                     <a href="{{ path('provider_edit', {'id': provider.id}) }}">edit</a>
                 </td>
             </tr>

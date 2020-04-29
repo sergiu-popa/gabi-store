@@ -85,7 +85,7 @@ class MerchandiseCategoryController extends AbstractController
             $merchandiseCategory->delete($this->getUser());
             $this->em->flush();
 
-            $this->addFlash('success', 'Stergere cu success.');
+            $this->addFlash('success', 'Categoria a fost stearsa.');
         }
 
         return $this->redirectToRoute('merchandise_category_index');

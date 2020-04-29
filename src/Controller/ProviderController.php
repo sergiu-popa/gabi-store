@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Provider;
 use App\Form\ProviderType;
 use App\Repository\ProviderRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProviderController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="provider_index", methods={"GET"})
      */
@@ -35,9 +44,8 @@ class ProviderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($provider);
-            $entityManager->flush();
+            $this->em->persist($provider);
+            $this->em->flush();
 
             return $this->redirectToRoute('provider_index');
         }
@@ -84,9 +92,10 @@ class ProviderController extends AbstractController
     public function delete(Request $request, Provider $provider): Response
     {
         if ($this->isCsrfTokenValid('delete'.$provider->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($provider);
-            $entityManager->flush();
+            $provider->delete($this->getUser());
+            $this->em->flush();
+
+            $this->addFlash('success', 'Furnizorul a fost sters cu success.');
         }
 
         return $this->redirectToRoute('provider_index');

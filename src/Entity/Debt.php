@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
+use App\Entity\Traits\DeleteTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\PaidPartiallyTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -19,10 +20,14 @@ class Debt
     use AmountTrait;
     use DateTrait;
     use PaidPartiallyTrait;
+    use DeleteTrait;
 
     public function __construct()
     {
         $this->debtPayments = new ArrayCollection();
+        $this->date = new \DateTime();
+        $this->paidFully = false;
+        $this->paidPartially = false;
     }
 
     /**

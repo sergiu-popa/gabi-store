@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\DeleteTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -15,6 +16,7 @@ class Provider
 {
     use IdTrait;
     use NameTrait;
+    use DeleteTrait;
 
     public function __construct()
     {

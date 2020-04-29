@@ -1,31 +1,28 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Debt index{% endblock %}
+{% block title %}Datorii{% endblock %}
 
 {% block body %}
-    <h1>Debt index</h1>
+    <h1>Datorii</h1>
+
+    Datorii / <a href="{{ path('provider_index') }}">Furnizori</a>
 
     <table class="table">
         <thead>
             <tr>
-                <th>PaidFully</th>
-                <th>Id</th>
+                <th>Furnizor</th>
                 <th>Amount</th>
                 <th>Date</th>
-                <th>PaidPartially</th>
-                <th>actions</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
         {% for debt in debts %}
             <tr>
-                <td>{{ debt.paidFully ? 'Yes' : 'No' }}</td>
-                <td>{{ debt.id }}</td>
+                <td>{{ debt.provider.name }}</td>
                 <td>{{ debt.amount }}</td>
                 <td>{{ debt.date ? debt.date|date('Y-m-d') : '' }}</td>
-                <td>{{ debt.paidPartially ? 'Yes' : 'No' }}</td>
                 <td>
-                    <a href="{{ path('debt_show', {'id': debt.id}) }}">show</a>
                     <a href="{{ path('debt_edit', {'id': debt.id}) }}">edit</a>
                 </td>
             </tr>

@@ -6,6 +6,7 @@ use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\PaidPartiallyTrait;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -17,6 +18,12 @@ class DebtPayment
     use AmountTrait;
     use DateTrait;
     use PaidPartiallyTrait;
+
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+        $this->paidPartially = false;
+    }
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Debt", inversedBy="debtPayments")

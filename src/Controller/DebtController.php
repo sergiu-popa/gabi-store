@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Debt;
 use App\Form\DebtType;
 use App\Repository\DebtRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DebtController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="debt_index", methods={"GET"})
      */
@@ -35,9 +44,8 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($debt);
-            $entityManager->flush();
+            $this->em->persist($debt);
+            $this->em->flush();
 
             return $this->redirectToRoute('debt_index');
         }
@@ -45,16 +53,6 @@ class DebtController extends AbstractController
         return $this->render('debt/new.html.twig', [
             'debt' => $debt,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="debt_show", methods={"GET"})
-     */
-    public function show(Debt $debt): Response
-    {
-        return $this->render('debt/show.html.twig', [
-            'debt' => $debt,
         ]);
     }
 
@@ -84,9 +82,10 @@ class DebtController extends AbstractController
     public function delete(Request $request, Debt $debt): Response
     {
         if ($this->isCsrfTokenValid('delete'.$debt->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($debt);
-            $entityManager->flush();
+            $debt->delete($this->getUser());
+            $this->em->flush();
+
+            $this->addFlash('success', 'Datoria a fost stearsa cu success.');
         }
 
         return $this->redirectToRoute('debt_index');

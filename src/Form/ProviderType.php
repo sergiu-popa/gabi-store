@@ -12,12 +12,12 @@ class ProviderType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('name')
+            ->add('agent')
+            ->add('mobileNumber')
             ->add('cui')
             ->add('town')
             ->add('phoneNumber')
-            ->add('agent')
-            ->add('mobileNumber')
-            ->add('name')
         ;
     }
 
