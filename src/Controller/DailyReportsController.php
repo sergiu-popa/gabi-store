@@ -16,10 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 class DailyReportsController extends AbstractController
 {
     /**
-     * @Route("/reports/daily/{year}/{month}", name="reports_sales", requirements={"year":"\d+"})
+     * @Route("/reports/daily/{year}/{month}", name="report_sales", requirements={"year":"\d+"})
      */
-    public function sales($year = '2020', $month = '04')
+    public function sales($year = null, $month = null)
     {
+        $year = $year ?? date('Y');
+        $month = $month ?? date('m');
+
         //$month = '04'; // TODO aprilie -> 04
         $em = $this->getDoctrine()->getManager();
 
@@ -38,13 +41,13 @@ class DailyReportsController extends AbstractController
         $month->addItemsInEachDay('merchandisePayments', $merchandisePayments);
 
         // TODO chart
-        return $this->render('reports/sales.html.twig', [
+        return $this->render('reports/daily/sales.html.twig', [
             'month' => $month
         ]);
     }
 
     /**
-     * @Route("/reports/daily/expenses/{year}/{month}", name="reports_expenses")
+     * @Route("/reports/daily/expenses/{year}/{month}", name="report_expenses")
      */
     public function expenses($year = '2020', $month = '04')
     {
@@ -56,17 +59,21 @@ class DailyReportsController extends AbstractController
         $month->addExpensesInEachDay($expenses);
 
         // TODO chart
-        return $this->render('reports/expenses.html.twig', [
+        return $this->render('reports/daily/expenses.html.twig', [
             'categories' => $categories,
             'month' => $month
         ]);
     }
 
     /**
-     * @Route("/reports/daily/providers/{provider}/{year}/{month}", name="reports_providers")
+     * @Route("/reports/daily/providers/{provider}/{year}/{month}", name="report_providers")
      */
-    public function payments($provider, $year = '2020', $month = '04')
+    public function payments($provider = null, $year = null, $month = null)
     {
+        $year = $year ?? date('Y');
+        $month = $month ?? date('m');
+
+        // TODO search box
         $em = $this->getDoctrine()->getManager();
         $provider = $em->getRepository(Provider::class)->find($provider);
         $merchandisePayments = $em->getRepository(MerchandisePayment::class)
@@ -76,21 +83,21 @@ class DailyReportsController extends AbstractController
         $month->addItemsInEachDay('merchandisePayments', $merchandisePayments);
 
         // TODO chart
-        return $this->render('reports/providers.html.twig', [
+        return $this->render('reports/daily/providers.html.twig', [
             'month' => $month
         ]);
     }
 
     /**
-     * @Route("/reports/daily/merchandise/{name}", name="reports_merchandise")
+     * @Route("/reports/daily/merchandise/{name}", name="report_merchandise")
      */
-    public function merchandise($name)
+    public function merchandise($name = null)
     {
         $em = $this->getDoctrine()->getManager();
         $merchandise = $em->getRepository(Merchandise::class)->searchMerchandise($name);
 
-        // TODO pagination
-        return $this->render('reports/merchandise.html.twig', [
+        // TODO search and pagination
+        return $this->render('reports/daily/merchandise.html.twig', [
             'merchandise' => $merchandise
         ]);
     }

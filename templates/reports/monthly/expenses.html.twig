@@ -18,7 +18,7 @@
             <tr>
                 <th scope="col">Luna</th>
                 {% for c in categories %}
-                    <th>{{ c.name }}</th>
+                    <th>{{ c['category'].name }}</th>
                 {% endfor %}
             </tr>
             </thead>
@@ -27,7 +27,7 @@
                 <tr>
                     <th scope="row">{{ month }}</th>
                     {% for c in categories %}
-                        <td>{{ merchandise[month] is defined ? merchandise[month][c.id]|number_format(2, '.', ' ') : '-' }}</td>
+                        <td>{{ merchandise[month] is defined ? merchandise[month][c['category'].id]|number_format(2, '.', ' ') : '-' }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}

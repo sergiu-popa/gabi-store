@@ -13,10 +13,12 @@ use Symfony\Component\Routing\Annotation\Route;
 class MonthlyReportController extends AbstractController
 {
     /**
-     * @Route("/reports/monthly/{year}", name="monthly_report")
+     * @Route("/reports/monthly/{year}", name="monthly_report", requirements={"year":"\d+"})
      */
-    public function report($year)
+    public function report($year = null)
     {
+        $year = $year ?? (int) date('Y');
+
         // TODO refactor this to month name and change in repositories, than translate
         $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
         $data = [];
@@ -49,8 +51,10 @@ class MonthlyReportController extends AbstractController
     /**
      * @Route("/reports/monthly/expenses/{year}", name="monthly_expenses_report")
      */
-    public function expenses($year)
+    public function expenses($year = null)
     {
+        $year = $year ?? (int) date('Y');
+
         $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
 
         $em = $this->getDoctrine()->getManager();
