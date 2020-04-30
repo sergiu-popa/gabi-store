@@ -32,7 +32,9 @@
                 <a href="{{ path('debt_index') }}" class="nav-link">Furnizori</a>
             </li>
 
-            <!--<li style="display: inline-block"><a href="#" title="Move inside foaia zilei la iesire">Sabloane</a></li>-->
+            <li class="nav-item {{ route == 'expense_index' ? 'active' }}">
+                <a href="{{ path('expense_index') }}" class="nav-link">Ieșiri</a>
+            </li>
 
             <li class="nav-item dropdown {{ 'report' in route ? 'active' }}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -46,6 +48,7 @@
                     <a class="dropdown-item {{ route == 'report_merchandise' ? 'disabled' }}" href="{{ path('report_merchandise') }}">Marfă</a>
                     <div class="dropdown-divider"></div>
 
+                    {% if is_granted('ROLE_ADMIN') %}
                     <h6 class="dropdown-header">Pe luni</h6>
                     <a class="dropdown-item {{ route == 'monthly_report' ? 'disabled' }}" href="{{ path('monthly_report') }}">General</a>
                     <a class="dropdown-item {{ route == 'monthly_expenses_report' ? 'disabled' }}" href="{{ path('monthly_expenses_report') }}">Categorii ieșiri</a>
@@ -54,6 +57,7 @@
                     <h6 class="dropdown-header">Pe ani</h6>
                     <a class="dropdown-item {{ route == 'annual_report' ? 'disabled' }}" href="{{ path('annual_report') }}">General</a>
                     <a class="dropdown-item {{ route == 'annual_expenses_report' ? 'disabled' }}" href="{{ path('annual_expenses_report') }}">Categorii ieșiri</a>
+                    {% endif %}
                 </div>
             </li>
         </ul>

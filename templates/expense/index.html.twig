@@ -1,9 +1,11 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Expense index{% endblock %}
+{% block title %}Iesiri{% endblock %}
 
 {% block body %}
     <h1>Expense index</h1>
+
+    Iesiri {% if is_granted('ROLE_ADMIN') %}/ <a href="{{ path('expense_category_index') }}">Categorii</a>{% endif %}
 
     <table class="table">
         <thead>

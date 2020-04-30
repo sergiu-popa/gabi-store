@@ -36,6 +36,11 @@ class User implements UserInterface
      */
     private $password;
 
+    public function isAdmin(): bool
+    {
+        return \in_array('ROLE_ADMIN', $this->roles, true);
+    }
+
     public function getId(): ?int
     {
         return $this->id;
