@@ -20,6 +20,7 @@ class BalanceController extends AbstractController
      */
     public function index(BalanceRepository $balanceRepository): Response
     {
+        // TODO pagination
         return $this->render('balance/index.html.twig', [
             'balances' => $balanceRepository->findAll(),
         ]);

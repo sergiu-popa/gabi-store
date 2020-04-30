@@ -2,9 +2,10 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\DeleteTrait;
+use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
+use App\Util\SnapshotableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -12,11 +13,11 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProviderRepository")
  */
-class Provider
+class Provider implements \JsonSerializable, SnapshotableInterface
 {
     use IdTrait;
     use NameTrait;
-    use DeleteTrait;
+    use DeletedAtTrait;
 
     public function __construct()
     {
@@ -65,12 +66,29 @@ class Provider
      */
     private $merchandisePayments;
 
+    public function jsonSerialize()
+    {
+        return [
+            'nume' => $this->name,
+            'agent' => $this->agent,
+            'mobil' => $this->mobileNumber,
+            'CUI' => $this->cui,
+            'localitate' => $this->town,
+            'telefon' => $this->phoneNumber,
+        ];
+    }
+
+    public function __toString()
+    {
+        return $this->name;
+    }
+
     public function getCui(): ?string
     {
         return $this->cui;
     }
 
-    public function setCui(string $cui): self
+    public function setCui(?string $cui): self
     {
         $this->cui = $cui;
 
@@ -216,10 +234,5 @@ class Provider
         }
 
         return $this;
-    }
-
-    public function __toString()
-    {
-        return $this->name;
     }
 }

@@ -15,7 +15,6 @@ class DebtPaymentType extends AbstractType
             ->add('amount')
             ->add('date')
             ->add('paidPartially')
-            ->add('debt')
         ;
     }
 

@@ -11,7 +11,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method Money|null find($id, $lockMode = null, $lockVersion = null)
  * @method Money|null findOneBy(array $criteria, array $orderBy = null)
- * @method Money[]    findAll()
  * @method Money[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class MoneyRepository extends ServiceEntityRepository
@@ -25,6 +24,15 @@ class MoneyRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Money::class);
         $this->conn = $registry->getConnection();
+    }
+
+    public function findAll()
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.deletedAt IS NULL')
+            ->orderBy('m.date', 'DESC')
+            ->getQuery()
+            ->getResult();
     }
 
     /**

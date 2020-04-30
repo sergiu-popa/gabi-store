@@ -4,9 +4,10 @@ namespace App\Entity;
 
 use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
-use App\Entity\Traits\DeleteTrait;
+use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\PaidPartiallyTrait;
+use App\Util\SnapshotableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -14,13 +15,13 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\DebtRepository")
  */
-class Debt
+class Debt implements \JsonSerializable, SnapshotableInterface
 {
     use IdTrait;
     use AmountTrait;
     use DateTrait;
     use PaidPartiallyTrait;
-    use DeleteTrait;
+    use DeletedAtTrait;
 
     public function __construct()
     {
@@ -45,6 +46,18 @@ class Debt
      * @ORM\OneToMany(targetEntity="App\Entity\DebtPayment", mappedBy="debt")
      */
     private $debtPayments;
+
+    public function jsonSerialize()
+    {
+        return [
+            'furnizor' => $this->provider->getName(),
+            'cantitate' => $this->amount,
+            'date' => $this->date->format('Y-m-d'),
+            'platit complet' => $this->paidFully,
+            'platit partial' => $this->paidPartially,
+            'plati' => $this->debtPayments->count()
+        ];
+    }
 
     public function getProvider(): ?Provider
     {

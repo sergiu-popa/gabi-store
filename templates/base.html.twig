@@ -36,6 +36,12 @@
                 <a href="{{ path('expense_index') }}" class="nav-link">Ieșiri</a>
             </li>
 
+            {% if is_granted('ROLE_ADMIN') %}
+            <li class="nav-item {{ route == 'log' ? 'active' }}">
+                <a href="{{ path('log') }}" class="nav-link">Istoric</a>
+            </li>
+            {% endif %}
+
             <li class="nav-item dropdown {{ 'report' in route ? 'active' }}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Rapoarte

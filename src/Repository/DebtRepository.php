@@ -24,6 +24,7 @@ class DebtRepository extends ServiceEntityRepository
             ->select('d, p')
             ->join('d.provider', 'p')
             ->where('d.paidFully = :paid')
+            ->andWhere('d.deletedAt IS NULL')
             ->setParameter('paid', false)
             ->orderBy('d.date', 'DESC')
             ->getQuery()

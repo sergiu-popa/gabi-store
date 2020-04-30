@@ -10,7 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method MerchandisePayment|null find($id, $lockMode = null, $lockVersion = null)
  * @method MerchandisePayment|null findOneBy(array $criteria, array $orderBy = null)
- * @method MerchandisePayment[]    findAll()
  * @method MerchandisePayment[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class MerchandisePaymentRepository extends ServiceEntityRepository
@@ -19,6 +18,15 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
 
     /** @var Connection */
     private $conn;
+
+    public function findAll()
+    {
+        return $this->createQueryBuilder('p')
+            ->andWhere('p.deletedAt IS NULL')
+            ->orderBy('p.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 
     public function __construct(ManagerRegistry $registry)
     {

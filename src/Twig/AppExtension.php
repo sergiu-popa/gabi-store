@@ -11,7 +11,84 @@ class AppExtension extends AbstractExtension
     {
         return array(
             new TwigFilter('dash', [$this, 'dash']),
+            new TwigFilter('snapshot_verb', [$this, 'snapshotVerb']),
+            new TwigFilter('snapshot_content', [$this, 'snapshotContent']),
+            new TwigFilter('snapshot_type', [$this, 'snapshotType']),
         );
+    }
+
+    /**
+     * Returns the verb for the snapshot type.
+     */
+    public function snapshotVerb(string $type)
+    {
+        $verbs = [
+            'create' => 'creat',
+            'update' => 'actualizat',
+            'delete' => 'șters'
+        ];
+
+        return $verbs[$type];
+    }
+
+    /**
+     * Returns the translated content for a snapshot.
+     */
+    public function snapshotContent(string $json)
+    {
+        return str_replace(
+            [
+                '"',
+                '{', '}',
+                'amount',
+                'name',
+                'provider',
+                'date',
+                'paidPartially',
+                'paidTotally',
+                'true',
+                'false',
+                'enterPrice',
+                'exitPrice'
+            ],
+            [
+                '',
+                '',
+                '',
+                'cantitate',
+                'nume',
+                'funizor',
+                'data',
+                'platit partial',
+                'platit total',
+                'da',
+                'nu',
+                'pret intare',
+                'pret iesire'
+            ],
+            $json
+        );
+    }
+
+    /**
+     * Returns the translated entity type for a snapshot.
+     */
+    public function snapshotType(string $className)
+    {
+        $type = substr($className, strrpos($className, '\\') + 1);
+
+        $types = [
+            'Balance' => 'sold',
+            'Debt' => 'datoria',
+            'DebtPayment' => 'plata marfă',
+            'Expense' => 'ieșire',
+            'Merchandise' => 'intrare marfă',
+            'MerchandiseCategory' => 'categorie intrare marfă',
+            'Money' => 'monetar',
+            'Provider' => 'furnizor',
+        ];
+
+        return $types[$type];
     }
 
     /**

@@ -10,7 +10,6 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method Expense|null find($id, $lockMode = null, $lockVersion = null)
  * @method Expense|null findOneBy(array $criteria, array $orderBy = null)
- * @method Expense[]    findAll()
  * @method Expense[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ExpenseRepository extends ServiceEntityRepository
@@ -24,6 +23,15 @@ class ExpenseRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Expense::class);
         $this->conn = $registry->getConnection();
+    }
+
+    public function findAll()
+    {
+        return $this->createQueryBuilder('e')
+            ->orderBy('e.date', 'DESC')
+            ->setMaxResults(25)
+            ->getQuery()
+            ->getResult();
     }
 
     /**

@@ -5,28 +5,30 @@ namespace App\Entity;
 use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
-use App\Entity\Traits\DeleteTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\SnapshotsTrait;
+use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MerchandiseRepository")
  */
-class Merchandise
+class Merchandise implements \JsonSerializable, SnapshotableInterface
 {
     use IdTrait;
     use NameTrait;
     use DateTrait;
     use AmountTrait;
-    use DeleteTrait;
+    use DeletedAtTrait;
+    use SnapshotsTrait;
 
     public function __construct($date = null, $provider = null)
     {
         $this->date = new \DateTime($date ?? 'now');
 
-        if($this->provider) {
+        if ($this->provider) {
             $this->provider = $provider;
         }
     }
@@ -55,6 +57,18 @@ class Merchandise
      * @ORM\JoinColumn(nullable=false)
      */
     private $category;
+
+    public function jsonSerialize()
+    {
+        return [
+            'furnizor' => $this->provider->getName(),
+            'categorie' => $this->category->getName(),
+            'nume' => $this->name,
+            'cantitate' => $this->amount,
+            'pret intrare' => $this->enterPrice,
+            'pret iesire' => $this->exitPrice
+        ];
+    }
 
     public function getTotalEnterValue()
     {

@@ -4,20 +4,28 @@ namespace App\Entity;
 
 use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
+use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
+use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MerchandisePaymentRepository")
  */
-class MerchandisePayment
+class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
 {
-    public const TYPE_BILL = 1;
-    public const TYPE_INVOICE = 2;
+    public const TYPE_BILL = 1; // bonuri
+    public const TYPE_INVOICE = 2; // facturi
 
     use IdTrait;
     use AmountTrait;
     use DateTrait;
+    use DeletedAtTrait;
+
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
 
     /**
      * @ORM\Column(type="smallint")
@@ -29,6 +37,17 @@ class MerchandisePayment
      * @ORM\JoinColumn(nullable=false)
      */
     private $provider;
+
+    public function jsonSerialize()
+    {
+        return [
+            'provider' => $this->provider->getName(),
+            'amount' => $this->amount,
+            'date' => $this->date->format('Y-m-d'),
+            'type' => $this->type,
+            'type_desc' => $this->type === self::TYPE_BILL ? 'bon' : 'factura'
+        ];
+    }
 
     public function withInvoice()
     {
