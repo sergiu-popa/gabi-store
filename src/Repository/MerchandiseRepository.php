@@ -28,7 +28,25 @@ class MerchandiseRepository extends ServiceEntityRepository
     /**
      * @return Merchandise[]
      */
-    public function findAll()
+    public function findByDay(\DateTime $date): array
+    {
+        // TODO create base query builder
+        return $this->createQueryBuilder('m')
+            ->select('m, p, c')
+            ->join('m.provider', 'p')
+            ->join('m.category', 'c')
+            ->where('p.deletedAt IS NULL')
+            ->andWhere('m.date = :date')
+            ->setParameter('date', $date)
+            ->orderBy('m.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @return Merchandise[]
+     */
+    public function findAll(): array
     {
         // TODO pagination please
         return $this->createQueryBuilder('m')
@@ -156,18 +174,5 @@ class MerchandiseRepository extends ServiceEntityRepository
         }
 
         return $data;
-    }
-
-    public function findByDay(\DateTimeInterface $date): array
-    {
-        return $this->createQueryBuilder('m')
-            ->select('m, p, c')
-            ->join('m.provider', 'p')
-            ->join('m.category', 'c')
-            ->where('m.date = :date')
-            ->setParameter('date', $date->format('Y-m-d'))
-            ->orderBy('m.name', 'ASC')
-            ->getQuery()
-            ->getResult();
     }
 }

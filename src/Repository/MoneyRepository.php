@@ -26,10 +26,12 @@ class MoneyRepository extends ServiceEntityRepository
         $this->conn = $registry->getConnection();
     }
 
-    public function findAll()
+    public function findByDay(\DateTime $date)
     {
         return $this->createQueryBuilder('m')
-            ->andWhere('m.deletedAt IS NULL')
+            ->where('m.deletedAt IS NULL')
+            ->andWhere('m.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('m.date', 'DESC')
             ->getQuery()
             ->getResult();

@@ -10,14 +10,14 @@
 <body>
 {% set route = app.request.attributes.get('_route') %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ path('day') }}">Magazin</a>
+    <a class="navbar-brand" href="{{ path('dashboard') }}">Magazin</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-            <li class="nav-item {{ route == 'day' ? 'active' }}">
-                <a class="nav-link" href="{{ path('day') }}">Foaia zilei <span class="sr-only">(curent)</span></a>
+            <li class="nav-item {{ route == 'dashboard' ? 'active' }}">
+                <a class="nav-link" href="{{ path('dashboard') }}">Foaia zilei <span class="sr-only">(curent)</span></a>
             </li>
 
             <li class="nav-item {{ route == 'monthly_situation' ? 'active' }}">
@@ -32,8 +32,8 @@
                 <a href="{{ path('debt_index') }}" class="nav-link">Furnizori</a>
             </li>
 
-            <li class="nav-item {{ route == 'expense_index' ? 'active' }}">
-                <a href="{{ path('expense_index') }}" class="nav-link">Ieșiri</a>
+            <li class="nav-item {{ route == 'expense_category_index' ? 'active' }}">
+                <a href="{{ path('expense_category_index') }}" class="nav-link">Categorii ieșiri</a>
             </li>
 
             {% if is_granted('ROLE_ADMIN') %}

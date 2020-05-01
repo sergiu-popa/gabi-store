@@ -19,10 +19,14 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
     /** @var Connection */
     private $conn;
 
-    public function findAll()
+    public function findByDay(\DateTime $date)
     {
         return $this->createQueryBuilder('p')
-            ->andWhere('p.deletedAt IS NULL')
+            ->select('p, provider')
+            ->join('p.provider', 'provider')
+            ->where('p.deletedAt IS NULL')
+            ->andWhere('p.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('p.date', 'DESC')
             ->getQuery()
             ->getResult();

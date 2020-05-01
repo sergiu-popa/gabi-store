@@ -3,6 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Day;
+use App\Entity\Expense;
+use App\Entity\Merchandise;
+use App\Entity\MerchandisePayment;
+use App\Entity\Money;
 use App\Form\DayType;
 use App\Repository\DayRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -21,9 +25,9 @@ class DayController extends AbstractController
     }
 
     /**
-     * @Route("/", name="day")
+     * @Route("/", name="dashboard")
      */
-    public function day(DayRepository $dayRepository, Request $request)
+    public function dashboard(DayRepository $dayRepository, Request $request)
     {
         $day = $dayRepository->findByDate();
 
@@ -44,6 +48,29 @@ class DayController extends AbstractController
         return $this->render('dashboard.html.twig', [
             'day' => $day,
             'form' => $form->createView()
+        ]);
+    }
+
+    public function day($date, $review = false)
+    {
+        $date = (new \DateTime($date))->setTime(0, 0, 0);
+        $em = $this->getDoctrine()->getManager();
+
+        // TODO calculate totals with collections, please
+        $totals = [];
+        $merchandise = $em->getRepository(Merchandise::class)->findByDay($date); // TODO group by provider?
+        $payments = $em->getRepository(MerchandisePayment::class)->findByDay($date);
+        $expenses = $em->getRepository(Expense::class)->findByDay($date);
+        $money = $em->getRepository(Money::class)->findByDay($date);
+
+        return $this->render('day.html.twig', [
+            'review' => $review,
+            'date' => $date,
+            'totals' => $totals,
+            'merchandise' => $merchandise,
+            'payments' => $payments,
+            'expenses' => $expenses,
+            'money' => $money
         ]);
     }
 }

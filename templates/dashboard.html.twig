@@ -3,15 +3,14 @@
 {% block title %}Foaia zilei{% endblock %}
 
 {% block body %}
-    {{ 'now'|roDate('EEEE')|capitalize }}, {{ 'now'|date("j") }} {{ 'now'|roDate('MMMM') }} {{ 'now'|date("H:i") }}
-
-    {# TODO arata filtru pentru selectie data #}
-    {# TODO situatia actuala boxes ca in Refactoring UI #}
-    <hr>
-
     {% if day %}
-        <p>show module for previous day, review and correct, then mark as revied</p>
-        <p>show module for current day</p>
+        {{ render(controller(
+            'App\\Controller\\DayController::day',
+            {
+                'date': day.isConfirmed ? 'now'|date('Y-m-d') : 'yesterday'|date('Y-m-d'),
+                'review': day.isConfirmed ? 'false' : 'true'
+            }
+        )) }}
     {% else %}
         {{ form_start(form) }}
 

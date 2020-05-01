@@ -46,6 +46,12 @@ class Day
     private $bills_100;
 
     /**
+     * @var bool
+     * @ORM\Column(type="boolean")
+     */
+    private $confirmed;
+
+    /**
      * @var \DateTime
      * @ORM\Column(type="datetime_immutable", nullable=true)
      */
@@ -59,6 +65,7 @@ class Day
         $this->author = $author;
         $this->bills_50 = 1;
         $this->bills_100 = 1;
+        $this->confirmed = false;
     }
 
     public function getStartedAt(): \DateTimeImmutable
@@ -92,5 +99,10 @@ class Day
     public function setBills100(int $bills_100): void
     {
         $this->bills_100 = $bills_100;
+    }
+
+    public function isConfirmed(): bool
+    {
+        return $this->confirmed;
     }
 }

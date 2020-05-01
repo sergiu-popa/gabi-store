@@ -1,0 +1,18 @@
+{{ date|roDate('EEEE')|capitalize }}, {{ date|date("j") }} {{ date|roDate('MMMM') }} {{ date|date("Y") }}
+
+    {# TODO arata filtru pentru selectie data if admin #}
+<hr>
+
+{% if review %}
+    <h2>Verifică toate acțiunile de ieri</h2>
+    <p>Dacă sesizezi erori, poți corecta datele.</p>
+{% endif %}
+
+{{ dump(merchandise) }}
+{{ dump(payments) }}
+{{ dump(expenses) }}
+{{ dump(money) }}
+
+{% if review %}
+    <p><a href="#" class="btn btn-primary" >Confirmă</a></p>
+{% endif %}

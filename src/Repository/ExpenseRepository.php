@@ -25,11 +25,15 @@ class ExpenseRepository extends ServiceEntityRepository
         $this->conn = $registry->getConnection();
     }
 
-    public function findAll()
+    public function findByDay(\DateTime $date)
     {
         return $this->createQueryBuilder('e')
+            ->select('e, c')
+            ->join('e.category', 'c')
+            ->where('e.deletedAt IS NULL')
+            ->andWhere('e.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('e.date', 'DESC')
-            ->setMaxResults(25)
             ->getQuery()
             ->getResult();
     }
