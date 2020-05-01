@@ -10,14 +10,14 @@
 <body>
 {% set route = app.request.attributes.get('_route') %}
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <a class="navbar-brand" href="{{ path('dashboard') }}">Magazin</a>
+    <a class="navbar-brand" href="{{ path('day') }}">Magazin</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
         <ul class="navbar-nav">
-            <li class="nav-item {{ route == 'dashboard' ? 'active' }}">
-                <a class="nav-link" href="{{ path('dashboard') }}">Foaia zilei <span class="sr-only">(curent)</span></a>
+            <li class="nav-item {{ route == 'day' ? 'active' }}">
+                <a class="nav-link" href="{{ path('day') }}">Foaia zilei <span class="sr-only">(curent)</span></a>
             </li>
 
             <li class="nav-item {{ route == 'monthly_situation' ? 'active' }}">
@@ -37,9 +37,9 @@
             </li>
 
             {% if is_granted('ROLE_ADMIN') %}
-            <li class="nav-item {{ route == 'log' ? 'active' }}">
-                <a href="{{ path('log') }}" class="nav-link">Istoric</a>
-            </li>
+                <li class="nav-item {{ route == 'log' ? 'active' }}">
+                    <a href="{{ path('log') }}" class="nav-link">Istoric</a>
+                </li>
             {% endif %}
 
             <li class="nav-item dropdown {{ 'report' in route ? 'active' }}">
@@ -55,22 +55,28 @@
                     <div class="dropdown-divider"></div>
 
                     {% if is_granted('ROLE_ADMIN') %}
-                    <h6 class="dropdown-header">Pe luni</h6>
-                    <a class="dropdown-item {{ route == 'monthly_report' ? 'disabled' }}" href="{{ path('monthly_report') }}">General</a>
-                    <a class="dropdown-item {{ route == 'monthly_expenses_report' ? 'disabled' }}" href="{{ path('monthly_expenses_report') }}">Categorii ieșiri</a>
-                    <div class="dropdown-divider"></div>
+                        <h6 class="dropdown-header">Pe luni</h6>
+                        <a class="dropdown-item {{ route == 'monthly_report' ? 'disabled' }}" href="{{ path('monthly_report') }}">General</a>
+                        <a class="dropdown-item {{ route == 'monthly_expenses_report' ? 'disabled' }}" href="{{ path('monthly_expenses_report') }}">Categorii ieșiri</a>
+                        <div class="dropdown-divider"></div>
 
-                    <h6 class="dropdown-header">Pe ani</h6>
-                    <a class="dropdown-item {{ route == 'annual_report' ? 'disabled' }}" href="{{ path('annual_report') }}">General</a>
-                    <a class="dropdown-item {{ route == 'annual_expenses_report' ? 'disabled' }}" href="{{ path('annual_expenses_report') }}">Categorii ieșiri</a>
+                        <h6 class="dropdown-header">Pe ani</h6>
+                        <a class="dropdown-item {{ route == 'annual_report' ? 'disabled' }}" href="{{ path('annual_report') }}">General</a>
+                        <a class="dropdown-item {{ route == 'annual_expenses_report' ? 'disabled' }}" href="{{ path('annual_expenses_report') }}">Categorii ieșiri</a>
                     {% endif %}
                 </div>
             </li>
         </ul>
     </div>
+
+    <!-- #TODO search form, mergi la masa, mergi la marfa & dropdown for user to logout (numele utilizatorului) -->
 </nav>
 
-{% block body %}{% endblock %}
+<div class="container pt-3">
+    {% block body %}{% endblock %}
+
+    {{ include('_messages.html.twig') }}
+</div>
 
 <script src="{{ asset('js/jquery-3.5.0.min.js') }}"></script>
 <script src="{{ asset('js/popper.min.js') }}"></script>

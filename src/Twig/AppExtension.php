@@ -7,9 +7,13 @@ use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
 {
+    /** @var string */
+    private $locale = 'ro';
+
     public function getFilters(): array
     {
         return array(
+            new TwigFilter('roDate', [$this, 'roDate'], ['needs_environment' => true]),
             new TwigFilter('dash', [$this, 'dash']),
             new TwigFilter('snapshot_verb', [$this, 'snapshotVerb']),
             new TwigFilter('snapshot_content', [$this, 'snapshotContent']),
@@ -37,35 +41,8 @@ class AppExtension extends AbstractExtension
     public function snapshotContent(string $json)
     {
         return str_replace(
-            [
-                '"',
-                '{', '}',
-                'amount',
-                'name',
-                'provider',
-                'date',
-                'paidPartially',
-                'paidTotally',
-                'true',
-                'false',
-                'enterPrice',
-                'exitPrice'
-            ],
-            [
-                '',
-                '',
-                '',
-                'cantitate',
-                'nume',
-                'funizor',
-                'data',
-                'platit partial',
-                'platit total',
-                'da',
-                'nu',
-                'pret intare',
-                'pret iesire'
-            ],
+            ['"','{', '}'],
+            ['','',''],
             $json
         );
     }
@@ -101,5 +78,34 @@ class AppExtension extends AbstractExtension
         }
 
         return $value;
+    }
+
+    public function roDate($env, $date, $format)
+    {
+        $dateFormat = 'medium';
+        $timeFormat = 'none';
+        $locale = 'ro';
+        $timezone = 'Europe/Bucharest';
+        $calendar = 'gregorian';
+        $date = twig_date_converter($env, $date, $timezone);
+
+        $formatValues = array(
+            'none' => \IntlDateFormatter::NONE,
+            'short' => \IntlDateFormatter::SHORT,
+            'medium' => \IntlDateFormatter::MEDIUM,
+            'long' => \IntlDateFormatter::LONG,
+            'full' => \IntlDateFormatter::FULL,
+        );
+
+        $formatter = \IntlDateFormatter::create(
+            $locale,
+            $formatValues[$dateFormat],
+            $formatValues[$timeFormat],
+            PHP_VERSION_ID >= 50500 ? $date->getTimezone() : $date->getTimezone()->getName(),
+            'gregorian' === $calendar ? \IntlDateFormatter::GREGORIAN : \IntlDateFormatter::TRADITIONAL,
+            $format
+        );
+
+        return $formatter->format($date->getTimestamp());
     }
 }

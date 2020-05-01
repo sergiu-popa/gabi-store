@@ -3,14 +3,28 @@
 {% block title %}Foaia zilei{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    {{ 'now'|roDate('EEEE')|capitalize }}, {{ 'now'|date("j") }} {{ 'now'|roDate('MMMM') }} {{ 'now'|date("H:i") }}
 
-<div class="example-wrapper">
-    <h1>Foaia zilei</h1>
+    {# TODO arata filtru pentru selectie data #}
+    {# TODO situatia actuala boxes ca in Refactoring UI #}
+    <hr>
 
-    <p>Yey</p>
-</div>
+    {% if day %}
+        <p>show module for previous day, review and correct, then mark as revied</p>
+        <p>show module for current day</p>
+    {% else %}
+        {{ form_start(form) }}
+
+        {{ form_errors(form) }}
+
+        <div class="row">
+            <div class="col">
+                {{ form_row(form.bills_50) }}
+            </div>
+            <div class="col">
+                {{ form_row(form.bills_100) }}
+            </div>
+        </div>
+        {{ form_end(form) }}
+    {% endif %}
 {% endblock %}

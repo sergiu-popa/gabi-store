@@ -1,0 +1,15 @@
+<script src="{{ asset('js/sweetalert.min.js') }}"></script>
+
+{% for type, messages in app.flashes %}
+    {% for message in messages %}
+        <script>
+            swal({
+                    title: '{{ type == 'success' ? 'Success' : 'Eroare' }}',
+                    text: '{{ message }}',
+                    timer: 3000,
+                    icon: '{{ type }}',
+                    buttons: false
+                });
+        </script>
+    {% endfor %}
+{% endfor %}

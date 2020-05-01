@@ -19,32 +19,14 @@ class DayRepository extends ServiceEntityRepository
         parent::__construct($registry, Day::class);
     }
 
-    // /**
-    //  * @return Day[] Returns an array of Day objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findByDate($day = null): ?Day
     {
-        return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $day = $date ?? new \DateTime();
 
-    /*
-    public function findOneBySomeField($value): ?Day
-    {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
+            ->where('d.date = :date')
+            ->setParameter('date', $day->format('Y-m-d'))
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
-    */
 }
