@@ -29,7 +29,7 @@ class SnapshotRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('s')
             ->select('s', 'a')
             ->innerJoin('s.author', 'a')
-            ->orderBy('s.createdAt', 'DESC')
+            ->orderBy('s.createdAt', 'ASC')
             ->where('s.createdAt >= :date')
             ->andWhere('s.class != :class')
             ->setParameter('date', $date)
