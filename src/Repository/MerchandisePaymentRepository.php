@@ -27,7 +27,7 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
             ->where('p.deletedAt IS NULL')
             ->andWhere('p.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
-            ->orderBy('p.date', 'DESC')
+            ->orderBy('provider.name', 'ASC')
             ->getQuery()
             ->getResult();
     }

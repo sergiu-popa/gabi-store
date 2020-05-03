@@ -2,7 +2,9 @@
 
 namespace App\Twig;
 
+use Twig\Environment;
 use Twig\Extension\AbstractExtension;
+use Twig\Extension\CoreExtension;
 use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
@@ -13,12 +15,18 @@ class AppExtension extends AbstractExtension
     public function getFilters(): array
     {
         return array(
+            new TwigFilter('num_for', [$this, 'number_format']),
             new TwigFilter('roDate', [$this, 'roDate'], ['needs_environment' => true]),
             new TwigFilter('dash', [$this, 'dash']),
             new TwigFilter('snapshot_verb', [$this, 'snapshotVerb']),
             new TwigFilter('snapshot_content', [$this, 'snapshotContent']),
             new TwigFilter('snapshot_type', [$this, 'snapshotType']),
         );
+    }
+
+    function number_format($number)
+    {
+        return number_format((float) $number, 2, '.', ' ');
     }
 
     /**

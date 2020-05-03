@@ -31,12 +31,12 @@ class DayController extends AbstractController
             return $this->redirectToRoute('start');
         }
 
-        $day = $this->manager->getDay($date);
         $transactions = $this->manager->getTransactions($date);
 
         return $this->render('day.html.twig', [
             'currentDate' => $date,
-            'canModify' => $this->manager->userCanModifyDay($date),
+            'canModify' => $this->manager->getDay($date),
+            'day' => $this->manager->getDay($date),
             'transactions' => $transactions
         ]);
     }

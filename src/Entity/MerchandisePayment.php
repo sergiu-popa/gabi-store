@@ -64,6 +64,11 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
         return $this->type;
     }
 
+    public function getTypeLabel(): string
+    {
+        return $this->type === 1 ? 'bonuri' : 'facturi';
+    }
+
     public function setType(int $type): self
     {
         $this->type = $type;

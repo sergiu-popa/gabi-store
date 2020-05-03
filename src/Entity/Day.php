@@ -82,19 +82,14 @@ class Day
         $this->confirmed = true;
     }
 
-    /**
-     * Returns yesterday or last Friday if today's Sunday.
-     */
-    public static function getLastDay()
+    public function isToday(): bool
     {
-        $todayIsSunday = (new \DateTime())->format('l') === 'Sunday';
-
-        return new \DateTime($todayIsSunday ? '-2 days' : 'yesterday');
+        return $this->date === (new \DateTime())->setTime(0, 0, 0);
     }
 
-    public function isConfirmed(): bool
+    public function hasEnded(): bool
     {
-        return $this->confirmed;
+        return $this->endedAt !== null;
     }
 
     public function getStartedAt(): \DateTimeImmutable

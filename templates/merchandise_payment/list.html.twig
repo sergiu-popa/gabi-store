@@ -1,0 +1,39 @@
+<div class="card">
+    <div class="card-header">Marfă achitată</div>
+
+    {% if payments|length > 0 %}
+        <table class="table table-striped" style="border-top: none;">
+            <thead>
+            <tr>
+                <th></th>
+                <th>Furnizor</th>
+                <th>Cantitate</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for p in payments %}
+                <tr>
+                    <td width="50">{{ loop.index }}</td>
+                    <td>{{ p.provider.name }}</td>
+                    <td>
+                        {{ p.amount|num_for }}
+                        <span class="badge badge-{{ p.typeLabel }}">{{ p.typeLabel }}</span>
+                    </td>
+                    <td>
+                        <a href="{{ path('merchandise_payment_edit', {'id': p.id}) }}">modifică</a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p class="card-body">Nu s-a achitat nici o marfă.</p>
+    {% endif %}
+
+    {% if canModify %}
+        <div class="card-footer text-right">
+            <a class="btn btn-sm btn-outline-primary" href="{{ path('merchandise_payment_new') }}">adaugă</a>
+        </div>
+    {% endif %}
+</div>
