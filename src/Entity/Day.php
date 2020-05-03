@@ -27,7 +27,7 @@ class Day
 
     /**
      * @var \DateTime
-     * @ORM\Column(type="datetime_immutable")
+     * @ORM\Column(type="time_immutable")
      */
     private $startedAt;
 
@@ -36,14 +36,28 @@ class Day
      * @ORM\Column(type="smallint", options={"unsigned":"true"})
      * @Assert\Positive()
      */
-    private $bills_50;
+    private $bills_50_start;
 
     /**
      * @var int
      * @ORM\Column(type="smallint", options={"unsigned":"true"})
      * @Assert\Positive()
      */
-    private $bills_100;
+    private $bills_100_start;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint", nullable=true, options={"unsigned":"true"})
+     * @Assert\Positive()
+     */
+    private $bills_50_end;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint", nullable=true, options={"unsigned":"true"})
+     * @Assert\Positive()
+     */
+    private $bills_100_end;
 
     /**
      * @var bool
@@ -52,8 +66,8 @@ class Day
     private $confirmed;
 
     /**
-     * @var \DateTime
-     * @ORM\Column(type="datetime_immutable", nullable=true)
+     * @var \DateTimeImmutable
+     * @ORM\Column(type="time_immutable", nullable=true)
      */
     private $endedAt;
 
@@ -63,9 +77,24 @@ class Day
         $this->startedAt = new \DateTimeImmutable();
 
         $this->author = $author;
-        $this->bills_50 = 1;
-        $this->bills_100 = 1;
-        $this->confirmed = false;
+        $this->bills_50_start = 1;
+        $this->bills_100_start = 1;
+        $this->confirmed = true;
+    }
+
+    /**
+     * Returns yesterday or last Friday if today's Sunday.
+     */
+    public static function getLastDay()
+    {
+        $todayIsSunday = (new \DateTime())->format('l') === 'Sunday';
+
+        return new \DateTime($todayIsSunday ? '-2 days' : 'yesterday');
+    }
+
+    public function isConfirmed(): bool
+    {
+        return $this->confirmed;
     }
 
     public function getStartedAt(): \DateTimeImmutable
@@ -78,31 +107,43 @@ class Day
         return $this->endedAt;
     }
 
-    public function getBills50(): ?int
+    public function getBills50Start(): ?int
     {
-        return $this->bills_50;
+        return $this->bills_50_start;
     }
 
-    /**
-     * @param int $bills_50
-     */
-    public function setBills50(int $bills_50): void
+    public function setBills50Start(int $bills_50_start): void
     {
-        $this->bills_50 = $bills_50;
+        $this->bills_50_start = $bills_50_start;
     }
 
-    public function getBills100(): ?int
+    public function getBills100Start(): ?int
     {
-        return $this->bills_100;
+        return $this->bills_100_start;
     }
 
-    public function setBills100(int $bills_100): void
+    public function setBills100Start(int $bills_100_start): void
     {
-        $this->bills_100 = $bills_100;
+        $this->bills_100_start = $bills_100_start;
     }
 
-    public function isConfirmed(): bool
+    public function getBills50End(): ?int
     {
-        return $this->confirmed;
+        return $this->bills_50_end;
+    }
+
+    public function setBills50End(int $bills_50_end): void
+    {
+        $this->bills_50_end = $bills_50_end;
+    }
+
+    public function getBills100End(): ?int
+    {
+        return $this->bills_100_end;
+    }
+
+    public function setBills100End(int $bills_100_end): void
+    {
+        $this->bills_100_end = $bills_100_end;
     }
 }

@@ -64,7 +64,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
     {
         $plainPassword = 'danexbob';
 
-        $users = ['gabriel.iarca', 'anda.moiceanu', 'anda.ciobanu'];
+        $users = ['anda.moiceanu', 'anda.ciobanu', 'gabriel.iarca'];
 
         foreach ($users as $username) {
             $user = new User();

@@ -1,18 +1,11 @@
-{{ date|roDate('EEEE')|capitalize }}, {{ date|date("j") }} {{ date|roDate('MMMM') }} {{ date|date("Y") }}
+{% extends 'base.html.twig' %}
 
-    {# TODO arata filtru pentru selectie data if admin #}
-<hr>
+{% block title %}Foaia zilei{% endblock %}
 
-{% if review %}
-    <h2>Verifică toate acțiunile de ieri</h2>
-    <p>Dacă sesizezi erori, poți corecta datele.</p>
-{% endif %}
+{% block body %}
+    {{ include('blocks/_day_header.html.twig', {date: currentDate}) }}
 
-{{ dump(merchandise) }}
-{{ dump(payments) }}
-{{ dump(expenses) }}
-{{ dump(money) }}
+    <h3>Transactions</h3>
 
-{% if review %}
-    <p><a href="#" class="btn btn-primary" >Confirmă</a></p>
-{% endif %}
+    {# TODO arata buton sa inchizi ziua if today #}
+{% endblock %}

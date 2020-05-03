@@ -19,14 +19,21 @@ class DayRepository extends ServiceEntityRepository
         parent::__construct($registry, Day::class);
     }
 
-    public function findByDate($day = null): ?Day
+    public function getToday(): ?Day
     {
-        $day = $date ?? new \DateTime();
-
         return $this->createQueryBuilder('d')
             ->where('d.date = :date')
-            ->setParameter('date', $day->format('Y-m-d'))
+            ->setParameter('date', (new \DateTime())->format('Y-m-d'))
             ->getQuery()
             ->getOneOrNullResult();
+    }
+
+    public function getLastDay(): Day
+    {
+        return $this->createQueryBuilder('d')
+            ->orderBy('d.date', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getSingleResult();
     }
 }

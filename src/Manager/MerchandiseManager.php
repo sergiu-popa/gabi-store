@@ -2,7 +2,6 @@
 
 namespace App\Manager;
 
-use App\Entity\Merchandise;
 use App\Entity\Provider;
 use App\Repository\MerchandiseRepository;
 use Doctrine\ORM\EntityManagerInterface;

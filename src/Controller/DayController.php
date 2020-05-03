@@ -3,74 +3,72 @@
 namespace App\Controller;
 
 use App\Entity\Day;
-use App\Entity\Expense;
-use App\Entity\Merchandise;
-use App\Entity\MerchandisePayment;
-use App\Entity\Money;
-use App\Form\DayType;
-use App\Repository\DayRepository;
-use Doctrine\ORM\EntityManagerInterface;
+use App\Form\DayStartType;
+use App\Manager\DayManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DayController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    /** @var DayManager */
+    private $manager;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(DayManager $manager)
     {
-        $this->em = $em;
+        $this->manager = $manager;
     }
 
     /**
-     * @Route("/", name="dashboard")
+     * @Route("/", name="day")
      */
-    public function dashboard(DayRepository $dayRepository, Request $request)
+    public function day(Request $request)
     {
-        $day = $dayRepository->findByDate();
+        $date = (new \DateTime($request->request->get('date', 'now')))->setTime(0, 0, 0);
+        $today = $this->manager->getCurrentDay();
 
-        $form = $this->createForm(DayType::class, $day ?? new Day($this->getUser()));
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $day = $form->getData();
-            $this->em->persist($day);
-            $this->em->flush();
-
-            $this->addFlash(
-                'success',
-                'Ziua a fost începută la ' . $day->getStartedAt()->format('H:i')
-            );
+        if ($today === null && $this->dateIsToday($date)) {
+            return $this->redirectToRoute('start');
         }
 
-        return $this->render('dashboard.html.twig', [
-            'day' => $day,
-            'form' => $form->createView()
+        $transactions = $this->manager->getTransactions($date);
+
+        // TODO if admin, enable edit mode; if user, only today or last day
+
+        return $this->render('day.html.twig', [
+            'currentDate' => $date,
+            'transactions' => $transactions
         ]);
     }
 
-    public function day($date, $review = false)
+    /**
+     * Shows the form to start today by reviewing last day transactions.
+     * @Route("/incepe-ziua", name="start")
+     */
+    public function start(Request $request)
     {
-        $date = (new \DateTime($date))->setTime(0, 0, 0);
-        $em = $this->getDoctrine()->getManager();
+        $form = $this->createForm(DayStartType::class, new Day($this->getUser()));
+        $form->handleRequest($request);
 
-        // TODO calculate totals with collections, please
-        $totals = [];
-        $merchandise = $em->getRepository(Merchandise::class)->findByDay($date); // TODO group by provider?
-        $payments = $em->getRepository(MerchandisePayment::class)->findByDay($date);
-        $expenses = $em->getRepository(Expense::class)->findByDay($date);
-        $money = $em->getRepository(Money::class)->findByDay($date);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->manager->start($form->getData());
 
-        return $this->render('day.html.twig', [
-            'review' => $review,
-            'date' => $date,
-            'totals' => $totals,
-            'merchandise' => $merchandise,
-            'payments' => $payments,
-            'expenses' => $expenses,
-            'money' => $money
+            $this->addFlash(
+                'success',
+                'Ziua a fost începută la ' . (new \DateTime())->format('H:i')
+            );
+
+            return $this->redirectToRoute('day');
+        }
+
+        return $this->render('start-day.html.twig', [
+            'form' => $form->createView(),
+            'transactions' => $this->manager->getTransactionsForLastDay()
         ]);
+    }
+
+    private function dateIsToday(\DateTime $date): bool
+    {
+        return $date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
     }
 }

@@ -1,0 +1,9 @@
+{{ date|roDate('EEEE')|capitalize }}, {{ date|date("j") }} {{ date|roDate('MMMM') }} {{ date|date("Y") }}
+
+<form id="js-change-day-form" class="d-none" action="{{ path('day') }}" method="post">
+    <input id="js-change-day-date" name="date" type="hidden" value="" />
+</form>
+<button id="js-change-day-datepicker" class="btn btn-outline-secondary btn-sm">
+    <i class="fas fa-calendar" aria-hidden="true"></i>
+</button>
+<hr>

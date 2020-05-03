@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Foaia zilei{% endblock %}
+
+{% block body %}
+    {{ include('blocks/_day_header.html.twig', {date: 'now'|date }) }}
+
+    {{ form_start(form) }}
+
+    {{ form_errors(form) }}
+
+    <div class="row">
+        <div class="col">
+            {{ form_row(form.bills_50_start) }}
+        </div>
+        <div class="col">
+            {{ form_row(form.bills_100_start) }}
+        </div>
+    </div>
+
+    <div>
+        <h2>Verifică toate acțiunile ultimei zile</h2>
+        <p>Dacă sesizezi erori, poți corecta datele.</p>
+        Show all data here: payments, expenses, money and merchandise?
+    </div>
+    {{ form_end(form) }}
+{% endblock %}
