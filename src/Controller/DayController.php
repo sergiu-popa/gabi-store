@@ -31,12 +31,12 @@ class DayController extends AbstractController
             return $this->redirectToRoute('start');
         }
 
+        $day = $this->manager->getDay($date);
         $transactions = $this->manager->getTransactions($date);
-
-        // TODO if admin, enable edit mode; if user, only today or last day
 
         return $this->render('day.html.twig', [
             'currentDate' => $date,
+            'canModify' => $this->manager->userCanModifyDay($date),
             'transactions' => $transactions
         ]);
     }

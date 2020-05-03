@@ -21,11 +21,7 @@ class DayRepository extends ServiceEntityRepository
 
     public function getToday(): ?Day
     {
-        return $this->createQueryBuilder('d')
-            ->where('d.date = :date')
-            ->setParameter('date', (new \DateTime())->format('Y-m-d'))
-            ->getQuery()
-            ->getOneOrNullResult();
+        return $this->getByDay(new \DateTime());
     }
 
     public function getLastDay(): Day
@@ -35,5 +31,14 @@ class DayRepository extends ServiceEntityRepository
             ->setMaxResults(1)
             ->getQuery()
             ->getSingleResult();
+    }
+
+    public function getByDay(\DateTime $date)
+    {
+        return $this->createQueryBuilder('d')
+        ->where('d.date = :date')
+        ->setParameter('date', $date->format('Y-m-d'))
+        ->getQuery()
+        ->getOneOrNullResult();
     }
 }
