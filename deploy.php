@@ -21,7 +21,7 @@ set('migrations_config', '');
 // Hosts
 
 host('89.33.25.175')
-    ->user('deployer')
+    ->user('admin')
     ->identityFile('~/.ssh/id_rsa')
     ->port(22)
     ->set('deploy_path', '/home/admin/web/magazin.respiro.ro');
