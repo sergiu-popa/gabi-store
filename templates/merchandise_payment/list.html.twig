@@ -24,7 +24,8 @@
 
     {% if canModify %}
         <div class="card-footer text-right">
-            <a class="btn btn-sm btn-outline-primary" href="{{ path('merchandise_payment_new') }}">adaugă</a>
+            <a class="js-add btn btn-sm btn-outline-primary"
+               href="{{ path('merchandise_payment_new', { 'date': currentDate|date('Y-m-d'), 'index': payments|length + 1 }) }}">adaugă</a>
         </div>
     {% endif %}
 </div>

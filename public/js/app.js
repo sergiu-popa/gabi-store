@@ -37,16 +37,21 @@ jQuery(function ($) {
         e.preventDefault();
     })
 
-    // Save edit form
+    // Save edit/new form
     $(document).on('click', '.js-save',  function (e) {
         var route = $(this).data('href'),
             $parentRow = $(this).parents('tr'),
-            $form = $(this).closest('form');
+            $form = $(this).closest('form'),
+            mode = $(this).data('mode');
 
         $.post(route, $form.serialize(), function(html) {
             $form.fadeOut(300, function() {
-                $parentRow.prev().replaceWith(html).fadeIn(400);
-                $parentRow.remove();
+                if(mode === 'edit') {
+                    $parentRow.prev().replaceWith(html).fadeIn(400);
+                    $parentRow.remove();
+                } else {
+                    $parentRow.replaceWith(html).fadeIn(400);
+                }
             });
         });
 
@@ -55,10 +60,25 @@ jQuery(function ($) {
 
     // Cancel edit form
     $(document).on('click', '.js-close',  function () {
-        var $parentRow = $(this).parents('tr');
+        var $parentRow = $(this).parents('tr'),
+            mode = $(this).data('mode');
 
-        $parentRow.prev().fadeIn();
+        if(mode === 'edit') $parentRow.prev().fadeIn(); // revert previous hidden row
+
         $parentRow.remove();
+    })
+
+    // Show add form
+    $(document).on('click', '.js-add',  function (e) {
+        var route = $(this).attr('href'),
+            $lastRow = $(this).parents('.card').find('table tr:last');
+
+        $.get(route, function(data) {
+            // TODO increment index
+            $lastRow.after(data);
+        });
+
+        e.preventDefault();
     })
 
     var $changeDayPicker = $('#js-change-day-datepicker');

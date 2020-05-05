@@ -16,8 +16,6 @@ class MerchandisePaymentType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        // TODO show date only when adding? or preia de la zi?
-
         $builder
             ->add('provider', EntityType::class, [
                 'class' => Provider::class,

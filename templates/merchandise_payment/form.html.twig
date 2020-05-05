@@ -1,16 +1,20 @@
 <tr>
+    {% set path = payment.id ?
+        path('merchandise_payment_edit', {'id': payment.id, 'index': index }) :
+        path('merchandise_payment_new', {'index': index, 'date': currentDate })
+    %}
+    {% set mode = payment.id ? 'edit' : 'insert' %}
     <td colspan="5">
         {{ form_start(form) }}
 
         {{ form_widget(form) }}
 
         <div class="text-right">
-            <button class="js-save btn btn-sm btn-success"
-                    data-href="{{ path('merchandise_payment_edit', {'id': payment.id, 'index': index }) }}">
+            <button class="js-save btn btn-sm btn-success" data-href="{{ path }}" data-mode="{{ mode }}">
                 <i class="fas fa-check"></i> salvează
             </button>
 
-            <button class="js-close btn btn-sm btn-outline-secondary">închide</button>
+            <button class="js-close btn btn-sm btn-outline-secondary" data-mode="{{ mode }}">închide</button>
         </div>
 
         {{ form_end(form) }}

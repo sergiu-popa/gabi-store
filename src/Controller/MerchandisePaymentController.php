@@ -28,20 +28,24 @@ class MerchandisePaymentController extends AbstractController
      */
     public function new(Request $request): Response
     {
-        // TODO full AJAX
-        $merchandisePayment = new MerchandisePayment();
-        $form = $this->createForm(MerchandisePaymentType::class, $merchandisePayment);
+        $payment = new MerchandisePayment();
+        $payment->setDate(new \DateTime($request->query->get('date')));
+        $form = $this->createForm(MerchandisePaymentType::class, $payment);
+        $index = (int) $request->query->get('index');
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($merchandisePayment);
+            $this->em->persist($payment);
             $this->em->flush();
 
-            return $this->redirectToRoute('merchandise_payment_index');
+            return $this->returnRow($payment, $index);
         }
 
         return $this->render('merchandise_payment/form.html.twig', [
-            'merchandise_payment' => $merchandisePayment,
+            'currentDate' => $request->query->get('date'),
+            'index' => $index,
+            'payment' => $payment,
             'form' => $form->createView(),
         ]);
     }
@@ -52,17 +56,14 @@ class MerchandisePaymentController extends AbstractController
     public function edit(Request $request, MerchandisePayment $payment): Response
     {
         $form = $this->createForm(MerchandisePaymentType::class, $payment);
+        $index = (int) $request->query->get('index');
+
         $form->handleRequest($request);
-        $index = $request->query->get('index');
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            return $this->render('merchandise_payment/_payment.html.twig', [
-                'canModify' => true,
-                'p' => $payment,
-                'index' => $index
-            ]);
+            return $this->returnRow($payment, $index);
         }
 
         return $this->render('merchandise_payment/form.html.twig', [
@@ -85,5 +86,14 @@ class MerchandisePaymentController extends AbstractController
         }
 
         return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
+    }
+
+    private function returnRow(MerchandisePayment $payment, int $index): Response
+    {
+        return $this->render('merchandise_payment/_payment.html.twig', [
+            'canModify' => true,
+            'p' => $payment,
+            'index' => $index
+        ]);
     }
 }
