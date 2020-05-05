@@ -52,7 +52,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         return [
             'furnizor' => $this->provider->getName(),
             'cantitate' => $this->amount,
-            'date' => $this->date->format('Y-m-d'),
+            'data' => $this->date->format('Y-m-d'),
             'platit complet' => $this->paidFully,
             'platit partial' => $this->paidPartially,
             'plati' => $this->debtPayments->count()

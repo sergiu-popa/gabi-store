@@ -4,7 +4,7 @@
     <td style="width: 100px">{{ p.amount|num_for }}</td>
     {% if canModify %}
         <td style="width: 100px;">
-            {{ include('blocks/_edit_button.html.twig', { href: path('merchandise_payment_edit', {'id': p.id, 'index': index }) }) }}
+            {{ include('blocks/_edit_button.html.twig', { href: path('merchandise_payment_edit', {'id': p.id }) }) }}
             {{ include('blocks/_delete_button.html.twig', { route: 'merchandise_payment_delete', 'id': p.id, item: 'plata' }) }}
         </td>
     {% endif %}

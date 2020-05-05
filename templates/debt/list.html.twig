@@ -1,30 +1,29 @@
 <div class="card">
-    <div class="card-header">Marfă achitată</div>
+    <div class="card-header">Datorii diverse</div>
 
-    {% if payments|length > 0 %}
+    {% if debts|length > 0 %}
         <table class="table table-striped" style="border-top: none;">
             <thead>
             <tr>
-                <th>Furnizor</th>
-                <th>Plată</th>
+                <th>Nume</th>
                 <th>Cantitate</th>
                 {% if canModify %}<th></th>{% endif %}
             </tr>
             </thead>
             <tbody>
-            {% for p in payments %}
-                {{ include('merchandise_payment/_payment.html.twig') }}
+            {% for d in debts %}
+                {{ include('debt/_debt.html.twig') }}
             {% endfor %}
             </tbody>
         </table>
     {% else %}
-        <p class="card-body">Nu s-a achitat nici o marfă.</p>
+        <p class="card-body">Nu există nici o datorie.</p>
     {% endif %}
 
     {% if canModify %}
         <div class="card-footer text-right">
             <a class="js-add btn btn-sm btn-outline-primary"
-               href="{{ path('merchandise_payment_new', { 'date': currentDate|date('Y-m-d') }) }}">adaugă</a>
+               href="{{ path('debt_new', { 'date': currentDate|date('Y-m-d') }) }}">adaugă</a>
         </div>
     {% endif %}
 </div>

@@ -1,0 +1,22 @@
+<tr>
+    {% set path = expense.id ?
+        path('expense_edit', {'id': expense.id }) :
+        path('expense_new', {'date': currentDate })
+    %}
+    {% set mode = expense.id ? 'edit' : 'insert' %}
+    <td colspan="4">
+        {{ form_start(form) }}
+
+        {{ form_widget(form) }}
+
+        <div class="text-right">
+            <button class="js-save btn btn-sm btn-success" data-href="{{ path }}" data-mode="{{ mode }}">
+                <i class="fas fa-check"></i> salvează
+            </button>
+
+            <button class="js-close btn btn-sm btn-outline-secondary" data-mode="{{ mode }}">închide</button>
+        </div>
+
+        {{ form_end(form) }}
+    </td>
+</tr>

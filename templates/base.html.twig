@@ -26,16 +26,8 @@
                 <a href="{{ path('monthly_situation') }}" class="nav-link">Situatia lunară</a>
             </li>
 
-            <li class="nav-item {{ route == 'merchandise_index' ? 'active' }}">
-                <a href="{{ path('merchandise_index') }}" class="nav-link">Intrare marfa</a>
-            </li>
-
-            <li class="nav-item {{ route == 'debt_index' ? 'active' }}">
-                <a href="{{ path('debt_index') }}" class="nav-link">Furnizori</a>
-            </li>
-
-            <li class="nav-item {{ route == 'expense_category_index' ? 'active' }}">
-                <a href="{{ path('expense_category_index') }}" class="nav-link">Categorii ieșiri</a>
+            <li class="nav-item {{ route == 'provider_debt_index' ? 'active' }}">
+                <a href="{{ path('provider_debt_index') }}" class="nav-link">Furnizori</a>
             </li>
 
             {% if is_granted('ROLE_ADMIN') %}
@@ -43,6 +35,18 @@
                     <a href="{{ path('log') }}" class="nav-link">Istoric</a>
                 </li>
             {% endif %}
+
+            <li class="nav-item dropdown {{ 'category' in route ? 'active' }}">
+                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategoriesLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Categorii
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdownCategoriesLink">
+                    <a class="dropdown-item {{ route == 'expense_category_index' ? 'disabled' }}" href="{{ path('expense_category_index') }}">Ieșiri</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="dropdown-item {{ route == 'merchandise_category_index' ? 'disabled' }}" href="{{ path('merchandise_category_index') }}">Intrare marfă</a>
+                    {% endif %}
+                </div>
+            </li>
 
             <li class="nav-item dropdown {{ 'report' in route ? 'active' }}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

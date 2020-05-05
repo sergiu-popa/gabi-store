@@ -41,11 +41,10 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
     public function jsonSerialize()
     {
         return [
-            'provider' => $this->provider->getName(),
-            'amount' => $this->amount,
-            'date' => $this->date->format('Y-m-d'),
-            'type' => $this->type,
-            'type_desc' => $this->type === self::TYPE_BILL ? 'bon' : 'factura'
+            'furnizor' => $this->provider->getName(),
+            'cantitate' => $this->amount,
+            'data' => $this->date->format('Y-m-d'),
+            'tip' => $this->type === self::TYPE_BILL ? 'bon' : 'factura'
         ];
     }
 

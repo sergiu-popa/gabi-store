@@ -1,0 +1,29 @@
+<div class="card">
+    <div class="card-header">Monetar</div>
+
+    {% if money|length > 0 %}
+    <table class="table table-striped" style="border-top: none;">
+        <thead>
+            <tr>
+                <th>Cantitate</th>
+                <th>Note</th>
+                {% if canModify %}<th></th>{% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for m in monies %}
+            {{ include('money/_money.html.twig') }}
+        {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p class="card-body">Nici un monetar.</p>
+    {% endif %}
+
+    {% if canModify %}
+        <div class="card-footer text-right">
+            <a class="js-add btn btn-sm btn-outline-primary"
+               href="{{ path('money_new', { 'date': currentDate|date('Y-m-d') }) }}">adaugă</a>
+        </div>
+    {% endif %}
+</div>

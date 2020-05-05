@@ -1,0 +1,36 @@
+<h2>Intrare marfă</h2>
+
+{% if providers|length > 0 %}
+    {% for p in providers %}
+        <div class="card">
+            <div class="card-header">{{ p.name }}</div>
+            <table class="table table-striped" style="border-top: none;">
+                <thead>
+                <tr>
+                    <th>Furnizor</th>
+                    <th>Categorie</th>
+                    <th>Nume</th>
+                    <th>Cantitate</th>
+                    <th>Pret intrare</th>
+                    <th>Pret iesire</th>
+                    {% if canModify %}<th></th>{% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for m in p.merchandises %}
+                    {{ include('merchandise/_merchandise.html.twig') }}
+                {% endfor %}
+                </tbody>
+            </table>
+            {% if canModify %}
+                <div class="card-footer text-right">
+                    <a class="js-add btn btn-sm btn-outline-primary"
+                       href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d'), 'provider': p.id }) }}">adaugă</a>
+                </div>
+            {% endif %}
+        </div>
+    {% endfor %}
+
+{% else %}
+    <p class="card-body">Nu s-a găsit nici o intrare de marfă.</p>
+{% endif %}

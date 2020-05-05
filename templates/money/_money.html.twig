@@ -1,0 +1,10 @@
+<tr>
+    <td style="width: 100px">{{ p.amount|num_for }}</td>
+    <td>{{ money.notes }}</td>
+    {% if canModify %}
+        <td style="width: 100px;">
+            {{ include('blocks/_edit_button.html.twig', { href: path('money_edit', {'id': m.id }) }) }}
+            {{ include('blocks/_delete_button.html.twig', { route: 'money_delete', 'id': m.id, item: 'monetarul' }) }}
+        </td>
+    {% endif %}
+</tr>

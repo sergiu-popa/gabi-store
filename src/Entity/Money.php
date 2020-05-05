@@ -29,9 +29,9 @@ class Money implements \JsonSerializable, SnapshotableInterface
     public function jsonSerialize()
     {
         return [
-            'amount' => $this->amount,
-            'date' => $this->date->format('Y-m-d'),
-            'notes' => $this->notes
+            'cantitate' => $this->amount,
+            'data' => $this->date->format('Y-m-d'),
+            'note' => $this->notes
         ];
     }
 }

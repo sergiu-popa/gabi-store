@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\ProviderDebt;
-use App\Form\DebtType;
+use App\Form\ProviderDebtType;
 use App\Repository\ProviderDebtRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -25,7 +25,7 @@ class ProviderDebtController extends AbstractController
     }
 
     /**
-     * @Route("/", name="debt_index", methods={"GET"})
+     * @Route("/", name="provider_debt_index", methods={"GET"})
      */
     public function index(ProviderDebtRepository $debtRepository): Response
     {
@@ -35,12 +35,12 @@ class ProviderDebtController extends AbstractController
     }
 
     /**
-     * @Route("/new", name="debt_new", methods={"GET","POST"})
+     * @Route("/new", name="provider_debt_new", methods={"GET","POST"})
      */
     public function new(Request $request): Response
     {
         $debt = new ProviderDebt();
-        $form = $this->createForm(DebtType::class, $debt);
+        $form = $this->createForm(ProviderDebtType::class, $debt);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -57,11 +57,11 @@ class ProviderDebtController extends AbstractController
     }
 
     /**
-     * @Route("/{id}/edit", name="debt_edit", methods={"GET","POST"})
+     * @Route("/{id}/edit", name="provider_debt_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, ProviderDebt $debt): Response
     {
-        $form = $this->createForm(DebtType::class, $debt);
+        $form = $this->createForm(ProviderDebtType::class, $debt);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -77,7 +77,7 @@ class ProviderDebtController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="debt_delete", methods={"DELETE"})
+     * @Route("/{id}", name="provider_debt_delete", methods={"DELETE"})
      */
     public function delete(Request $request, ProviderDebt $debt): Response
     {

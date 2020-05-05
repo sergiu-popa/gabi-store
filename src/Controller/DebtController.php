@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Debt;
-use App\Form\Debt1Type;
+use App\Form\DebtType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +30,7 @@ class DebtController extends AbstractController
     {
         $debt = new Debt();
         $debt->setDate(new \DateTime($request->query->get('date')));
-        $form = $this->createForm(Debt1Type::class, $debt);
+        $form = $this->createForm(DebtType::class, $debt);
 
         $form->handleRequest($request);
 
@@ -53,7 +53,7 @@ class DebtController extends AbstractController
      */
     public function edit(Request $request, Debt $debt): Response
     {
-        $form = $this->createForm(Debt1Type::class, $debt);
+        $form = $this->createForm(DebtType::class, $debt);
 
         $form->handleRequest($request);
 

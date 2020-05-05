@@ -3,6 +3,7 @@
 namespace App\Manager;
 
 use App\Entity\Day;
+use App\Entity\Debt;
 use App\Entity\Expense;
 use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
@@ -90,7 +91,7 @@ class DayManager
             'expenses' => $this->em->getRepository(Expense::class)->findByDay($date),
             'money' => $this->em->getRepository(Money::class)->findByDay($date),
             'merchandise' => $this->em->getRepository(Merchandise::class)->findByDay($date),
-            'debts' => '' // TODO
+            'debts' => $this->em->getRepository(Debt::class)->findByDay($date),
         ];
     }
 }

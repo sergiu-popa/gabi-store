@@ -1,0 +1,11 @@
+<tr>
+    <td>{{ e.category }}</td>
+    <td>{{ e.amount|num_for }}</td>
+    <td>{{ e.notes }}</td>
+    {% if canModify %}
+        <td style="width: 100px;">
+            {{ include('blocks/_edit_button.html.twig', { href: path('expense_edit', {'id': e.id }) }) }}
+            {{ include('blocks/_delete_button.html.twig', { route: 'expense_new', 'id': e.id, item: 'ieșirea' }) }}
+        </td>
+    {% endif %}
+</tr>

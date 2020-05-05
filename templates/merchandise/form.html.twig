@@ -1,0 +1,22 @@
+<tr>
+    {% set path = merchandise.id ?
+        path('merchandise_edit', {'id': merchandise.id }) :
+        path('merchandise_new', {'date': currentDate })
+    %}
+    {% set mode = merchandise.id ? 'edit' : 'insert' %}
+    <td colspan="7">
+        {{ form_start(form) }}
+
+        {{ form_widget(form) }}
+
+        <div class="text-right">
+            <button class="js-save btn btn-sm btn-success" data-href="{{ path }}" data-mode="{{ mode }}">
+                <i class="fas fa-check"></i> salvează
+            </button>
+
+            <button class="js-close btn btn-sm btn-outline-secondary" data-mode="{{ mode }}">închide</button>
+        </div>
+
+        {{ form_end(form) }}
+    </td>
+</tr>
