@@ -29,17 +29,20 @@ class MoneyController extends AbstractController
     public function new(Request $request): Response
     {
         $money = new Money();
+        $money->setDate(new \DateTime($request->query->get('date')));
         $form = $this->createForm(MoneyType::class, $money);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($money);
             $this->em->flush();
 
-            return $this->redirectToRoute('money_index');
+            return $this->returnRow($money);
         }
 
-        return $this->render('money/new.html.twig', [
+        return $this->render('money/form.html.twig', [
+            'currentDate' => $request->query->get('date'),
             'money' => $money,
             'form' => $form->createView(),
         ]);
@@ -51,15 +54,16 @@ class MoneyController extends AbstractController
     public function edit(Request $request, Money $money): Response
     {
         $form = $this->createForm(MoneyType::class, $money);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('money_index');
+            return $this->returnRow($money);
         }
 
-        return $this->render('money/edit.html.twig', [
+        return $this->render('money/form.html.twig', [
             'money' => $money,
             'form' => $form->createView(),
         ]);
@@ -78,5 +82,13 @@ class MoneyController extends AbstractController
         }
 
         return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
+    }
+
+    private function returnRow(Money $money): Response
+    {
+        return $this->render('money/_money.html.twig', [
+            'canModify' => true,
+            'm' => $money
+        ]);
     }
 }

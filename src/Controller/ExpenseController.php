@@ -29,17 +29,20 @@ class ExpenseController extends AbstractController
     public function new(Request $request): Response
     {
         $expense = new Expense();
+        $expense->setDate(new \DateTime($request->query->get('date')));
         $form = $this->createForm(ExpenseType::class, $expense);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($expense);
             $this->em->flush();
 
-            return $this->redirectToRoute('expense_index');
+            return $this->returnRow($expense);
         }
 
-        return $this->render('expense/new.html.twig', [
+        return $this->render('expense/form.html.twig', [
+            'currentDate' => $request->query->get('date'),
             'expense' => $expense,
             'form' => $form->createView(),
         ]);
@@ -56,10 +59,10 @@ class ExpenseController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('expense_index');
+            return $this->returnRow($expense);
         }
 
-        return $this->render('expense/edit.html.twig', [
+        return $this->render('expense/form.html.twig', [
             'expense' => $expense,
             'form' => $form->createView(),
         ]);
@@ -78,5 +81,13 @@ class ExpenseController extends AbstractController
         }
 
         return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
+    }
+
+    private function returnRow(Expense $expense): Response
+    {
+        return $this->render('expense/_expense.html.twig', [
+            'canModify' => true,
+            'e' => $expense
+        ]);
     }
 }

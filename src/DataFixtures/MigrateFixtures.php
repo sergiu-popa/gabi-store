@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Balance;
 use App\Entity\ExpenseCategory;
-use App\Entity\Debt;
+use App\Entity\ProviderDebt;
 use App\Entity\DebtPayment;
 use App\Entity\Expense;
 use App\Entity\Merchandise;
@@ -46,7 +46,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
         $this->createUsers($manager);
 
         $this->migrateFurnizoriToProviders($manager);
-        $this->migrateDatoriiToDebt($manager);
+        $this->migrateDatoriiToProviderDebt($manager);
         $this->migrateIstoricPlatitToDebtPayment($manager);
         $this->migrateIntrareMarfaToMerchandise($manager);
         $this->migrateMarfaAchitataToMerchandisePayment($manager);
@@ -105,7 +105,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
         }
     }
 
-    private function migrateDatoriiToDebt(ObjectManager $manager)
+    private function migrateDatoriiToProviderDebt(ObjectManager $manager)
     {
         $stmt = $this->conn->query('SELECT * FROM datorii');
 
@@ -113,7 +113,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
             try {
                 $provider = $this->getReference('Provider' . $row['id_firma']);
 
-                $debt = new Debt();
+                $debt = new ProviderDebt();
                 $debt->setProvider($provider);
                 $debt->setAmount($row['suma']);
                 $debt->setDate(new \DateTime($row['data']));

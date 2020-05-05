@@ -52,7 +52,7 @@ class Provider implements \JsonSerializable, SnapshotableInterface
     private $mobileNumber;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\Debt", mappedBy="provider")
+     * @ORM\OneToMany(targetEntity="ProviderDebt", mappedBy="provider")
      */
     private $debts;
 
@@ -144,14 +144,14 @@ class Provider implements \JsonSerializable, SnapshotableInterface
     }
 
     /**
-     * @return Collection|Debt[]
+     * @return Collection|ProviderDebt[]
      */
     public function getDebts(): Collection
     {
         return $this->debts;
     }
 
-    public function addDebt(Debt $debt): self
+    public function addDebt(ProviderDebt $debt): self
     {
         if (!$this->debts->contains($debt)) {
             $this->debts[] = $debt;
@@ -161,7 +161,7 @@ class Provider implements \JsonSerializable, SnapshotableInterface
         return $this;
     }
 
-    public function removeDebt(Debt $debt): self
+    public function removeDebt(ProviderDebt $debt): self
     {
         if ($this->debts->contains($debt)) {
             $this->debts->removeElement($debt);

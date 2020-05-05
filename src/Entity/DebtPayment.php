@@ -28,7 +28,7 @@ class DebtPayment implements \JsonSerializable, SnapshotableInterface
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Debt", inversedBy="debtPayments")
+     * @ORM\ManyToOne(targetEntity="ProviderDebt", inversedBy="debtPayments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $debt;
@@ -43,12 +43,12 @@ class DebtPayment implements \JsonSerializable, SnapshotableInterface
         ];
     }
 
-    public function getDebt(): ?Debt
+    public function getDebt(): ?ProviderDebt
     {
         return $this->debt;
     }
 
-    public function setDebt(?Debt $debt): self
+    public function setDebt(?ProviderDebt $debt): self
     {
         $this->debt = $debt;
 

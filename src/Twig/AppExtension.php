@@ -64,13 +64,14 @@ class AppExtension extends AbstractExtension
 
         $types = [
             'Balance' => 'sold',
-            'Debt' => 'datoria',
+            'Debt' => 'datorie',
             'DebtPayment' => 'plata marfă',
             'Expense' => 'ieșire',
             'Merchandise' => 'intrare marfă',
             'MerchandiseCategory' => 'categorie intrare marfă',
             'Money' => 'monetar',
             'Provider' => 'furnizor',
+            'ProviderDebt' => 'datorie furnizor',
         ];
 
         return $types[$type];

@@ -8,12 +8,12 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ debt.id }}</td>
+                <th>PaidFully</th>
+                <td>{{ debt.paidFully ? 'Yes' : 'No' }}</td>
             </tr>
             <tr>
-                <th>Name</th>
-                <td>{{ debt.name }}</td>
+                <th>Id</th>
+                <td>{{ debt.id }}</td>
             </tr>
             <tr>
                 <th>Amount</th>
@@ -24,8 +24,8 @@
                 <td>{{ debt.date ? debt.date|date('Y-m-d') : '' }}</td>
             </tr>
             <tr>
-                <th>DeletedAt</th>
-                <td>{{ debt.deletedAt ? debt.deletedAt|date('Y-m-d H:i:s') : '' }}</td>
+                <th>PaidPartially</th>
+                <td>{{ debt.paidPartially ? 'Yes' : 'No' }}</td>
             </tr>
         </tbody>
     </table>

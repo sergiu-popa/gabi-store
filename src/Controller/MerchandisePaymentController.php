@@ -31,7 +31,6 @@ class MerchandisePaymentController extends AbstractController
         $payment = new MerchandisePayment();
         $payment->setDate(new \DateTime($request->query->get('date')));
         $form = $this->createForm(MerchandisePaymentType::class, $payment);
-        $index = (int) $request->query->get('index');
 
         $form->handleRequest($request);
 
@@ -39,12 +38,11 @@ class MerchandisePaymentController extends AbstractController
             $this->em->persist($payment);
             $this->em->flush();
 
-            return $this->returnRow($payment, $index);
+            return $this->returnRow($payment);
         }
 
         return $this->render('merchandise_payment/form.html.twig', [
             'currentDate' => $request->query->get('date'),
-            'index' => $index,
             'payment' => $payment,
             'form' => $form->createView(),
         ]);
@@ -56,20 +54,18 @@ class MerchandisePaymentController extends AbstractController
     public function edit(Request $request, MerchandisePayment $payment): Response
     {
         $form = $this->createForm(MerchandisePaymentType::class, $payment);
-        $index = (int) $request->query->get('index');
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            return $this->returnRow($payment, $index);
+            return $this->returnRow($payment);
         }
 
         return $this->render('merchandise_payment/form.html.twig', [
             'payment' => $payment,
-            'form' => $form->createView(),
-            'index' => $index
+            'form' => $form->createView()
         ]);
     }
 
@@ -88,12 +84,11 @@ class MerchandisePaymentController extends AbstractController
         return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 
-    private function returnRow(MerchandisePayment $payment, int $index): Response
+    private function returnRow(MerchandisePayment $payment): Response
     {
         return $this->render('merchandise_payment/_payment.html.twig', [
             'canModify' => true,
-            'p' => $payment,
-            'index' => $index
+            'p' => $payment
         ]);
     }
 }

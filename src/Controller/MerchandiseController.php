@@ -36,6 +36,7 @@ class MerchandiseController extends AbstractController
     public function new(Request $request): Response
     {
         $merchandise = new Merchandise($request->query->get('date'));
+        $merchandise->setDate(new \DateTime($request->query->get('date')));
 
         $form = $this->createForm(MerchandiseType::class, $merchandise, [
             'provider' => $request->query->get('provider')
@@ -46,24 +47,13 @@ class MerchandiseController extends AbstractController
             $this->em->persist($merchandise);
             $this->em->flush();
 
-            return $this->redirectToRoute('merchandise_index');
+            return $this->returnRow($merchandise);
         }
 
-        return $this->render('merchandise/new.html.twig', [
+        return $this->render('merchandise/form.html.twig', [
+            'currentDate' => $request->query->get('date'),
             'merchandise' => $merchandise,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{date}", name="merchandise_index", methods={"GET"})
-     */
-    public function index($date = null): Response
-    {
-        $date = new \DateTime($date ?? 'now');
-
-        return $this->render('merchandise/index.html.twig', [
-            'providers' => $this->manager->findForDay($date),
         ]);
     }
 
@@ -73,15 +63,16 @@ class MerchandiseController extends AbstractController
     public function edit(Request $request, Merchandise $merchandise): Response
     {
         $form = $this->createForm(MerchandiseType::class, $merchandise);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('merchandise_index');
+            return $this->returnRow($merchandise);
         }
 
-        return $this->render('merchandise/edit.html.twig', [
+        return $this->render('merchandise/form.html.twig', [
             'merchandise' => $merchandise,
             'form' => $form->createView(),
         ]);
@@ -100,5 +91,13 @@ class MerchandiseController extends AbstractController
         }
 
         return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
+    }
+
+    private function returnRow(Merchandise $merchandise): Response
+    {
+        return $this->render('merchandise/_merchandise.html.twig', [
+            'canModify' => true,
+            'm' => $merchandise
+        ]);
     }
 }

@@ -9,6 +9,7 @@ use Doctrine\Persistence\ManagerRegistry;
 /**
  * @method Debt|null find($id, $lockMode = null, $lockVersion = null)
  * @method Debt|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Debt[]    findAll()
  * @method Debt[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class DebtRepository extends ServiceEntityRepository
@@ -18,16 +19,32 @@ class DebtRepository extends ServiceEntityRepository
         parent::__construct($registry, Debt::class);
     }
 
-    public function findAll()
+    // /**
+    //  * @return Debt[] Returns an array of Debt objects
+    //  */
+    /*
+    public function findByExampleField($value)
     {
         return $this->createQueryBuilder('d')
-            ->select('d, p')
-            ->join('d.provider', 'p')
-            ->where('d.paidFully = :paid')
-            ->andWhere('d.deletedAt IS NULL')
-            ->setParameter('paid', false)
-            ->orderBy('d.date', 'DESC')
+            ->andWhere('d.exampleField = :val')
+            ->setParameter('val', $value)
+            ->orderBy('d.id', 'ASC')
+            ->setMaxResults(10)
             ->getQuery()
-            ->getResult();
+            ->getResult()
+        ;
     }
+    */
+
+    /*
+    public function findOneBySomeField($value): ?Debt
+    {
+        return $this->createQueryBuilder('d')
+            ->andWhere('d.exampleField = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
+    */
 }

@@ -1,10 +1,34 @@
-<h3 class="d-inline-block m-0">{{ date|roDate('EEEE')|capitalize }}, {{ date|date("j") }} {{ date|roDate('MMMM') }} {{ date|date("Y") }}</h3>
+<div class="row">
+    <div class="col-6">
+        <h3 class="d-inline-block m-0">{{ date|roDate('EEEE')|capitalize }}, {{ date|date("j") }} {{ date|roDate('MMMM') }} {{ date|date("Y") }}</h3>
 
-<form id="js-change-day-form" class="d-none" action="{{ path('day') }}" method="post">
-    <input id="js-change-day-date" name="date" type="hidden" value="" />
-</form>
+        <form id="js-change-day-form" class="d-none" action="{{ path('day') }}" method="post">
+            <input id="js-change-day-date" name="date" type="hidden" value="" />
+        </form>
 
-<button id="js-change-day-datepicker" class="btn btn-outline-secondary btn-sm align-top">
-    <i class="fas fa-calendar" aria-hidden="true"></i>
-</button>
-<hr>
+        <button id="js-change-day-datepicker" class="btn btn-outline-secondary btn-sm align-top">
+            <i class="fas fa-calendar" aria-hidden="true"></i>
+        </button>
+    </div>
+    <div class="col-6 text-right">
+        {% if day %}
+            <i class="far fa-clock"></i> {{ day.startedAt|date('H:i') }}
+            {{ day.endedAt ? ' - ' ~ day.endedAt|date('H:i') }}
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-12">
+        <ul id="summary" class="list-group list-group-horizontal mt-3 w-100">
+            <li class="list-group-item">Sold actual</li>
+            <li class="list-group-item">Intrare marfa</li>
+            <li class="list-group-item">Iesiri diverse</li>
+            <li class="list-group-item">Marfa bonuri</li>
+            <li class="list-group-item">Marfa facturi</li>
+            <li class="list-group-item">Monetar</li>
+            <li class="list-group-item">Bancnote</li>
+            <li class="list-group-item">Z</li>
+        </ul>
+    </div>
+</div>

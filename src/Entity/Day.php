@@ -97,7 +97,7 @@ class Day
         return $this->startedAt;
     }
 
-    public function getEndedAt(): \DateTimeImmutable
+    public function getEndedAt(): ?\DateTimeImmutable
     {
         return $this->endedAt;
     }

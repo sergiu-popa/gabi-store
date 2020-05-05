@@ -7,22 +7,18 @@
 
     <div class="row">
         <div class="col-6">
-            <p>Rezumat</p>
-            <p>Inceput si terminat</p>
             <p>Iesiri diverse</p>
             <p>Monetar</p>
-            <p>Bills 50 & 100: start/end</p>
             <p>Datorii diverse</p>
-            <p>Z</p>
         </div>
         <div class="col-6">
-            {{ include('merchandise_payment/list.html.twig', {payments: transactions['payments']}) }}
+            {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}
         </div>
     </div>
 
     <div class="row">
         <div class="col-12">
-            Furnizori pentru a bifa
+            Furnizori pentru a bifa daca a dat comanda sau a facut plata
         </div>
     </div>
 
