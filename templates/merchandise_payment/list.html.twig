@@ -1,25 +1,23 @@
-<div class="card">
+<div class="card mb-5">
     <div class="card-header">Marfă achitată</div>
 
-    {% if payments|length > 0 %}
-        <table class="table table-striped" style="border-top: none;">
-            <thead>
-            <tr>
-                <th>Furnizor</th>
-                <th>Plată</th>
-                <th>Cantitate</th>
-                {% if canModify %}<th></th>{% endif %}
-            </tr>
-            </thead>
-            <tbody>
-            {% for p in payments %}
-                {{ include('merchandise_payment/_payment.html.twig') }}
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p class="card-body">Nu s-a achitat nici o marfă.</p>
-    {% endif %}
+    <table class="table table-striped" style="border-top: none;">
+        <thead>
+        <tr>
+            <th>Furnizor</th>
+            <th>Plată</th>
+            <th>Cantitate</th>
+            {% if canModify %}<th></th>{% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for p in payments %}
+            {{ include('merchandise_payment/_payment.html.twig') }}
+        {% else %}
+            <tr><td colspan="4">Nu s-a achitat nici o marfă.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     {% if canModify %}
         <div class="card-footer text-right">

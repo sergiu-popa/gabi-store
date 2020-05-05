@@ -7,24 +7,24 @@
 
     <div class="row">
         <div class="col-6">
-            <p>Iesiri diverse</p>
-            <p>Monetar</p>
-            <p>Datorii diverse</p>
+            {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}
+            {{ include('expense/list.html.twig', { expenses: transactions['expenses'] }) }}
         </div>
         <div class="col-6">
-            {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}
+            {{ include('money/list.html.twig', { money: transactions['money'] }) }}
+            {{ include('debt/list.html.twig', { debts: transactions['debts'] }) }}
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-12">
             Furnizori pentru a bifa daca a dat comanda sau a facut plata
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mb-5">
         <div class="col-12">
-            Intrare marfa
+            {{ include('merchandise/list.html.twig', { merchandises: transactions['merchandises'] }) }}
         </div>
     </div>
 

@@ -1,25 +1,23 @@
-<div class="card">
+<div class="card mb-5">
     <div class="card-header">Ieșiri diverse</div>
 
-    {% if expenses|length > 0 %}
-        <table class="table table-striped" style="border-top: none;">
+    <table class="table table-striped" style="border-top: none;">
         <thead>
-            <tr>
-                <th>Categoria</th>
-                <th>Cantitate</th>
-                <th>Note</th>
-                {% if canModify %}<th></th>{% endif %}
-            </tr>
+        <tr>
+            <th>Categoria</th>
+            <th>Cantitate</th>
+            <th>Note</th>
+            {% if canModify %}<th></th>{% endif %}
+        </tr>
         </thead>
         <tbody>
         {% for e in expenses %}
             {{ include('expense/_expense.html.twig') }}
         {% else %}
+            <tr><td colspan="4">Nu s-a găsit nici o ieșire.</td></tr>
+        {% endfor %}
         </tbody>
     </table>
-    {% else %}
-        <p class="card-body">Nu s-a găsit nici o ieșire.</p>
-    {% endif %}
 
     {% if canModify %}
         <div class="card-footer text-right">

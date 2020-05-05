@@ -1,24 +1,22 @@
-<div class="card">
+<div class="card mb-5">
     <div class="card-header">Datorii diverse</div>
 
-    {% if debts|length > 0 %}
-        <table class="table table-striped" style="border-top: none;">
-            <thead>
-            <tr>
-                <th>Nume</th>
-                <th>Cantitate</th>
-                {% if canModify %}<th></th>{% endif %}
-            </tr>
-            </thead>
-            <tbody>
-            {% for d in debts %}
-                {{ include('debt/_debt.html.twig') }}
-            {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p class="card-body">Nu există nici o datorie.</p>
-    {% endif %}
+    <table class="table table-striped" style="border-top: none;">
+        <thead>
+        <tr>
+            <th>Nume</th>
+            <th>Cantitate</th>
+            {% if canModify %}<th></th>{% endif %}
+        </tr>
+        </thead>
+        <tbody>
+        {% for d in debts %}
+            {{ include('debt/_debt.html.twig') }}
+        {% else %}
+            <tr><td colspan="3">Nu există nici o datorie.</td></tr>
+        {% endfor %}
+        </tbody>
+    </table>
 
     {% if canModify %}
         <div class="card-footer text-right">
