@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\ExpenseCategory;
 use App\Form\ExpenseCategoryType;
 use App\Repository\ExpenseCategoryRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,6 +18,14 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
  */
 class ExpenseCategoryController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="expense_category_index", methods={"GET"})
      */
@@ -37,9 +46,8 @@ class ExpenseCategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($expenseCategory);
-            $entityManager->flush();
+            $this->em->persist($expenseCategory);
+            $this->em->flush();
 
             return $this->redirectToRoute('expense_category_index');
         }
@@ -69,7 +77,7 @@ class ExpenseCategoryController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('expense_category_index');
         }
@@ -83,12 +91,11 @@ class ExpenseCategoryController extends AbstractController
     /**
      * @Route("/{id}", name="expense_category_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, ExpenseCategory $expenseCategory): Response
+    public function delete(Request $request, ExpenseCategory $category): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$expenseCategory->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($expenseCategory);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
+            $category->delete();
+            $this->em->flush();
         }
 
         return $this->redirectToRoute('expense_category_index');

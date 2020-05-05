@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -17,6 +18,7 @@ class ExpenseCategory
 {
     use IdTrait;
     use NameTrait;
+    use DeletedAtTrait;
 
     public function __construct()
     {

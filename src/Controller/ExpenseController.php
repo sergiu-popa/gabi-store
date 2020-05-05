@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Expense;
 use App\Form\ExpenseType;
-use App\Repository\ExpenseRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ExpenseController extends AbstractController
 {
-    /**
-     * @Route("/", name="expense_index", methods={"GET"})
-     */
-    public function index(ExpenseRepository $expenseRepository): Response
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
     {
-        return $this->render('expense/index.html.twig', [
-            'expenses' => $expenseRepository->findAll(),
-        ]);
+        $this->em = $em;
     }
 
     /**
@@ -35,9 +33,8 @@ class ExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($expense);
-            $entityManager->flush();
+            $this->em->persist($expense);
+            $this->em->flush();
 
             return $this->redirectToRoute('expense_index');
         }
@@ -45,16 +42,6 @@ class ExpenseController extends AbstractController
         return $this->render('expense/new.html.twig', [
             'expense' => $expense,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="expense_show", methods={"GET"})
-     */
-    public function show(Expense $expense): Response
-    {
-        return $this->render('expense/show.html.twig', [
-            'expense' => $expense,
         ]);
     }
 
@@ -67,7 +54,7 @@ class ExpenseController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('expense_index');
         }
@@ -84,11 +71,12 @@ class ExpenseController extends AbstractController
     public function delete(Request $request, Expense $expense): Response
     {
         if ($this->isCsrfTokenValid('delete'.$expense->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($expense);
-            $entityManager->flush();
+            $expense->delete();
+            $this->em->flush();
+
+            return $this->json(['success' => true, 'message' => 'Ieșirea a fost ștearsă cu success.']);
         }
 
-        return $this->redirectToRoute('expense_index');
+        return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 }

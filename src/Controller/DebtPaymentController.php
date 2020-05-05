@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\DebtPayment;
 use App\Form\DebtPaymentType;
 use App\Repository\DebtPaymentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,14 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class DebtPaymentController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+    }
+
     /**
      * @Route("/", name="debt_payment_index", methods={"GET"})
      */
@@ -35,9 +44,8 @@ class DebtPaymentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($debtPayment);
-            $entityManager->flush();
+            $this->em->persist($debtPayment);
+            $this->em->flush();
 
             return $this->redirectToRoute('debt_payment_index');
         }
@@ -67,7 +75,7 @@ class DebtPaymentController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('debt_payment_index');
         }
@@ -81,14 +89,15 @@ class DebtPaymentController extends AbstractController
     /**
      * @Route("/{id}", name="debt_payment_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, DebtPayment $debtPayment): Response
+    public function delete(Request $request, DebtPayment $payment): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$debtPayment->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($debtPayment);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$payment->getId(), $request->request->get('_token'))) {
+            $payment->delete();
+            $this->em->flush();
+
+            return $this->json(['success' => true, 'message' => 'Plata a fost ștearsă cu success.']);
         }
 
-        return $this->redirectToRoute('debt_payment_index');
+        return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 }

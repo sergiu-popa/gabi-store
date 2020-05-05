@@ -82,7 +82,7 @@ class MerchandiseCategoryController extends AbstractController
     public function delete(Request $request, MerchandiseCategory $merchandiseCategory): Response
     {
         if ($this->isCsrfTokenValid('delete'.$merchandiseCategory->getId(), $request->request->get('_token'))) {
-            $merchandiseCategory->delete($this->getUser());
+            $merchandiseCategory->delete();
             $this->em->flush();
 
             $this->addFlash('success', 'Categoria a fost stearsa.');

@@ -65,7 +65,7 @@ class DebtController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('debt_index');
         }
@@ -82,12 +82,12 @@ class DebtController extends AbstractController
     public function delete(Request $request, Debt $debt): Response
     {
         if ($this->isCsrfTokenValid('delete'.$debt->getId(), $request->request->get('_token'))) {
-            $debt->delete($this->getUser());
+            $debt->delete();
             $this->em->flush();
 
-            $this->addFlash('success', 'Datoria a fost stearsa cu success.');
+            return $this->json(['success' => true, 'message' => 'Datoria a fost ștearsă cu success.']);
         }
 
-        return $this->redirectToRoute('debt_index');
+        return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 }

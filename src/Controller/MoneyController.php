@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Money;
 use App\Form\MoneyType;
-use App\Repository\MoneyRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MoneyController extends AbstractController
 {
-    /**
-     * @Route("/", name="money_index", methods={"GET"})
-     */
-    public function index(MoneyRepository $moneyRepository): Response
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
     {
-        return $this->render('money/index.html.twig', [
-            'monies' => $moneyRepository->findAll(),
-        ]);
+        $this->em = $em;
     }
 
     /**
@@ -35,9 +33,8 @@ class MoneyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($money);
-            $entityManager->flush();
+            $this->em->persist($money);
+            $this->em->flush();
 
             return $this->redirectToRoute('money_index');
         }
@@ -45,16 +42,6 @@ class MoneyController extends AbstractController
         return $this->render('money/new.html.twig', [
             'money' => $money,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="money_show", methods={"GET"})
-     */
-    public function show(Money $money): Response
-    {
-        return $this->render('money/show.html.twig', [
-            'money' => $money,
         ]);
     }
 
@@ -67,7 +54,7 @@ class MoneyController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('money_index');
         }
@@ -84,11 +71,12 @@ class MoneyController extends AbstractController
     public function delete(Request $request, Money $money): Response
     {
         if ($this->isCsrfTokenValid('delete'.$money->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($money);
-            $entityManager->flush();
+            $money->delete();
+            $this->em->flush();
+
+            return $this->json(['success' => true, 'message' => 'Monetarul a fost șterș cu success.']);
         }
 
-        return $this->redirectToRoute('money_index');
+        return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 }

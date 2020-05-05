@@ -93,12 +93,12 @@ class MerchandiseController extends AbstractController
     public function delete(Request $request, Merchandise $merchandise): Response
     {
         if ($this->isCsrfTokenValid('delete'.$merchandise->getId(), $request->request->get('_token'))) {
-            $merchandise->delete($this->getUser());
+            $merchandise->delete();
             $this->em->flush();
 
-            $this->addFlash('success', 'Stergere cu success.');
+            return $this->json(['success' => true, 'message' => 'Intrarea a fost ștearsă cu success.']);
         }
 
-        return $this->redirectToRoute('merchandise_index');
+        return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 }

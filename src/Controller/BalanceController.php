@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Balance;
 use App\Form\BalanceType;
-use App\Repository\BalanceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,15 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class BalanceController extends AbstractController
 {
-    /**
-     * @Route("/", name="balance_index", methods={"GET"})
-     */
-    public function index(BalanceRepository $balanceRepository): Response
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
     {
-        // TODO pagination
-        return $this->render('balance/index.html.twig', [
-            'balances' => $balanceRepository->findAll(),
-        ]);
+        $this->em = $em;
     }
 
     /**
@@ -36,9 +33,8 @@ class BalanceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($balance);
-            $entityManager->flush();
+            $this->em->persist($balance);
+            $this->em->flush();
 
             return $this->redirectToRoute('balance_index');
         }
@@ -68,7 +64,7 @@ class BalanceController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('balance_index');
         }
@@ -77,19 +73,5 @@ class BalanceController extends AbstractController
             'balance' => $balance,
             'form' => $form->createView(),
         ]);
-    }
-
-    /**
-     * @Route("/{id}", name="balance_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, Balance $balance): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$balance->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($balance);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('balance_index');
     }
 }

@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Entity\MerchandisePayment;
 use App\Form\MerchandisePaymentType;
-use App\Repository\MerchandisePaymentRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,14 +15,12 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class MerchandisePaymentController extends AbstractController
 {
-    /**
-     * @Route("/", name="merchandise_payment_index", methods={"GET"})
-     */
-    public function index(MerchandisePaymentRepository $merchandisePaymentRepository): Response
+    /** @var EntityManagerInterface */
+    private $em;
+
+    public function __construct(EntityManagerInterface $em)
     {
-        return $this->render('merchandise_payment/index.html.twig', [
-            'merchandise_payments' => $merchandisePaymentRepository->findAll(),
-        ]);
+        $this->em = $em;
     }
 
     /**
@@ -30,14 +28,14 @@ class MerchandisePaymentController extends AbstractController
      */
     public function new(Request $request): Response
     {
+        // TODO full AJAX
         $merchandisePayment = new MerchandisePayment();
         $form = $this->createForm(MerchandisePaymentType::class, $merchandisePayment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($merchandisePayment);
-            $entityManager->flush();
+            $this->em->persist($merchandisePayment);
+            $this->em->flush();
 
             return $this->redirectToRoute('merchandise_payment_index');
         }
@@ -49,25 +47,16 @@ class MerchandisePaymentController extends AbstractController
     }
 
     /**
-     * @Route("/{id}", name="merchandise_payment_show", methods={"GET"})
-     */
-    public function show(MerchandisePayment $merchandisePayment): Response
-    {
-        return $this->render('merchandise_payment/show.html.twig', [
-            'merchandise_payment' => $merchandisePayment,
-        ]);
-    }
-
-    /**
      * @Route("/{id}/edit", name="merchandise_payment_edit", methods={"GET","POST"})
      */
     public function edit(Request $request, MerchandisePayment $merchandisePayment): Response
     {
+        // TODO full AJAX
         $form = $this->createForm(MerchandisePaymentType::class, $merchandisePayment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('merchandise_payment_index');
         }
@@ -81,14 +70,15 @@ class MerchandisePaymentController extends AbstractController
     /**
      * @Route("/{id}", name="merchandise_payment_delete", methods={"DELETE"})
      */
-    public function delete(Request $request, MerchandisePayment $merchandisePayment): Response
+    public function delete(Request $request, MerchandisePayment $payment)
     {
-        if ($this->isCsrfTokenValid('delete'.$merchandisePayment->getId(), $request->request->get('_token'))) {
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->remove($merchandisePayment);
-            $entityManager->flush();
+        if ($this->isCsrfTokenValid('delete'.$payment->getId(), $request->request->get('_token'))) {
+            $payment->delete();
+            $this->em->flush();
+
+            return $this->json(['success' => true, 'message' => 'Plata a fost ștearsă cu success.']);
         }
 
-        return $this->redirectToRoute('merchandise_payment_index');
+        return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
     }
 }

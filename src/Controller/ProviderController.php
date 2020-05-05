@@ -75,7 +75,7 @@ class ProviderController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->getDoctrine()->getManager()->flush();
+            $this->em->flush();
 
             return $this->redirectToRoute('provider_index');
         }
@@ -92,10 +92,10 @@ class ProviderController extends AbstractController
     public function delete(Request $request, Provider $provider): Response
     {
         if ($this->isCsrfTokenValid('delete'.$provider->getId(), $request->request->get('_token'))) {
-            $provider->delete($this->getUser());
+            $provider->delete();
             $this->em->flush();
 
-            $this->addFlash('success', 'Furnizorul a fost sters cu success.');
+            $this->addFlash('success', 'Furnizorul a fost șters cu success.');
         }
 
         return $this->redirectToRoute('provider_index');
