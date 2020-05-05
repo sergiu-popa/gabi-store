@@ -1,7 +1,7 @@
 <tr>
     {% set path = payment.id ?
-        path('merchandise_payment_edit', {'id': payment.id, 'index': index }) :
-        path('merchandise_payment_new', {'index': index, 'date': currentDate })
+        path('merchandise_payment_edit', {'id': payment.id }) :
+        path('merchandise_payment_new', {'date': currentDate })
     %}
     {% set mode = payment.id ? 'edit' : 'insert' %}
     <td colspan="5">

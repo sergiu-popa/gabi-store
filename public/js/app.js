@@ -47,11 +47,10 @@ jQuery(function ($) {
         $.post(route, $form.serialize(), function(html) {
             $form.fadeOut(300, function() {
                 if(mode === 'edit') {
-                    $parentRow.prev().replaceWith(html).fadeIn(400);
-                    $parentRow.remove();
-                } else {
-                    $parentRow.replaceWith(html).fadeIn(400);
+                    $parentRow.parent().find('tr:hidden').remove();
                 }
+
+                $parentRow.replaceWith(html).fadeIn(400);
             });
         });
 
@@ -74,7 +73,6 @@ jQuery(function ($) {
             $lastRow = $(this).parents('.card').find('table tr:last');
 
         $.get(route, function(data) {
-            // TODO increment index
             $lastRow.after(data);
         });
 

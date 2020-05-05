@@ -5,7 +5,6 @@
         <table class="table table-striped" style="border-top: none;">
             <thead>
             <tr>
-                <th></th>
                 <th>Furnizor</th>
                 <th>Plată</th>
                 <th>Cantitate</th>
@@ -25,7 +24,7 @@
     {% if canModify %}
         <div class="card-footer text-right">
             <a class="js-add btn btn-sm btn-outline-primary"
-               href="{{ path('merchandise_payment_new', { 'date': currentDate|date('Y-m-d'), 'index': payments|length + 1 }) }}">adaugă</a>
+               href="{{ path('merchandise_payment_new', { 'date': currentDate|date('Y-m-d') }) }}">adaugă</a>
         </div>
     {% endif %}
 </div>

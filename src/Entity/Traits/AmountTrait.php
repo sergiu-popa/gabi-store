@@ -20,7 +20,7 @@ trait AmountTrait
         return $this->amount;
     }
 
-    public function setAmount(float $amount): self
+    public function setAmount(?float $amount): self
     {
         $this->amount = $amount;
 
