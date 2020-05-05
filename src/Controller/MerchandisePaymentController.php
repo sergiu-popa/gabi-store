@@ -79,7 +79,7 @@ class MerchandisePaymentController extends AbstractController
     {
         if ($this->isCsrfTokenValid('delete'.$payment->getId(), $request->request->get('_token'))) {
             $payment->delete();
-            $this->em->flush();
+            #$this->em->flush();
 
             return $this->json(['success' => true, 'message' => 'Plata a fost ștearsă cu success.']);
         }

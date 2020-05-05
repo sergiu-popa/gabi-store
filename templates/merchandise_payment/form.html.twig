@@ -4,10 +4,14 @@
 
         {{ form_widget(form) }}
 
-        <button class="js-save btn btn-sm btn-success"
-                data-href="{{ path('merchandise_payment_edit', {'id': payment.id, 'index': index }) }}">
-            <i class="fas fa-check"></i>
-        </button>
+        <div class="text-right">
+            <button class="js-save btn btn-sm btn-success"
+                    data-href="{{ path('merchandise_payment_edit', {'id': payment.id, 'index': index }) }}">
+                <i class="fas fa-check"></i> salvează
+            </button>
+
+            <button class="js-close btn btn-sm btn-outline-secondary">închide</button>
+        </div>
 
         {{ form_end(form) }}
     </td>
