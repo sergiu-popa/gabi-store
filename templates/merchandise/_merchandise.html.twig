@@ -7,8 +7,8 @@
     <td>{{ m.exitPrice }}</td>
     {% if canModify %}
         <td style="width: 100px;">
-            {{ include('blocks/_edit_button.html.twig', { href: path('merchandise_edit', {'id': p.id }) }) }}
-            {{ include('blocks/_delete_button.html.twig', { route: 'merchandise_delete', 'id': p.id, item: 'intrarea' }) }}
+            {{ include('blocks/_edit_button.html.twig', { href: path('merchandise_edit', {'id': m.id }) }) }}
+            {{ include('blocks/_delete_button.html.twig', { route: 'merchandise_delete', 'id': m.id, item: 'intrarea' }) }}
         </td>
     {% endif %}
 </tr>
