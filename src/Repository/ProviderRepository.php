@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Provider;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,13 +19,16 @@ class ProviderRepository extends ServiceEntityRepository
         parent::__construct($registry, Provider::class);
     }
 
-    public function findAll(): array
+    public function getQueryBuilder(): QueryBuilder
     {
         return $this->createQueryBuilder('p')
             ->andWhere('p.deletedAt IS NULL')
-            ->orderBy('p.name', 'ASC')
-            ->getQuery()
-            ->getResult();
+            ->orderBy('p.name', 'ASC');
+    }
+
+    public function findAll(): array
+    {
+        return $this->getQueryBuilder()->getQuery()->getResult();
     }
 
     public function findByDay(\DateTimeInterface $date): array

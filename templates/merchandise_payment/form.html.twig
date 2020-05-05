@@ -1,0 +1,14 @@
+<tr>
+    <td colspan="5">
+        {{ form_start(form) }}
+
+        {{ form_widget(form) }}
+
+        <button class="js-save btn btn-sm btn-success"
+                data-href="{{ path('merchandise_payment_edit', {'id': payment.id, 'index': index }) }}">
+            <i class="fas fa-check"></i>
+        </button>
+
+        {{ form_end(form) }}
+    </td>
+</tr>

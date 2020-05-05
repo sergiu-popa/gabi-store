@@ -35,7 +35,7 @@ class DayController extends AbstractController
 
         return $this->render('day.html.twig', [
             'currentDate' => $date,
-            'canModify' => $this->manager->getDay($date),
+            'canModify' => $this->manager->userCanModifyDay($date),
             'day' => $this->manager->getDay($date),
             'transactions' => $transactions
         ]);

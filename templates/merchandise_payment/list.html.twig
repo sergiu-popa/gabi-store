@@ -9,21 +9,12 @@
                 <th>Furnizor</th>
                 <th>Plată</th>
                 <th>Cantitate</th>
-                <th></th>
+                {% if canModify %}<th></th>{% endif %}
             </tr>
             </thead>
             <tbody>
             {% for p in payments %}
-                <tr>
-                    <td width="50">{{ loop.index }}</td>
-                    <td>{{ p.provider.name }}</td>
-                    <td><span class="badge badge-{{ p.typeLabel }}">{{ p.typeLabel }}</span></td>
-                    <td>{{ p.amount|num_for }}</td>
-                    <td style="width: 100px;">
-                        {{ include('blocks/_edit_button.html.twig', { href: path('merchandise_payment_edit', {'id': p.id}) }) }}
-                        {{ include('blocks/_delete_button.html.twig', { route: 'merchandise_payment_delete', 'id': p.id, item: 'plata' }) }}
-                    </td>
-                </tr>
+                {{ include('merchandise_payment/_payment.html.twig', { index: loop.index }) }}
             {% endfor %}
             </tbody>
         </table>

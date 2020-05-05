@@ -40,7 +40,7 @@ class MerchandisePaymentController extends AbstractController
             return $this->redirectToRoute('merchandise_payment_index');
         }
 
-        return $this->render('merchandise_payment/new.html.twig', [
+        return $this->render('merchandise_payment/form.html.twig', [
             'merchandise_payment' => $merchandisePayment,
             'form' => $form->createView(),
         ]);
@@ -49,21 +49,26 @@ class MerchandisePaymentController extends AbstractController
     /**
      * @Route("/{id}/edit", name="merchandise_payment_edit", methods={"GET","POST"})
      */
-    public function edit(Request $request, MerchandisePayment $merchandisePayment): Response
+    public function edit(Request $request, MerchandisePayment $payment): Response
     {
-        // TODO full AJAX
-        $form = $this->createForm(MerchandisePaymentType::class, $merchandisePayment);
+        $form = $this->createForm(MerchandisePaymentType::class, $payment);
         $form->handleRequest($request);
+        $index = $request->query->get('index');
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
 
-            return $this->redirectToRoute('merchandise_payment_index');
+            return $this->render('merchandise_payment/_payment.html.twig', [
+                'canModify' => true,
+                'p' => $payment,
+                'index' => $index
+            ]);
         }
 
-        return $this->render('merchandise_payment/edit.html.twig', [
-            'merchandise_payment' => $merchandisePayment,
+        return $this->render('merchandise_payment/form.html.twig', [
+            'payment' => $payment,
             'form' => $form->createView(),
+            'index' => $index
         ]);
     }
 
