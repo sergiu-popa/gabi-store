@@ -11,10 +11,8 @@ class DebtType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name')
-            ->add('amount')
-        ;
+        $builder->add('name')
+            ->add('amount');
     }
 
     public function configureOptions(OptionsResolver $resolver)

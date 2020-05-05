@@ -13,7 +13,7 @@
         {% for m in money %}
             {{ include('money/_money.html.twig') }}
         {% else %}
-            <tr><td colspan="3">Nici un monetar.</td></tr>
+            <tr class="js-empty"><td colspan="3">Nici un monetar.</td></tr>
         {% endfor %}
         </tbody>
     </table>

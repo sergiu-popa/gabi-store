@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Money;
-use App\Form\MoneyType;
+use App\Form\StoreMoneyType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -30,7 +30,7 @@ class MoneyController extends AbstractController
     {
         $money = new Money();
         $money->setDate(new \DateTime($request->query->get('date')));
-        $form = $this->createForm(MoneyType::class, $money);
+        $form = $this->createForm(StoreMoneyType::class, $money);
 
         $form->handleRequest($request);
 
@@ -53,7 +53,7 @@ class MoneyController extends AbstractController
      */
     public function edit(Request $request, Money $money): Response
     {
-        $form = $this->createForm(MoneyType::class, $money);
+        $form = $this->createForm(StoreMoneyType::class, $money);
 
         $form->handleRequest($request);
 
@@ -78,7 +78,7 @@ class MoneyController extends AbstractController
             $money->delete();
             $this->em->flush();
 
-            return $this->json(['success' => true, 'message' => 'Monetarul a fost șterș cu success.']);
+            return $this->json(['success' => true, 'message' => 'Monetarul a fost șters cu success.']);
         }
 
         return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);

@@ -35,10 +35,10 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->select('m, p, c')
             ->join('m.provider', 'p')
             ->join('m.category', 'c')
-            ->where('p.deletedAt IS NULL')
+            ->where('m.deletedAt IS NULL')
             ->andWhere('m.date = :date')
             ->setParameter('date', $date)
-            ->orderBy('m.date', 'DESC')
+            ->orderBy('p.name', 'ASC')
             ->getQuery()
             ->getResult();
     }

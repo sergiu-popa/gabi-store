@@ -13,8 +13,7 @@ class DayEndType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('bills_50_end', NumberType::class, [
+        $builder->add('bills_50_end', NumberType::class, [
                 'label' => 'Bancnote de 50',
                 'html5' => true
             ])
@@ -28,8 +27,7 @@ class DayEndType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

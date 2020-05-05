@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\ExpenseCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -17,5 +18,12 @@ class ExpenseCategoryRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ExpenseCategory::class);
+    }
+
+    public function getQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.deletedAt IS NULL')
+            ->orderBy('c.name', 'ASC');
     }
 }

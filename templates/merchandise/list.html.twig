@@ -8,8 +8,8 @@
             <th>Categorie</th>
             <th>Nume</th>
             <th>Cantitate</th>
-            <th>Pret intrare</th>
-            <th>Pret iesire</th>
+            <th>Preț intrare</th>
+            <th>Preț ieșire</th>
             {% if canModify %}<th></th>{% endif %}
         </tr>
         </thead>
@@ -17,7 +17,7 @@
         {% for m in merchandises %}
             {{ include('merchandise/_merchandise.html.twig') }}
         {% else %}
-            <tr><td colspan="7">Nu s-a găsit nici o intrare de marfă.</td></tr>
+            <tr class="js-empty"><td colspan="7">Nu s-a găsit nici o intrare de marfă.</td></tr>
         {% endfor %}
         </tbody>
     </table>

@@ -14,7 +14,7 @@
         {% for p in payments %}
             {{ include('merchandise_payment/_payment.html.twig') }}
         {% else %}
-            <tr><td colspan="4">Nu s-a achitat nici o marfă.</td></tr>
+            <tr class="js-empty"><td colspan="4">Nu s-a achitat nici o marfă.</td></tr>
         {% endfor %}
         </tbody>
     </table>

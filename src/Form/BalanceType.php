@@ -11,10 +11,8 @@ class BalanceType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('amount')
-            ->add('date')
-        ;
+        $builder->add('amount')
+            ->add('date');
     }
 
     public function configureOptions(OptionsResolver $resolver)

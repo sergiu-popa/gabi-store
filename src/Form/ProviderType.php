@@ -11,14 +11,12 @@ class ProviderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('name')
+        $builder->add('name')
             ->add('agent')
             ->add('mobileNumber')
             ->add('cui')
             ->add('town')
-            ->add('phoneNumber')
-        ;
+            ->add('phoneNumber');
     }
 
     public function configureOptions(OptionsResolver $resolver)

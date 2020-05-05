@@ -1,6 +1,6 @@
 <tr>
-    <td style="width: 100px">{{ p.amount|num_for }}</td>
-    <td>{{ money.notes }}</td>
+    <td style="width: 100px">{{ m.amount|num_for }}</td>
+    <td>{{ m.notes }}</td>
     {% if canModify %}
         <td style="width: 100px;">
             {{ include('blocks/_edit_button.html.twig', { href: path('money_edit', {'id': m.id }) }) }}

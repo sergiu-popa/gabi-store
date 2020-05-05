@@ -13,7 +13,7 @@
         {% for d in debts %}
             {{ include('debt/_debt.html.twig') }}
         {% else %}
-            <tr><td colspan="3">Nu există nici o datorie.</td></tr>
+            <tr class="js-empty"><td colspan="3">Nu există nici o datorie.</td></tr>
         {% endfor %}
         </tbody>
     </table>

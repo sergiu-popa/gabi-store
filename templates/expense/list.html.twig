@@ -14,7 +14,7 @@
         {% for e in expenses %}
             {{ include('expense/_expense.html.twig') }}
         {% else %}
-            <tr><td colspan="4">Nu s-a găsit nici o ieșire.</td></tr>
+            <tr class="js-empty"><td colspan="4">Nu s-a găsit nici o ieșire.</td></tr>
         {% endfor %}
         </tbody>
     </table>

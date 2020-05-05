@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\MerchandiseCategory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,9 +19,16 @@ class MerchandiseCategoryRepository extends ServiceEntityRepository
         parent::__construct($registry, MerchandiseCategory::class);
     }
 
+    public function getQueryBuilder(): QueryBuilder
+    {
+        return $this->createQueryBuilder('c')
+            ->andWhere('c.deletedAt IS NULL')
+            ->orderBy('c.name', 'ASC');
+    }
+
     /**
-      * @return MerchandiseCategory[] Returns an array of MerchandiseCategory objects
-      */
+     * @return MerchandiseCategory[] Returns an array of MerchandiseCategory objects
+     */
     public function findAll()
     {
         return $this->createQueryBuilder('c')
@@ -31,6 +39,6 @@ class MerchandiseCategoryRepository extends ServiceEntityRepository
             ->groupBy('c.id')
             ->getQuery()
             ->getResult()
-        ;
+            ;
     }
 }

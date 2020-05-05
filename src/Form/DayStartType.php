@@ -13,8 +13,7 @@ class DayStartType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('bills_50_start', NumberType::class, [
+        $builder->add('bills_50_start', NumberType::class, [
                 'label' => 'Bancnote de 50',
                 'html5' => true
             ])
@@ -27,8 +26,7 @@ class DayStartType extends AbstractType
                 'attr' => [
                     'class' => 'btn btn-primary'
                 ]
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

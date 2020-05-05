@@ -7,15 +7,12 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class MoneyType extends AbstractType
+class StoreMoneyType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder
-            ->add('amount')
-            ->add('notes')
-            ->add('date')
-        ;
+        $builder->add('amount')
+            ->add('notes');
     }
 
     public function configureOptions(OptionsResolver $resolver)

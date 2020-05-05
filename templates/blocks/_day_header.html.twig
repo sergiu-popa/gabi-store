@@ -1,4 +1,4 @@
-<div class="row">
+<div class="row mb-3">
     <div class="col-6">
         <h3 class="d-inline-block m-0">{{ date|roDate('EEEE')|capitalize }}, {{ date|date("j") }} {{ date|roDate('MMMM') }} {{ date|date("Y") }}</h3>
 
@@ -11,14 +11,14 @@
         </button>
     </div>
     <div class="col-6 text-right">
-        {% if day is defined %}
+        {% if day is not null %}
             <i class="far fa-clock"></i> {{ day.startedAt|date('H:i') }}
             {{ day.endedAt ? ' - ' ~ day.endedAt|date('H:i') }}
         {% endif %}
     </div>
 </div>
 
-{% if day is defined %}
+{% if day is not null %}
 <div class="row mb-5">
     <div class="col-12">
         <ul id="summary" class="list-group list-group-horizontal mt-3 w-100">
