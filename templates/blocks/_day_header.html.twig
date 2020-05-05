@@ -11,13 +11,14 @@
         </button>
     </div>
     <div class="col-6 text-right">
-        {% if day %}
+        {% if day is defined %}
             <i class="far fa-clock"></i> {{ day.startedAt|date('H:i') }}
             {{ day.endedAt ? ' - ' ~ day.endedAt|date('H:i') }}
         {% endif %}
     </div>
 </div>
 
+{% if day is defined %}
 <div class="row mb-5">
     <div class="col-12">
         <ul id="summary" class="list-group list-group-horizontal mt-3 w-100">
@@ -32,3 +33,4 @@
         </ul>
     </div>
 </div>
+{% endif %}
