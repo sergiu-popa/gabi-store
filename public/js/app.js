@@ -89,7 +89,7 @@ jQuery(function ($) {
             $card.addClass('text-white bg-success');
             $card.removeClass('js-unverified');
 
-            if($('.card .js-unverified').length === 0) {
+            if($('.card.js-unverified').length === 0) {
                 $('.js-day-action').removeAttr('disabled');
             }
         }

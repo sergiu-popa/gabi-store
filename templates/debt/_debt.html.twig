@@ -1,6 +1,6 @@
 <tr>
     <td>{{ d.name }}</td>
-    <td style="width: 100px">{{ p.amount|num_for }}</td>
+    <td style="width: 100px">{{ d.amount|num_for }}</td>
     {% if canModify %}
         <td style="width: 100px;">
             {{ include('blocks/_edit_button.html.twig', { href: path('debt_edit', {'id': d.id }) }) }}
