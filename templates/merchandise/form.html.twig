@@ -1,7 +1,7 @@
 <tr>
     {% set path = merchandise.id ?
         path('merchandise_edit', {'id': merchandise.id }) :
-        path('merchandise_new', {'date': currentDate })
+        path('merchandise_new', {'date': currentDate, 'provider': provider })
     %}
     {% set mode = merchandise.id ? 'edit' : 'insert' %}
     <td colspan="7">

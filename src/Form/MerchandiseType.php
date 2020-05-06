@@ -9,7 +9,6 @@ use App\Repository\MerchandiseCategoryRepository;
 use App\Repository\ProviderRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -25,16 +24,21 @@ class MerchandiseType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+        /** @var Merchandise $merchandise */
+        $merchandise = $options['data'];
         $provider = $options['provider'];
 
-        if (empty($provider)) {
-            $builder->add('provider', EntityType::class, [
-                'class' => Provider::class,
-                'query_builder' => function (ProviderRepository $r) { return $r->getQueryBuilder(); }
-            ]);
-        } else {
-            $merchandise = $options['data'];
-            $merchandise->setProvider($this->providerRepository->find($provider));
+        if($merchandise->getId() === null) { // show or not provider only when adding new merchandise
+            if (empty($provider)) {
+                $builder->add('provider', EntityType::class, [
+                    'class' => Provider::class,
+                    'query_builder' => function (ProviderRepository $r) {
+                        return $r->getQueryBuilder();
+                    }
+                ]);
+            } else {
+                $merchandise->setProvider($this->providerRepository->find($provider));
+            }
         }
 
         $builder->add('category', EntityType::class, [

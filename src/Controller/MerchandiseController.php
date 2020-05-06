@@ -37,9 +37,10 @@ class MerchandiseController extends AbstractController
     {
         $merchandise = new Merchandise($request->query->get('date'));
         $merchandise->setDate(new \DateTime($request->query->get('date')));
+        $provider = $request->query->get('provider');
 
         $form = $this->createForm(MerchandiseType::class, $merchandise, [
-            'provider' => $request->query->get('provider')
+            'provider' => $provider
         ]);
         $form->handleRequest($request);
 
@@ -52,6 +53,7 @@ class MerchandiseController extends AbstractController
 
         return $this->render('merchandise/form.html.twig', [
             'currentDate' => $request->query->get('date'),
+            'provider' => $provider,
             'merchandise' => $merchandise,
             'form' => $form->createView(),
         ]);
