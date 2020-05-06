@@ -28,24 +28,6 @@ class MerchandiseRepository extends ServiceEntityRepository
     /**
      * @return Merchandise[]
      */
-    public function findByDay(\DateTime $date): array
-    {
-        // TODO create base query builder
-        return $this->createQueryBuilder('m')
-            ->select('m, p, c')
-            ->join('m.provider', 'p')
-            ->join('m.category', 'c')
-            ->where('m.deletedAt IS NULL')
-            ->andWhere('m.date = :date')
-            ->setParameter('date', $date)
-            ->orderBy('p.name', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return Merchandise[]
-     */
     public function findAll(): array
     {
         // TODO pagination please

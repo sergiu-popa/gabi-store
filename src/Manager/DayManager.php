@@ -8,6 +8,7 @@ use App\Entity\Expense;
 use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
+use App\Entity\Provider;
 use App\Entity\User;
 use App\Repository\DayRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -90,7 +91,7 @@ class DayManager
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),
             'expenses' => $this->em->getRepository(Expense::class)->findByDay($date),
             'money' => $this->em->getRepository(Money::class)->findByDay($date),
-            'merchandises' => $this->em->getRepository(Merchandise::class)->findByDay($date),
+            'providers' => $this->em->getRepository(Provider::class)->findByDay($date),
             'debts' => $this->em->getRepository(Debt::class)->findByDay($date),
         ];
     }

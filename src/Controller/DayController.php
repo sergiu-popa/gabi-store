@@ -31,6 +31,8 @@ class DayController extends AbstractController
             return $this->redirectToRoute('start');
         }
 
+        
+
         $transactions = $this->manager->getTransactions($date);
 
         return $this->render('day.html.twig', [

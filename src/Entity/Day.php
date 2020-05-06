@@ -84,7 +84,7 @@ class Day
 
     public function isToday(): bool
     {
-        return $this->date === (new \DateTime())->setTime(0, 0, 0);
+        return $this->date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
     }
 
     public function hasEnded(): bool

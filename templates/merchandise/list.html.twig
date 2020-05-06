@@ -1,10 +1,14 @@
-<div class="card">
-    <div class="card-header">Intrare marfă</div>
+<h3>Intrare marfă</h3>
+
+{# TODO modal create with provider, the refresh the list below with one request #}
+
+{% for p in providers %}
+<div class="card mb-2">
+    <div class="card-header">{{ p.name }}</div>
 
     <table class="table table-striped" style="border-top: none;">
         <thead>
         <tr>
-            <th>Furnizor</th>
             <th>Categorie</th>
             <th>Nume</th>
             <th>Cantitate</th>
@@ -14,10 +18,10 @@
         </tr>
         </thead>
         <tbody>
-        {% for m in merchandises %}
+        {% for m in p.merchandises %}
             {{ include('merchandise/_merchandise.html.twig') }}
         {% else %}
-            <tr class="js-empty"><td colspan="7">Nu s-a găsit nici o intrare de marfă.</td></tr>
+            <tr class="js-empty"><td colspan="6">Nu s-a găsit nici o intrare de marfă.</td></tr>
         {% endfor %}
         </tbody>
     </table>
@@ -30,7 +34,11 @@
 
         {% if canModify %}
             <a class="js-add btn btn-sm btn-outline-primary"
-               href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d') }) }}">adaugă</a>
+               href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d'), 'provider': p.id }) }}">adaugă</a>
         {% endif %}
     </div>
 </div>
+
+{% else %}
+    <p>Nu s-a găsit nici o intrare de marfă.</p>
+{% endfor %}
