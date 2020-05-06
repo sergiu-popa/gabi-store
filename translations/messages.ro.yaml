@@ -1,9 +1,12 @@
 Amount: Cantitate
 Category: Categorie
-Data: Data
+Date: Data
+error: Eroare
+Enter price: Preț intrare
+Exit price: Preț ieșire
 Notes: Notițe
 Name: Nume
 Provider: Furnizor
+success: Succes
 Type: Tip
-Enter price: Preț intrare
-Exit price: Preț ieșire
+warning: Atenție

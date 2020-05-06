@@ -4,7 +4,7 @@
     {% for message in messages %}
         <script>
             Swal.fire({
-                    title: '{{ type == 'success' ? 'Success' : 'Eroare' }}',
+                    title: '{{ type|trans|capitalize }}',
                     text: '{{ message }}',
                     timer: 3000,
                     icon: '{{ type }}',

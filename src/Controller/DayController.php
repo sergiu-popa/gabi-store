@@ -26,17 +26,22 @@ class DayController extends AbstractController
     {
         $date = (new \DateTime($request->request->get('date', 'now')))->setTime(0, 0, 0);
         $today = $this->manager->getCurrentDay();
+        $showReview = $request->query->get('showReview', false);
+
+        if($showReview) {
+            $this->addFlash('warning', 'Ca să închizi ziua, verifică fiecare secțiune.');
+        }
 
         if ($today === null && $this->dateIsToday($date)) {
             return $this->redirectToRoute('start');
         }
 
-        
+        // TODO end day form
 
         $transactions = $this->manager->getTransactions($date);
 
         return $this->render('day.html.twig', [
-            'showReview' => $request->query->get('showReview', false),
+            'showReview' => $showReview,
             'currentDate' => $date,
             'canModify' => $this->manager->userCanModifyDay($date),
             'day' => $this->manager->getDay($date),
