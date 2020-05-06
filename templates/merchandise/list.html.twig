@@ -1,44 +1,52 @@
-<h3>Intrare marfă</h3>
+<h3>Intrare marfă
+    <small>
+        <a href="#providersMerchandise" class="text-muted" data-toggle="collapse"
+           role="button" aria-expanded="false" aria-controls="providersMerchandise"
+        >ascunde</a>
+    </small>
+</h3>
 
 {# TODO modal create with provider, the refresh the list below with one request #}
 
-{% for p in providers %}
-<div class="card mb-2">
-    <div class="card-header">{{ p.name }}</div>
+<div id="providersMerchandise" class="collapse show">
+    {% for p in providers %}
+        <div class="card mb-2">
+            <div class="card-header">{{ p.name }}</div>
 
-    <table class="table table-striped" style="border-top: none;">
-        <thead>
-        <tr>
-            <th>Categorie</th>
-            <th>Nume</th>
-            <th>Cantitate</th>
-            <th>Preț intrare</th>
-            <th>Preț ieșire</th>
-            {% if canModify %}<th></th>{% endif %}
-        </tr>
-        </thead>
-        <tbody>
-        {% for m in p.merchandises %}
-            {{ include('merchandise/_merchandise.html.twig') }}
-        {% else %}
-            <tr class="js-empty"><td colspan="6">Nu s-a găsit nici o intrare de marfă.</td></tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            <table class="table table-striped" style="border-top: none;">
+                <thead>
+                <tr>
+                    <th>Categorie</th>
+                    <th>Nume</th>
+                    <th>Cantitate</th>
+                    <th>Preț intrare</th>
+                    <th>Preț ieșire</th>
+                    {% if canModify %}<th></th>{% endif %}
+                </tr>
+                </thead>
+                <tbody>
+                {% for m in p.merchandises %}
+                    {{ include('merchandise/_merchandise.html.twig') }}
+                {% else %}
+                    <tr class="js-empty"><td colspan="6">Nu s-a găsit nici o intrare de marfă.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-    <div class="card-footer text-right">
-        {% if showReview %}
-            <button class="js-review btn btn-sm btn-success">
-                <i class="fas fa-check"></i> verificat</button>
-        {% endif %}
+            <div class="card-footer text-right">
+                {% if showReview %}
+                    <button class="js-review btn btn-sm btn-success">
+                        <i class="fas fa-check"></i> verificat</button>
+                {% endif %}
 
-        {% if canModify %}
-            <a class="js-add btn btn-sm btn-outline-primary"
-               href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d'), 'provider': p.id }) }}">adaugă</a>
-        {% endif %}
-    </div>
+                {% if canModify %}
+                    <a class="js-add btn btn-sm btn-outline-primary"
+                       href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d'), 'provider': p.id }) }}">adaugă</a>
+                {% endif %}
+            </div>
+        </div>
+
+    {% else %}
+        <p>Nu s-a găsit nici o intrare de marfă.</p>
+    {% endfor %}
 </div>
-
-{% else %}
-    <p>Nu s-a găsit nici o intrare de marfă.</p>
-{% endfor %}
