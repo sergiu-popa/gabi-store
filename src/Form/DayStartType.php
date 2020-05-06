@@ -24,7 +24,8 @@ class DayStartType extends AbstractType
             ->add('submit', SubmitType::class, [
                 'label' => 'Începe ziua',
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'js-day-action btn btn-xl btn-primary',
+                    'disabled' => true
                 ]
             ]);
     }

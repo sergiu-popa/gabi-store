@@ -21,10 +21,16 @@
         {% endfor %}
         </tbody>
     </table>
-    {% if canModify %}
-        <div class="card-footer text-right">
+
+    <div class="card-footer text-right">
+        {% if showReview %}
+            <button class="js-review btn btn-sm btn-success">
+                <i class="fas fa-check"></i> verificat</button>
+        {% endif %}
+
+        {% if canModify %}
             <a class="js-add btn btn-sm btn-outline-primary"
                href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d') }) }}">adaugă</a>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 </div>

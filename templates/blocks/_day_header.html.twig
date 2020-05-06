@@ -1,6 +1,8 @@
 <div class="row mb-3">
     <div class="col-6">
-        <h3 class="d-inline-block m-0">{{ date|roDate('EEEE')|capitalize }}, {{ date|date("j") }} {{ date|roDate('MMMM') }} {{ date|date("Y") }}</h3>
+        <h3 class="d-inline-block m-0">
+            {{ include('blocks/_date.html.twig') }}
+        </h3>
 
         <form id="js-change-day-form" class="d-none" action="{{ path('day') }}" method="post">
             <input id="js-change-day-date" name="date" type="hidden" value="" />
@@ -19,18 +21,5 @@
 </div>
 
 {% if day is not null %}
-<div class="row mb-5">
-    <div class="col-12">
-        <ul id="summary" class="list-group list-group-horizontal mt-3 w-100">
-            <li class="list-group-item">Sold actual</li>
-            <li class="list-group-item">Intrare marfa</li>
-            <li class="list-group-item">Iesiri diverse</li>
-            <li class="list-group-item">Marfa bonuri</li>
-            <li class="list-group-item">Marfa facturi</li>
-            <li class="list-group-item">Monetar</li>
-            <li class="list-group-item">Bancnote</li>
-            <li class="list-group-item">Z</li>
-        </ul>
-    </div>
-</div>
+    {{ include('blocks/_totals.html.twig') }}
 {% endif %}

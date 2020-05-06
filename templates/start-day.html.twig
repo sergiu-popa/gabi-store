@@ -3,11 +3,14 @@
 {% block title %}Foaia zilei{% endblock %}
 
 {% block body %}
-    {{ include('blocks/_day_header.html.twig', {date: 'now'|date }) }}
+    <h2>
+        Începe ziua de astăzi
+        <small class="text-secondary">{{ include('blocks/_date.html.twig', {'date': 'now'|date}) }}</small>
+    </h2>
 
     {{ form_start(form) }}
-
     {{ form_errors(form) }}
+    <p>Completează câți bani sunt în casă.</p>
 
     <div class="row">
         <div class="col">
@@ -18,10 +21,31 @@
         </div>
     </div>
 
-    <div>
-        <h2>Verifică toate acțiunile ultimei zile</h2>
+    <div class="mt-3">
+        <h3>
+            Verifică toate acțiunile ultimei zile
+            <small class="text-secondary">{{ include('blocks/_date.html.twig', {'date': day.date}) }}</small>
+        </h3>
         <p>Dacă sesizezi erori, poți corecta datele.</p>
-        {# TODO Show all data here: payments, expenses, money and merchandise? #}
+
+        {{ include('blocks/_totals.html.twig') }}
+
+        <div class="row mt-3">
+            <div class="col-6">
+                {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}
+                {{ include('expense/list.html.twig', { expenses: transactions['expenses'] }) }}
+            </div>
+            <div class="col-6">
+                {{ include('money/list.html.twig', { money: transactions['money'] }) }}
+                {{ include('debt/list.html.twig', { debts: transactions['debts'] }) }}
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-12">
+                {{ include('merchandise/list.html.twig', { merchandises: transactions['merchandises'] }) }}
+            </div>
+        </div>
     </div>
     {{ form_end(form) }}
 {% endblock %}

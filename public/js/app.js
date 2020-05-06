@@ -79,6 +79,26 @@ jQuery(function ($) {
         e.preventDefault();
     })
 
+    // Review button
+    $(document).on('click', '.js-review',  function (e) {
+        var $card = $(this).parents('.card');
+
+        if (confirm('Ești sigur că este totul corect?')) {
+            $card.find('table').remove();
+            $card.find('.card-footer').remove();
+            $card.addClass('text-white bg-success');
+            $card.removeClass('js-unverified');
+
+            if($('.card .js-unverified').length === 0) {
+                $('.js-day-action').removeAttr('disabled');
+            }
+        }
+
+        e.preventDefault();
+    })
+
+
+
     var $changeDayPicker = $('#js-change-day-datepicker');
 
     $changeDayPicker.datepicker({

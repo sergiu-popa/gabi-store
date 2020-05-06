@@ -1,4 +1,4 @@
-<div class="card mb-5">
+<div class="js-unverified card mb-3">
     <div class="card-header">Ieșiri diverse</div>
 
     <table class="table table-striped" style="border-top: none;">
@@ -6,7 +6,7 @@
         <tr>
             <th>Categoria</th>
             <th>Cantitate</th>
-            <th>Note</th>
+            <th>Notițe</th>
             {% if canModify %}<th></th>{% endif %}
         </tr>
         </thead>
@@ -19,10 +19,15 @@
         </tbody>
     </table>
 
-    {% if canModify %}
-        <div class="card-footer text-right">
+    <div class="card-footer text-right">
+        {% if showReview %}
+            <button class="js-review btn btn-sm btn-success">
+                <i class="fas fa-check"></i> verificat</button>
+        {% endif %}
+
+        {% if canModify %}
             <a class="js-add btn btn-sm btn-outline-primary"
                href="{{ path('expense_new', { 'date': currentDate|date('Y-m-d') }) }}">adaugă</a>
-        </div>
-    {% endif %}
+        {% endif %}
+    </div>
 </div>
