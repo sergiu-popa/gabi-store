@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Traits\AuthorTrait;
 use App\Entity\Traits\DateTrait;
-use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -66,10 +65,25 @@ class Day
     private $confirmed;
 
     /**
+     * @var UserInterface
+     *
+     * @ORM\ManyToOne(targetEntity="User")
+     * @ORM\JoinColumn(name="confirmed_by", referencedColumnName="id")
+     */
+    protected $confirmedBy;
+
+    /**
      * @var \DateTimeImmutable
      * @ORM\Column(type="time_immutable", nullable=true)
      */
     private $endedAt;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Assert\Type("numeric")
+     * @Assert\Positive()
+     */
+    private $z;
 
     public function __construct(UserInterface $author)
     {
@@ -79,12 +93,17 @@ class Day
         $this->author = $author;
         $this->bills_50_start = 1;
         $this->bills_100_start = 1;
-        $this->confirmed = true;
+        $this->confirmed = false;
     }
 
     public function isToday(): bool
     {
         return $this->date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
+    }
+
+    public function end()
+    {
+        $this->endedAt = new \DateTime();
     }
 
     public function hasEnded(): bool
@@ -140,5 +159,33 @@ class Day
     public function setBills100End(int $bills_100_end): void
     {
         $this->bills_100_end = $bills_100_end;
+    }
+
+    public function getZ(): ?float
+    {
+        return $this->z;
+    }
+
+    public function setZ(float $z): self
+    {
+        $this->z = $z;
+
+        return $this;
+    }
+
+    public function getConfirmedBy(): ?UserInterface
+    {
+        return $this->confirmedBy;
+    }
+
+    public function setConfirmedBy(UserInterface $confirmedBy): void
+    {
+        $this->confirmedBy = $confirmedBy;
+    }
+
+    public function confirm(?UserInterface $user)
+    {
+        $this->confirmed = true;
+        $this->confirmedBy = $user;
     }
 }

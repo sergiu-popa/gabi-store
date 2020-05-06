@@ -13,6 +13,7 @@ use App\Entity\User;
 use App\Repository\DayRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 class DayManager
 {
@@ -34,8 +35,19 @@ class DayManager
 
     public function start(Day $day)
     {
-        $this->em->persist($day);
-        $this->em->flush();
+        $this->save($day);
+    }
+
+    public function end(Day $day)
+    {
+        $day->end();
+        $this->save($day);
+    }
+
+    public function confirm(Day $day, UserInterface $user)
+    {
+        $day->confirm($user);
+        $this->save($day);
     }
 
     public function getCurrentDay(): ?Day
@@ -94,5 +106,11 @@ class DayManager
             'providers' => $this->em->getRepository(Provider::class)->findByDay($date),
             'debts' => $this->em->getRepository(Debt::class)->findByDay($date),
         ];
+    }
+
+    private function save(Day $day): void
+    {
+        $this->em->persist($day);
+        $this->em->flush();
     }
 }

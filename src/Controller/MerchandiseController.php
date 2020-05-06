@@ -28,7 +28,8 @@ class MerchandiseController extends AbstractController
         $this->em = $em;
     }
 
-    // TODO render form with provider already selected, besides global form without any provider
+    // TODO method to fetch all providers for a date and render list on modal submit
+
     // TODO support collection of form and process it using Collections
     /**
      * @Route("/new", name="merchandise_new", methods={"GET","POST"})

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Day;
+use App\Form\DayEndType;
 use App\Form\DayStartType;
 use App\Manager\DayManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -28,15 +29,27 @@ class DayController extends AbstractController
         $today = $this->manager->getCurrentDay();
         $showReview = $request->query->get('showReview', false);
 
-        if($showReview) {
-            $this->addFlash('warning', 'Ca să închizi ziua, verifică fiecare secțiune.');
-        }
-
         if ($today === null && $this->dateIsToday($date)) {
             return $this->redirectToRoute('start');
         }
 
-        // TODO end day form
+        if($showReview) {
+            $this->addFlash('warning', 'Ca să închizi ziua, verifică fiecare secțiune.');
+        }
+
+        $form = $this->createForm(DayEndType::class, $today);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->manager->end($form->getData());
+
+            $this->addFlash(
+                'success',
+                'Ziua a fost închisă la ' . (new \DateTime())->format('H:i')
+            );
+
+            return $this->redirectToRoute('day');
+        }
 
         $transactions = $this->manager->getTransactions($date);
 
@@ -45,6 +58,7 @@ class DayController extends AbstractController
             'currentDate' => $date,
             'canModify' => $this->manager->userCanModifyDay($date),
             'day' => $this->manager->getDay($date),
+            'form' => $form->createView(),
             'transactions' => $transactions
         ]);
     }
@@ -58,8 +72,11 @@ class DayController extends AbstractController
         $form = $this->createForm(DayStartType::class, new Day($this->getUser()));
         $form->handleRequest($request);
 
+        $lastDay = $this->manager->getLastDay();
+
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->start($form->getData());
+            $this->manager->confirm($lastDay, $this->getUser());
 
             $this->addFlash(
                 'success',
@@ -73,7 +90,7 @@ class DayController extends AbstractController
 
         return $this->render('start-day.html.twig', [
             'showReview' => true,
-            'day' => $this->manager->getLastDay(),
+            'lastDay' => $lastDay,
             'currentDate' => $lastDay->getDate(),
             'canModify' => $this->manager->userCanModifyDay($lastDay->getDate()),
             'form' => $form->createView(),

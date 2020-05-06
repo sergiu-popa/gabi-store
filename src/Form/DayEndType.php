@@ -21,11 +21,14 @@ class DayEndType extends AbstractType
                 'label' => 'Bancnote de 100',
                 'html5' => true
             ])
-            // TODO Z
+            ->add('z', NumberType::class, [
+                'label' => 'Completează Z-ul'
+            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Trimite',
                 'attr' => [
-                    'class' => 'btn btn-primary'
+                    'class' => 'js-day-action btn btn-primary',
+                    'disabled' => true
                 ]
             ]);
     }
