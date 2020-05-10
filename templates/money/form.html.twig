@@ -4,18 +4,22 @@
         path('money_new', {'date': currentDate })
     %}
     {% set mode = money.id ? 'edit' : 'insert' %}
-    <td colspan="3">
+    <td class="p-0" colspan="3">
         {{ form_start(form) }}
+        <table class="table-form">
+            <tr>
+                <td style="width: 100px;">{{ form_row(form.amount) }}</td>
+                <td>{{ form_row(form.notes) }}</td>
+                <td style="width: 80px;" class="pt-2">
+                    <button class="js-save btn btn-sm btn-success align-text-bottom" data-href="{{ path }}" data-mode="{{ mode }}">
+                        <i class="fas fa-check"></i></button>
 
-        {{ form_widget(form) }}
-
-        <div class="text-right">
-            <button class="js-save btn btn-sm btn-success" data-href="{{ path }}" data-mode="{{ mode }}">
-                <i class="fas fa-check"></i> salvează
-            </button>
-
-            <button class="js-close btn btn-sm btn-outline-secondary" data-mode="{{ mode }}">închide</button>
-        </div>
+                    <button class="js-close btn btn-sm btn-outline-secondary align-text-bottom" data-mode="{{ mode }}">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </td>
+            </tr>
+        </table>
 
         {{ form_end(form) }}
     </td>

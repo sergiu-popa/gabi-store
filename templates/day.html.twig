@@ -10,8 +10,9 @@
             {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}
         </div>
         <div class="col-6">
-            {{ include('money/list.html.twig', { money: transactions['money'] }) }}
             {{ include('expense/list.html.twig', { expenses: transactions['expenses'] }) }}
+            {{ include('money/list.html.twig', { money: transactions['money'] }) }}
+            {{ include('debt/list.html.twig', { debts: transactions['debts'] }) }}
         </div>
     </div>
 

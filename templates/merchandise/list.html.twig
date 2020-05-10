@@ -13,14 +13,14 @@
         <div class="js-unverified card mb-2">
             <div class="card-header">{{ p.name }}</div>
 
-            <table class="table table-striped" style="border-top: none;">
+            <table class="js-main table table-striped" style="border-top: none;">
                 <thead>
                 <tr>
-                    <th>Categorie</th>
+                    <th style="width: 200px;">Categorie</th>
                     <th>Nume</th>
-                    <th>Cantitate</th>
-                    <th>Preț intrare</th>
-                    <th>Preț ieșire</th>
+                    <th style="width: 120px;">Cantitate</th>
+                    <th style="width: 150px;">Preț intrare</th>
+                    <th style="width: 150px;">Preț ieșire</th>
                     {% if canModify %}<th></th>{% endif %}
                 </tr>
                 </thead>

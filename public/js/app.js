@@ -56,6 +56,8 @@ jQuery(function ($) {
 
                 $parentRow.replaceWith(html).fadeIn(400).find('.js-selectize').selectize();
             });
+
+            $parentRow.siblings('.js-empty').remove();
         });
 
         e.preventDefault();

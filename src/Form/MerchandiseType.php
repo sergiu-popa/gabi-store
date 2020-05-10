@@ -9,6 +9,8 @@ use App\Repository\MerchandiseCategoryRepository;
 use App\Repository\ProviderRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\NumberType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -34,7 +36,9 @@ class MerchandiseType extends AbstractType
                     'class' => Provider::class,
                     'query_builder' => function (ProviderRepository $r) {
                         return $r->getQueryBuilder();
-                    }
+                    },
+                    'attr' => ['class' => 'js-selectize', 'placeholder' => 'Selectează'],
+                    'label' => false
                 ]);
             } else {
                 $merchandise->setProvider($this->providerRepository->find($provider));
@@ -43,12 +47,26 @@ class MerchandiseType extends AbstractType
 
         $builder->add('category', EntityType::class, [
             'class' => MerchandiseCategory::class,
-            'query_builder' => function (MerchandiseCategoryRepository $r) { return $r->getQueryBuilder(); }
+            'query_builder' => function (MerchandiseCategoryRepository $r) { return $r->getQueryBuilder(); },
+            'attr' => ['class' => 'js-selectize', 'placeholder' => 'Selectează'],
+            'label' => false
         ])
-            ->add('name')
-            ->add('amount')
-            ->add('enterPrice')
-            ->add('exitPrice');
+            ->add('name', TextType::class, [
+                'label' => false,
+                'attr' => ['placeholder' => 'Nume']
+            ])
+            ->add('amount', NumberType::class, [
+                'label' => false,
+                'attr' => ['placeholder' => 'Cantitate']
+            ])
+            ->add('enterPrice', NumberType::class, [
+                'label' => false,
+                'attr' => ['placeholder' => 'P. Intrare']
+            ])
+            ->add('exitPrice', NumberType::class, [
+                'label' => false,
+                'attr' => ['placeholder' => 'P. Iesire']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

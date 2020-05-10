@@ -33,7 +33,7 @@ class ExpenseRepository extends ServiceEntityRepository
             ->where('e.deletedAt IS NULL')
             ->andWhere('e.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
-            ->orderBy('e.date', 'DESC')
+            ->orderBy('c.name', 'ASC')
             ->getQuery()
             ->getResult();
     }
