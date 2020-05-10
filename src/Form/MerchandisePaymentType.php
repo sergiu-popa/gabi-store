@@ -19,7 +19,8 @@ class MerchandisePaymentType extends AbstractType
         $builder->add('provider', EntityType::class, [
             'label' => false,
             'class' => Provider::class,
-            'query_builder' => function (ProviderRepository $r) { return $r->getQueryBuilder(); }
+            'query_builder' => function (ProviderRepository $r) { return $r->getQueryBuilder(); },
+            'attr' => ['class' => 'js-selectize', 'placeholder' => 'Selectează']
         ])
             ->add('type', ChoiceType::class, [
                 'label' => false,

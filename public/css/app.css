@@ -12,3 +12,5 @@ body {
 .table-form td {padding: .2em}
 .table-form td .form-group {margin-bottom: 0;}
 .table-form tr {background: none !important;}
+
+.selectize-input {min-height: 38px; padding: 8px 12px;}

@@ -1,7 +1,7 @@
 jQuery(function ($) {
     $('[data-toggle="tooltip"]').tooltip();
 
-    // Delete
+    // Inline form: Delete
     $(document).on('submit', '.js-delete',  function (e) {
         if (confirm('Ești sigur că vrei să ștergi?')) {
             var route = $(this).attr('action'),
@@ -25,7 +25,7 @@ jQuery(function ($) {
         e.preventDefault();
     })
 
-    // Show edit form
+    // Inline form: Show edit form
     $(document).on('click', '.js-edit',  function (e) {
         var route = $(this).attr('href'),
             $parentRow = $(this).parents('tr'),
@@ -33,13 +33,15 @@ jQuery(function ($) {
 
         $.get(route, function(data) {
             $parentRow.hide().after(data);
-            $parentRow.next().css('backgroundColor', bgColor);
+            $parentRow.next()
+                .css('backgroundColor', bgColor)
+                .find('.js-selectize').selectize();
         });
 
         e.preventDefault();
     })
 
-    // Save edit/new form
+    // Inline form: send edit/new form
     $(document).on('click', '.js-save',  function (e) {
         var route = $(this).data('href'),
             $parentRow = $(this).parents('tr'),
@@ -52,14 +54,14 @@ jQuery(function ($) {
                     $parentRow.parent().find('tr:hidden').remove();
                 }
 
-                $parentRow.replaceWith(html).fadeIn(400);
+                $parentRow.replaceWith(html).fadeIn(400).find('.js-selectize').selectize();
             });
         });
 
         e.preventDefault();
     })
 
-    // Cancel edit form
+    // Inline form: Cancel edit form
     $(document).on('click', '.js-close',  function () {
         var $parentRow = $(this).parents('tr'),
             mode = $(this).data('mode');
@@ -69,16 +71,15 @@ jQuery(function ($) {
         $parentRow.remove();
     })
 
-    // Show add form
+    // Inline form: Show add form
     $(document).on('click', '.js-add',  function (e) {
         var route = $(this).attr('href'),
             $lastRow = $(this).parents('.card').find('table.js-main > tbody > tr:last');
 
-        $lastRow.addClass('test');
-
         $.get(route, function(data) {
-            $lastRow.after(data);
+            $lastRow.after(data).next().find('.js-selectize').selectize();
         });
+
 
         e.preventDefault();
     })
