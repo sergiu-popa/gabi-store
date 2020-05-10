@@ -6,9 +6,16 @@
     </small>
 </h3>
 
-{# TODO modal create with provider, the refresh the list below with one request #}
-
 <div id="providersMerchandise" class="collapse show">
+    <div class="mb-3">
+        <button class="js-add-merchandise btn btn-outline-primary" type="button"
+        data-route="{{ path('merchandise_new', {'includeProvider': 'true', 'date': currentDate|date('Y-m-d')}) }}">Adaugă la furnizor nou</button>
+
+        <div class="collapse mt-3" id="merchandiseForm">
+            <div class="card card-body"></div>
+        </div>
+    </div>
+
     {% for p in providers %}
         <div class="js-unverified card mb-2">
             <div class="card-header">{{ p.name }}</div>

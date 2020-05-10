@@ -153,7 +153,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
 
     private function migrateIntrareMarfaToMerchandise(ObjectManager $manager)
     {
-        $category = (new MerchandiseCategory())->setName('General');
+        $category = (new MerchandiseCategory())->setName('General')->setName('000');
         $manager->persist($category);
 
         /*

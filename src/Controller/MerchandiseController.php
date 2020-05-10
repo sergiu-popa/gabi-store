@@ -54,6 +54,7 @@ class MerchandiseController extends AbstractController
 
         return $this->render('merchandise/form.html.twig', [
             'currentDate' => $request->query->get('date'),
+            'includeProvider' => $request->query->get('includeProvider'),
             'provider' => $provider,
             'merchandise' => $merchandise,
             'form' => $form->createView(),
@@ -76,6 +77,7 @@ class MerchandiseController extends AbstractController
         }
 
         return $this->render('merchandise/form.html.twig', [
+            'includeProvider' => false,
             'merchandise' => $merchandise,
             'form' => $form->createView(),
         ]);

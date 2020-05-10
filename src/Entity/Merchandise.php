@@ -41,12 +41,14 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      * @Assert\Positive()
      */
     private $enterPrice;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
      * @Assert\Positive()
      * @Assert\GreaterThan(propertyPath="enterPrice")
      */

@@ -1,25 +1,29 @@
 <tr>
     {% set path = merchandise.id ?
         path('merchandise_edit', {'id': merchandise.id }) :
-        path('merchandise_new', {'date': currentDate, 'provider': provider })
+        path('merchandise_new', {'date': currentDate, 'provider': provider, 'includeProvider': includeProvider })
     %}
     {% set mode = merchandise.id ? 'edit' : 'insert' %}
     <td class="p-0" colspan="6">
         {{ form_start(form) }}
         <table class="table-form">
             <tr>
+                {% if includeProvider %}<td style="width: 200px;">{{ form_row(form.provider) }}</td>{% endif %}
                 <td style="width: 200px;">{{ form_row(form.category) }}</td>
                 <td>{{ form_row(form.name) }}</td>
                 <td style="width: 120px;">{{ form_row(form.amount) }}</td>
                 <td style="width: 150px;">{{ form_row(form.enterPrice) }}</td>
                 <td style="width: 150px">{{ form_row(form.exitPrice) }}</td>
                 <td style="width: 80px;" class="pt-2">
-                    <button class="js-save btn btn-sm btn-success align-text-bottom" data-href="{{ path }}" data-mode="{{ mode }}">
+                    <button class="js-save btn btn-sm btn-success align-text-bottom" data-href="{{ path }}"
+                            data-mode="{{ mode }}" data-refresh="{{ includeProvider ? 'true' : 'false' }}">
                         <i class="fas fa-check"></i></button>
 
+                    {% if not includeProvider %}
                     <button class="js-close btn btn-sm btn-outline-secondary align-text-bottom" data-mode="{{ mode }}">
                         <i class="fas fa-times"></i>
                     </button>
+                    {% endif %}
                 </td>
             </tr>
         </table>

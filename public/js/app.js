@@ -46,7 +46,9 @@ jQuery(function ($) {
         var route = $(this).data('href'),
             $parentRow = $(this).parents('tr'),
             $form = $(this).closest('form'),
-            mode = $(this).data('mode');
+            mode = $(this).data('mode'),
+            refresh = $(this).data('refresh'),
+            formIsValid = false;
 
         $.post(route, $form.serialize(), function(html) {
             $form.fadeOut(300, function() {
@@ -58,6 +60,14 @@ jQuery(function ($) {
             });
 
             $parentRow.siblings('.js-empty').remove();
+            formIsValid = (html.indexOf('invalid-feedback') === -1);
+        }).done(function() {
+            if (refresh && formIsValid) {
+                Swal.fire('Success', 'Intrarea a fost adăugată. Apasă OK să reîncarci pagina.', 'success')
+                    .then(function() {
+                        location.reload();
+                    });
+            } // merchandise global from refresh after send
         });
 
         e.preventDefault();
@@ -85,6 +95,15 @@ jQuery(function ($) {
 
         e.preventDefault();
     })
+
+    // Merchandise global form with provider
+    $(document).on('click', '.js-add-merchandise',  function (e) {
+        var $wrapper = $('#merchandiseForm');
+        $.get($(this).data('route'), function(data) {
+            $wrapper.find('.card-body').html(data).find('.js-selectize').selectize();
+            $wrapper.slideDown();
+        });
+    });
 
     // Review button
     $(document).on('click', '.js-review',  function (e) {
