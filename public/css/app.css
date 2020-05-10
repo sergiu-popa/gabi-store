@@ -7,3 +7,8 @@ body {
 .badge-facturi {background-color: #17a2b8;}
 
 #summary .list-group-item {flex: 1}
+
+.table-form {width:100%;}
+.table-form td {padding: .2em}
+.table-form td .form-group {margin-bottom: 0;}
+.table-form tr {background: none !important;}

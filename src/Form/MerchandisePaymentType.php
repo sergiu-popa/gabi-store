@@ -17,16 +17,21 @@ class MerchandisePaymentType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('provider', EntityType::class, [
-                'class' => Provider::class,
-                'query_builder' => function (ProviderRepository $r) { return $r->getQueryBuilder(); }
-            ])
+            'label' => false,
+            'class' => Provider::class,
+            'query_builder' => function (ProviderRepository $r) { return $r->getQueryBuilder(); }
+        ])
             ->add('type', ChoiceType::class, [
+                'label' => false,
                 'choices' => [
                     'Factură' => MerchandisePayment::TYPE_INVOICE,
                     'Bon' => MerchandisePayment::TYPE_BILL,
                 ]
             ])
-            ->add('amount');
+            ->add('amount', NumberType::class, [
+                'label' => false,
+                'attr' => ['placeholder' => 'Suma']
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

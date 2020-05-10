@@ -28,10 +28,12 @@ jQuery(function ($) {
     // Show edit form
     $(document).on('click', '.js-edit',  function (e) {
         var route = $(this).attr('href'),
-            $parentRow = $(this).parents('tr');
+            $parentRow = $(this).parents('tr'),
+            bgColor = $parentRow.css('backgroundColor');
 
         $.get(route, function(data) {
             $parentRow.hide().after(data);
+            $parentRow.next().css('backgroundColor', bgColor);
         });
 
         e.preventDefault();
@@ -70,7 +72,9 @@ jQuery(function ($) {
     // Show add form
     $(document).on('click', '.js-add',  function (e) {
         var route = $(this).attr('href'),
-            $lastRow = $(this).parents('.card').find('table tr:last');
+            $lastRow = $(this).parents('.card').find('table.js-main > tbody > tr:last');
+
+        $lastRow.addClass('test');
 
         $.get(route, function(data) {
             $lastRow.after(data);
