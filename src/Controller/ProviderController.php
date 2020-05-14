@@ -47,22 +47,14 @@ class ProviderController extends AbstractController
             $this->em->persist($provider);
             $this->em->flush();
 
+            $this->addFlash('success', 'Furnizorul a fost creat cu success.');
+
             return $this->redirectToRoute('provider_index');
         }
 
         return $this->render('provider/new.html.twig', [
             'provider' => $provider,
             'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="provider_show", methods={"GET"})
-     */
-    public function show(Provider $provider): Response
-    {
-        return $this->render('provider/show.html.twig', [
-            'provider' => $provider,
         ]);
     }
 
@@ -76,6 +68,8 @@ class ProviderController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->flush();
+
+            $this->addFlash('success', 'Furnizorul a fost actualizat cu success.');
 
             return $this->redirectToRoute('provider_index');
         }

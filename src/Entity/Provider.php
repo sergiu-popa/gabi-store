@@ -66,6 +66,11 @@ class Provider implements \JsonSerializable, SnapshotableInterface
      */
     private $merchandisePayments;
 
+    /**
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    private $days = [];
+
     public function jsonSerialize()
     {
         return [
@@ -232,6 +237,18 @@ class Provider implements \JsonSerializable, SnapshotableInterface
                 $merchandisePayment->setProvider(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDays(): ?array
+    {
+        return $this->days;
+    }
+
+    public function setDays(?array $days): self
+    {
+        $this->days = $days;
 
         return $this;
     }

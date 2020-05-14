@@ -1,4 +1,33 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+
+
+<div class="row">
+    <div class="col-12 col-md-6">
+        {{ form_row(form.name) }}
+    </div>
+    <div class="col-12 col-md-6">
+        {{ form_row(form.days) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-6">
+        {{ form_row(form.agent) }}
+    </div>
+    <div class="col-12 col-md-6">
+        {{ form_row(form.mobileNumber) }}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12 col-md-4">
+        {{ form_row(form.cui) }}
+    </div>
+    <div class="col-12 col-md-4">
+        {{ form_row(form.town) }}
+    </div>
+    <div class="col-12 col-md-4">
+        {{ form_row(form.phoneNumber) }}
+    </div>
+</div>
+
+{{ form_rest(form) }}

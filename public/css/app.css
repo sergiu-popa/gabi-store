@@ -1,18 +1,22 @@
-body {
-    background: #f3f3f3;
-}
+body {background: #f3f3f3;}
+
+h1 small {font-size: 1.4rem;}
+h1 small a {color: #787878}
 
 .badge-bonuri, .badge-facturi {color: #fff;}
 .badge-bonuri {background-color: #dc3545;}
 .badge-facturi {background-color: #17a2b8;}
+.provider-days .badge {margin-right: .3rem;}
 
+/** Day summary */
 #summary .list-group-item {flex: 1; padding: .75rem 1rem;}
 #summary .list-group-item .total {display: block; font-weight: bold; font-size: 1.4rem;}
-#summary .list-group-item small {display: block; font-size: .9rem;}
+#summary .list-group-item .badge:hover {cursor: default}
 
+/** Forms */
+#provider_days div {display: inline-block; margin-right: 1rem;}
 .table-form {width:100%;}
 .table-form td {padding: .2em}
 .table-form td .form-group {margin-bottom: 0;}
 .table-form tr {background: none !important;}
-
 .selectize-input {min-height: 38px; padding: 8px 12px;}
