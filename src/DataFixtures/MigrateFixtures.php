@@ -153,7 +153,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
 
     private function migrateIntrareMarfaToMerchandise(ObjectManager $manager)
     {
-        $category = (new MerchandiseCategory())->setName('General')->setName('000');
+        $category = (new MerchandiseCategory())->setName('General')->setCode('000');
         $manager->persist($category);
 
         /*
@@ -270,7 +270,8 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
 
     private function migrateSoldPrecedentToBalance(ObjectManager $manager)
     {
-        $stmt = $this->conn->query('SELECT * FROM sold_precedent');
+        // Do not persist duplicated balance for day 2017-11-05 (#335, #336). Persist only the last one.
+        $stmt = $this->conn->query('SELECT * FROM sold_precedent WHERE id != 335');
 
         foreach ($stmt->fetchAll() as $row) {
             $balance = new Balance();
@@ -278,10 +279,7 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
             $balance->setAmount($row['sold_precedent']);
             $balance->setDate(new \DateTime($row['data']));
 
-            // Do not persist duplicated balance for day 2017-11-05 (#335, #336). Persist the last one.
-            if ($row['id'] !== 335) {
-                $manager->persist($balance);
-            }
+            $manager->persist($balance);
         }
     }
 

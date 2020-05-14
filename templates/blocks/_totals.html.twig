@@ -3,31 +3,25 @@
         <ul id="summary" class="list-group list-group-horizontal w-100">
             <li class="list-group-item">
                 Sold actual
-                <span>{{ totals.balance|num_for }}</span>
+                <span class="total">{{ totals.balance|num_for }}</span>
+                <small>Precedent: {{ totals.balance_previous|num_for }}</small>
             </li>
             <li class="list-group-item">
                 Intrare marfă
-                <span>{{ totals.merchandise|num_for }}</span>
+                <span class="total">{{ totals.merchandise|num_for }}</span>
+                <small>Profit brut: {{ totals.profit|num_for }}</small>
             </li>
             <li class="list-group-item">
-                Profit marfă
-                <span>{{ totals.profit|num_for }}</span>
+                Marfă
+                <span class="total">{{ (totals.payments_bill + totals.payments_invoice)|num_for }}</span>
+                <span class="badge badge-bonuri" data-toggle="tooltip" title="Bonuri">{{ totals.payments_bill|num_for }}</span>
+                <span class="badge badge-facturi" data-toggle="tooltip" title="Facturi">{{ totals.payments_invoice|num_for }}</span>
             </li>
             <li class="list-group-item">
-                Ieșiri diverse
-                <span>{{ totals.expenses|num_for }}</span>
-            </li>
-            <li class="list-group-item">
-                Marfă bonuri
-                <span>{{ totals.payments_bill|num_for }}</span>
-            </li>
-            <li class="list-group-item">
-                Marfă facturi
-                <span>{{ totals.payments_invoice|num_for }}</span>
-            </li>
-            <li class="list-group-item">
-                Monetar
-                <span>{{ totals.money|num_for }}</span>
+                Total zi
+                <span class="total">{{ totals.day|num_for }}</span>
+                <span class="badge badge-secondary" data-toggle="tooltip" title="Monetar">{{ totals.money|num_for }}</span>
+                <span class="badge badge-dark" data-toggle="tooltip" title="Ieșiri diverse">{{ totals.expenses|num_for }}</span>
             </li>
         </ul>
     </div>

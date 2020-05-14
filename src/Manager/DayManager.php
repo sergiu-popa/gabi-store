@@ -65,11 +65,6 @@ class DayManager
         return $this->repository->getByDay($date);
     }
 
-    public function getTransactionsForLastDay()
-    {
-        return $this->getTransactions($this->getLastDay()->getDate());
-    }
-
     /**
      * A normal user can modify the current day or the last one.
      * An administrator can modify anything.
@@ -104,7 +99,7 @@ class DayManager
 
     public function getTransactions(\DateTime $date)
     {
-        $balance = $this->em->getRepository(Balance::class)->findPrevious($date);
+        $balance = $this->em->getRepository(Balance::class)->findByDay($date);
 
         $transactions = [
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),
@@ -115,7 +110,7 @@ class DayManager
         ];
 
         $transactions['totals'] = $this->calculateTotals($balance, $transactions);
-        
+
         return $transactions;
     }
 
@@ -132,11 +127,13 @@ class DayManager
             'payments_invoice' => $this->calculateTotal($payments_invoice)
         ];
 
-        $restFromBalance = array_sum($totals);
+        $totalDay = array_sum($totals);
 
         $totals = array_merge($totals, $this->calculateTotalMerchandise($transactions['providers']));
 
-        $totals['balance'] = $balance->getAmount() + $totals['merchandise'] - $restFromBalance;
+        $totals['day'] = $totalDay;
+        $totals['balance_previous'] = $balance->getAmount();
+        $totals['balance'] = $balance->getAmount() + $totals['merchandise'] - $totalDay;
 
         return $totals;
     }
@@ -178,7 +175,7 @@ class DayManager
                 $enterAmount = $merchandise->getAmount() * $merchandise->getEnterPrice();
                 $exitAmount = $merchandise->getAmount() * $merchandise->getExitPrice();
 
-                $enterTotal += $enterAmount;
+                $enterTotal += $exitAmount;
                 $profit += $exitAmount - $enterAmount;
             }
         }

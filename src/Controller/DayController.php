@@ -86,15 +86,13 @@ class DayController extends AbstractController
             return $this->redirectToRoute('day');
         }
 
-        $lastDay = $this->manager->getLastDay();
-
         return $this->render('start-day.html.twig', [
             'showReview' => true,
             'lastDay' => $lastDay,
             'currentDate' => $lastDay->getDate(),
             'canModify' => $this->manager->userCanModifyDay($lastDay->getDate()),
             'form' => $form->createView(),
-            'transactions' => $this->manager->getTransactionsForLastDay()
+            'transactions' => $this->manager->getTransactions($lastDay->getDate())
         ]);
     }
 
