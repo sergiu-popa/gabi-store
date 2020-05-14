@@ -2,10 +2,10 @@
 
 namespace App\Manager;
 
+use App\Entity\Balance;
 use App\Entity\Day;
 use App\Entity\Debt;
 use App\Entity\Expense;
-use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use App\Entity\Provider;
@@ -96,21 +96,96 @@ class DayManager
         return false;
     }
 
+    private function save(Day $day): void
+    {
+        $this->em->persist($day);
+        $this->em->flush();
+    }
+
     public function getTransactions(\DateTime $date)
     {
-        return [
-            'totals' => [],
+        $balance = $this->em->getRepository(Balance::class)->findPrevious($date);
+
+        $transactions = [
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),
             'expenses' => $this->em->getRepository(Expense::class)->findByDay($date),
             'money' => $this->em->getRepository(Money::class)->findByDay($date),
             'providers' => $this->em->getRepository(Provider::class)->findByDay($date),
             'debts' => $this->em->getRepository(Debt::class)->findByDay($date),
         ];
+
+        $transactions['totals'] = $this->calculateTotals($balance, $transactions);
+        
+        return $transactions;
     }
 
-    private function save(Day $day): void
+    // TODO refactor this using illuminate/collections (dev?)
+    private function calculateTotals(Balance $balance, array $transactions): array
     {
-        $this->em->persist($day);
-        $this->em->flush();
+        $payments_bill =  $this->filterBy($transactions['payments'], MerchandisePayment::TYPE_BILL);
+        $payments_invoice =  $this->filterBy($transactions['payments'], MerchandisePayment::TYPE_INVOICE);
+
+        $totals = [
+            'expenses' => $this->calculateTotal($transactions['expenses']),
+            'money' => $this->calculateTotal($transactions['money']),
+            'payments_bill' => $this->calculateTotal($payments_bill),
+            'payments_invoice' => $this->calculateTotal($payments_invoice)
+        ];
+
+        $restFromBalance = array_sum($totals);
+
+        $totals = array_merge($totals, $this->calculateTotalMerchandise($transactions['providers']));
+
+        $totals['balance'] = $balance->getAmount() + $totals['merchandise'] - $restFromBalance;
+
+        return $totals;
+    }
+
+    private function calculateTotal(array $items, string $property = 'amount'): float
+    {
+        $total = 0.0;
+
+        foreach($items as $item) {
+            $total += $item->{'get'.ucfirst($property)}();
+        }
+
+        return $total;
+    }
+
+    private function filterBy(array $items, int $value, string $property = 'type'): array
+    {
+        $filtered = [];
+
+        foreach ($items as $item) {
+            if($item->{'get'.ucfirst($property)}() === $value) {
+                $filtered[] = $item;
+            }
+        }
+
+        return $filtered;
+    }
+
+    /**
+     * @param Provider[] $providers
+     */
+    private function calculateTotalMerchandise(array $providers): array
+    {
+        $enterTotal = 0;
+        $profit = 0;
+
+        foreach ($providers as $provider) {
+            foreach ($provider->getMerchandises() as $merchandise) {
+                $enterAmount = $merchandise->getAmount() * $merchandise->getEnterPrice();
+                $exitAmount = $merchandise->getAmount() * $merchandise->getExitPrice();
+
+                $enterTotal += $enterAmount;
+                $profit += $exitAmount - $enterAmount;
+            }
+        }
+
+        return [
+            'merchandise' => $enterTotal,
+            'profit' => $profit
+        ];
     }
 }

@@ -7,6 +7,7 @@
 </h3>
 
 <div id="providersMerchandise" class="collapse show">
+    {% if canModify %}
     <div class="mb-3">
         <button class="js-add-merchandise btn btn-outline-primary" type="button"
         data-route="{{ path('merchandise_new', {'includeProvider': 'true', 'date': currentDate|date('Y-m-d')}) }}">Adaugă la furnizor nou</button>
@@ -15,6 +16,8 @@
             <div class="card card-body"></div>
         </div>
     </div>
+    {% endif %}
+
 
     {% for p in providers %}
         <div class="js-unverified card mb-2">

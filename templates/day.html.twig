@@ -3,7 +3,7 @@
 {% block title %}Foaia zilei{% endblock %}
 
 {% block body %}
-    {{ include('blocks/_day_header.html.twig', {date: currentDate}) }}
+    {{ include('blocks/_day_header.html.twig', { 'date': currentDate, 'totals': transactions['totals'] }) }}
 
     <div class="row">
         <div class="col-6">

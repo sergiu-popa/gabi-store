@@ -8,9 +8,11 @@ use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\DateTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BalanceRepository")
+ * @UniqueEntity("date")
  */
 class Balance implements \JsonSerializable, SnapshotableInterface
 {
@@ -23,6 +25,12 @@ class Balance implements \JsonSerializable, SnapshotableInterface
     {
         $this->date = new \DateTime();
     }
+
+    /**
+     * @ORM\Column(type="date", unique=true)
+     * @Assert\Type("\DateTimeInterface")
+     */
+    private $date;
 
     public function jsonSerialize()
     {

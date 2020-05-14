@@ -7,6 +7,7 @@ body {
 .badge-facturi {background-color: #17a2b8;}
 
 #summary .list-group-item {flex: 1}
+#summary .list-group-item span {display: block; font-weight: bold; font-size: 1.4rem;}
 
 .table-form {width:100%;}
 .table-form td {padding: .2em}

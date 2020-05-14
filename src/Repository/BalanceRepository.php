@@ -18,16 +18,18 @@ class BalanceRepository extends ServiceEntityRepository
         parent::__construct($registry, Balance::class);
     }
 
-    /**
-     * @return Balance[]
-     */
-    public function findAll(): array
+    public function findPrevious(\DateTime $date)
+    {
+        return $this->findByDay($date->modify('-1 day'));
+    }
+
+    public function findByDay(\DateTime $date)
     {
         return $this->createQueryBuilder('b')
             ->where('b.deletedAt IS NULL')
-            ->orderBy('b.date', 'DESC')
-            ->setMaxResults(25)
+            ->andWhere('b.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
-            ->getResult();
+            ->getSingleResult();
     }
 }

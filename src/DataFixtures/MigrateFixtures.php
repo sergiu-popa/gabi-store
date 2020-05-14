@@ -278,7 +278,10 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
             $balance->setAmount($row['sold_precedent']);
             $balance->setDate(new \DateTime($row['data']));
 
-            $manager->persist($balance);
+            // Do not persist duplicated balance for day 2017-11-05 (#335, #336). Persist the last one.
+            if ($row['id'] !== 335) {
+                $manager->persist($balance);
+            }
         }
     }
 
