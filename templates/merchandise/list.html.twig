@@ -44,7 +44,7 @@
                 {% if p.merchandises|length > 0 %}
                     <tr class="total">
                         <td colspan="3">
-                            <strong>Profit</strong>: {{ p.totalGrossProfit }}
+                            <strong>Profit</strong>: {{ p.totalGrossProfit|num_for }}
                             <span class="text-muted">({{ p.totalGrossProfitPercent|num_for(1) }}%)</span>
                         </td>
                         <td colspan="1">{{ p.totalEnterAmount|num_for }}</td>
@@ -63,6 +63,11 @@
                 {% if canModify %}
                     <a class="js-add btn btn-sm btn-outline-primary"
                        href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d'), 'provider': p.id }) }}">adaugă</a>
+
+                    {% for id, code in p.merchandises|unique_categories %}
+                        <a class="js-add btn btn-sm btn-outline-primary"
+                           href="{{ path('merchandise_new', { 'date': currentDate|date('Y-m-d'), 'provider': p.id, 'category': id }) }}">{{ code }}</a>
+                    {% endfor %}
                 {% endif %}
             </div>
         </div>

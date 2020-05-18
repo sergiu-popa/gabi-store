@@ -28,8 +28,6 @@ class MerchandiseController extends AbstractController
         $this->em = $em;
     }
 
-    // TODO method to fetch all providers for a date and render list on modal submit
-
     // TODO support collection of form and process it using Collections
     /**
      * @Route("/new", name="merchandise_new", methods={"GET","POST"})
@@ -41,8 +39,10 @@ class MerchandiseController extends AbstractController
         $provider = $request->query->get('provider');
 
         $form = $this->createForm(MerchandiseType::class, $merchandise, [
-            'provider' => $provider
+            'provider' => $provider,
+            'category' => $request->query->get('category')
         ]);
+
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

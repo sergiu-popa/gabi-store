@@ -2,6 +2,7 @@
 
 namespace App\Twig;
 
+use App\Entity\Merchandise;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -15,6 +16,7 @@ class AppExtension extends AbstractExtension
     public function getFilters(): array
     {
         return array(
+            new TwigFilter('unique_categories', [$this, 'uniqueCategories']),
             new TwigFilter('total', [$this, 'calculateTotal']),
             new TwigFilter('num_for', [$this, 'number_format']),
             new TwigFilter('roDate', [$this, 'roDate'], ['needs_environment' => true]),
@@ -23,6 +25,19 @@ class AppExtension extends AbstractExtension
             new TwigFilter('snapshot_content', [$this, 'snapshotContent']),
             new TwigFilter('snapshot_type', [$this, 'snapshotType']),
         );
+    }
+
+    /**
+     * @param Merchandise[] $merchandises
+     */
+    public function uniqueCategories($merchandises, $categories = []): array
+    {
+        foreach($merchandises as $merchandise) {
+            $category = $merchandise->getCategory();
+            $categories[$category->getId()] = $category->getCode();
+        }
+
+        return $categories;
     }
 
     public function calculateTotal($items, $property = 'amount')

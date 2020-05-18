@@ -19,9 +19,15 @@ class MerchandiseType extends AbstractType
     /** @var ProviderRepository */
     private $providerRepository;
 
-    public function __construct(ProviderRepository $providerRepository)
-    {
+    /** @var MerchandiseCategoryRepository */
+    private $categoryRepository;
+
+    public function __construct(
+        ProviderRepository $providerRepository,
+        MerchandiseCategoryRepository $categoryRepository
+    ) {
         $this->providerRepository = $providerRepository;
+        $this->categoryRepository = $categoryRepository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -29,8 +35,14 @@ class MerchandiseType extends AbstractType
         /** @var Merchandise $merchandise */
         $merchandise = $options['data'];
         $provider = $options['provider'];
+        $category = $options['category'];
 
-        if($merchandise->getId() === null) { // show or not provider only when adding new merchandise
+        // set category when creating merchandise if specified
+        if ($merchandise->getId() === null && $category !== null) {
+            $merchandise->setCategory($this->categoryRepository->find($category));
+        }
+
+        if ($merchandise->getId() === null) { // show or not provider only when adding new merchandise
             if (empty($provider)) {
                 $builder->add('provider', EntityType::class, [
                     'class' => Provider::class,
@@ -73,7 +85,8 @@ class MerchandiseType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Merchandise::class,
-            'provider' => null
+            'provider' => null,
+            'category' => null,
         ]);
     }
 }
