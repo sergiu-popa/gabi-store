@@ -82,12 +82,15 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
         return $this->amount * $this->exitPrice;
     }
 
+    public function getGrossProfitPercent()
+    {
+        return number_format(($this->getGrossProfit() / $this->enterPrice) * 100, 1);
+    }
+
     public function getGrossProfit()
     {
         return $this->exitPrice - $this->enterPrice;
     }
-
-    // TODO getGrossProfitPercentage
 
     public function getProvider(): ?Provider
     {

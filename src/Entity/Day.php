@@ -85,6 +85,16 @@ class Day
      */
     private $z;
 
+    /**
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    private $orderProviders = [];
+
+    /**
+     * @ORM\Column(type="simple_array", nullable=true)
+     */
+    private $paidProviders = [];
+
     public function __construct(UserInterface $author)
     {
         $this->date = new \DateTime();
@@ -187,5 +197,29 @@ class Day
     {
         $this->confirmed = true;
         $this->confirmedBy = $user;
+    }
+
+    public function getOrderProviders(): ?array
+    {
+        return $this->orderProviders;
+    }
+
+    public function setOrderProviders(?array $orderProviders): self
+    {
+        $this->orderProviders = $orderProviders;
+
+        return $this;
+    }
+
+    public function getPaidProviders(): ?array
+    {
+        return $this->paidProviders;
+    }
+
+    public function setPaidProviders(?array $paidProviders): self
+    {
+        $this->paidProviders = $paidProviders;
+
+        return $this;
     }
 }

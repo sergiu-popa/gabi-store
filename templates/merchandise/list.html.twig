@@ -40,6 +40,17 @@
                 {% else %}
                     <tr class="js-empty"><td colspan="6">Nu s-a găsit nici o intrare de marfă.</td></tr>
                 {% endfor %}
+
+                {% if p.merchandises|length > 0 %}
+                    <tr class="total">
+                        <td colspan="3">
+                            <strong>Profit</strong>: {{ p.totalGrossProfit }}
+                            <span class="text-muted">({{ p.totalGrossProfitPercent|num_for(1) }}%)</span>
+                        </td>
+                        <td colspan="1">{{ p.totalEnterAmount|num_for }}</td>
+                        <td colspan="2">{{ p.totalExitAmount|num_for }}</td>
+                    </tr>
+                {% endif %}
                 </tbody>
             </table>
 

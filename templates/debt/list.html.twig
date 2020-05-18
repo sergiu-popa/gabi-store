@@ -15,6 +15,13 @@
         {% else %}
             <tr class="js-empty"><td colspan="3">Nu există nici o datorie.</td></tr>
         {% endfor %}
+
+        {% if debts|length > 1 %}
+            <tr class="total">
+                <td colspan="2" class="text-right"><strong>Total</strong></td>
+                <td colspan="2">{{ debts|total }}</td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
 

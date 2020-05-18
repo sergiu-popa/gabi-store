@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\MerchandiseTotalsTrait;
 use App\Entity\Traits\NameTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -18,6 +19,7 @@ class Provider implements \JsonSerializable, SnapshotableInterface
     use IdTrait;
     use NameTrait;
     use DeletedAtTrait;
+    use MerchandiseTotalsTrait;
 
     public function __construct()
     {

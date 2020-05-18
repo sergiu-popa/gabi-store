@@ -16,6 +16,13 @@
         {% else %}
             <tr class="js-empty"><td colspan="4">Nu s-a găsit nici o ieșire.</td></tr>
         {% endfor %}
+
+        {% if expenses|length > 1 %}
+            <tr class="total">
+                <td colspan="2" class="text-right"><strong>Total</strong></td>
+                <td colspan="2">{{ expenses|total }}</td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
 

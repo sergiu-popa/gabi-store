@@ -3,7 +3,7 @@
     <td>{{ m.name }}</td>
     <td style="width: 100px">{{ m.amount }}</td>
     <td>{{ m.enterPrice }}</td>
-    <td>{{ m.exitPrice }}</td>
+    <td>{{ m.exitPrice }} <span class="text-muted">({{ m.grossProfitPercent }}%)</span></td>
     {% if canModify %}
         <td style="width: 100px;">
             {{ include('blocks/_edit_button.html.twig', { href: path('merchandise_edit', {'id': m.id }) }) }}

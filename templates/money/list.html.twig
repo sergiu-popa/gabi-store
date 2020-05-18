@@ -15,6 +15,13 @@
         {% else %}
             <tr class="js-empty"><td colspan="3">Nici un monetar.</td></tr>
         {% endfor %}
+
+        {% if money|length > 1 %}
+            <tr class="total">
+                <td colspan="2" class="text-right"><strong>Total</strong></td>
+                <td colspan="2">{{ money|total }}</td>
+            </tr>
+        {% endif %}
         </tbody>
     </table>
 

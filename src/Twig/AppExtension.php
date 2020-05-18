@@ -15,6 +15,7 @@ class AppExtension extends AbstractExtension
     public function getFilters(): array
     {
         return array(
+            new TwigFilter('total', [$this, 'calculateTotal']),
             new TwigFilter('num_for', [$this, 'number_format']),
             new TwigFilter('roDate', [$this, 'roDate'], ['needs_environment' => true]),
             new TwigFilter('dash', [$this, 'dash']),
@@ -24,9 +25,20 @@ class AppExtension extends AbstractExtension
         );
     }
 
-    function number_format($number)
+    public function calculateTotal($items, $property = 'amount')
     {
-        return number_format((float) $number, 2, '.', ' ');
+        $total = 0;
+
+        foreach($items as $item) {
+            $total += $item->{'get' . ucfirst($property)}();
+        }
+
+        return $this->number_format($total);
+    }
+
+    function number_format($number, $decimals = 2)
+    {
+        return number_format((float) $number, $decimals, '.', ' ');
     }
 
     /**
