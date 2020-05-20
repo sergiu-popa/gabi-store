@@ -17,6 +17,10 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Merchandise implements \JsonSerializable, SnapshotableInterface
 {
+    public const PAID_WITH_DEBT = 'debt';
+    public const PAID_WITH_BILL = 'bill';
+    public const PAID_WITH_INVOICE = 'invoice';
+
     use IdTrait;
     use NameTrait;
     use DateTrait;
@@ -60,6 +64,17 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
      */
     private $category;
 
+    /**
+     * @ORM\Column(type="smallint", nullable=true)
+     */
+    private $vat;
+
+    /**
+     * @ORM\Column(type="string", length=15, nullable=true)
+     * @Assert\NotBlank()
+     */
+    private $paidWith;
+
     public function jsonSerialize()
     {
         return [
@@ -68,7 +83,9 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
             'nume' => $this->name,
             'cantitate' => $this->amount,
             'pret intrare' => $this->enterPrice,
-            'pret iesire' => $this->exitPrice
+            'pret iesire' => $this->exitPrice,
+            'TVA' => $this->vat,
+            'plata' => $this->paidWith
         ];
     }
 
@@ -136,6 +153,30 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
     public function setCategory(?MerchandiseCategory $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    public function getVat(): ?int
+    {
+        return $this->vat;
+    }
+
+    public function setVat(?int $vat): self
+    {
+        $this->vat = $vat;
+
+        return $this;
+    }
+
+    public function getPaidWith(): ?string
+    {
+        return $this->paidWith;
+    }
+
+    public function setPaidWith(?string $paidWith): self
+    {
+        $this->paidWith = $paidWith;
 
         return $this;
     }

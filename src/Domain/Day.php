@@ -65,11 +65,11 @@ class Day
     {
         $this->merchandisePayments[] = $payment;
 
-        if ($payment->withInvoice()) {
+        if ($payment->paidWithInvoice()) {
             $this->totalMerchandisePaymentsInvoice += $payment->getAmount();
         }
 
-        if ($payment->withBill()) {
+        if ($payment->paidWithBill()) {
             $this->totalMerchandisePaymentsBill += $payment->getAmount();
         }
     }

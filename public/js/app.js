@@ -86,7 +86,7 @@ jQuery(function ($) {
     // Inline form: Show add form
     $(document).on('click', '.js-add',  function (e) {
         var route = $(this).attr('href'),
-            $lastRow = $(this).parents('.card').find('table.js-main > tbody > tr:last');
+            $lastRow = $(this).parents('.card').find('table.js-main > tbody > tr:last').prev();
 
         $.get(route, function(data) {
             $lastRow.after(data).next().find('.js-selectize').selectize();
@@ -104,6 +104,43 @@ jQuery(function ($) {
             $wrapper.slideDown();
         });
     });
+
+    // Merchandise pice calculation and VAT
+    $(document).on('click', '#merchandise_vat input', function(e) {
+        var $radioInput = $(this),
+            $enterPriceInput = $('#merchandise_enterPrice');
+
+        if($enterPriceInput.val().length > 0) {
+            var enterPrice = parseFloat($enterPriceInput.val()),
+                priceWithVAT = enterPrice * $(this).val() + enterPrice,
+                recommendedPrice = priceWithVAT * 1.30;
+
+            $enterPriceInput.val(priceWithVAT.toFixed(2));
+            $radioInput.parents('td').next().find('.js-recommended-price').text(recommendedPrice.toFixed(2));
+        }
+    })
+
+    // Merchandise paidWith sweet alert
+    $(document).on('click', '#merchandise_paidWith input', function(e) {
+        var paidWith = $(this).val(),
+            message = 'Se va genera o <strong>datorie nouă</strong>.'
+
+        switch (paidWith) {
+            case 'bill':
+                message = 'Se va genera o plată nouă de tip <strong>bon</strong>.';
+                break;
+            case 'invoice':
+                message = 'Se va genera o plată nouă de tip <strong>factură</strong>.';
+                break;
+        }
+
+        Swal.fire({
+            title: 'Atenție',
+            html: message,
+            timer: 3000,
+            icon: 'warning'
+        });
+    })
 
     // Review button
     $(document).on('click', '.js-review',  function (e) {

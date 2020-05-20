@@ -2,6 +2,7 @@
 
 namespace App\Manager;
 
+use App\Entity\Merchandise;
 use App\Entity\Provider;
 use App\Repository\MerchandiseRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -14,10 +15,22 @@ class MerchandiseManager
     /** @var MerchandiseRepository */
     private $repository;
 
-    public function __construct(EntityManagerInterface $em, MerchandiseRepository $repository)
-    {
+    /** @var MerchandisePaymentManager */
+    private $paymentManager;
+
+    /** @var ProviderDebtManager */
+    private $debtManager;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        MerchandiseRepository $repository,
+        MerchandisePaymentManager $paymentManager,
+        ProviderDebtManager $debtManager
+    ) {
         $this->em = $em;
         $this->repository = $repository;
+        $this->paymentManager = $paymentManager;
+        $this->debtManager = $debtManager;
     }
 
     /**
@@ -28,5 +41,14 @@ class MerchandiseManager
     public function findForDay(\DateTimeInterface $date): array
     {
         return $this->em->getRepository(Provider::class)->findByDay($date);
+    }
+
+    public function createPaymentOrDebt(Merchandise $merchandise)
+    {
+        if($merchandise->getPaidWith() === Merchandise::PAID_WITH_DEBT) {
+            $this->debtManager->create($merchandise);
+        } else {
+            $this->paymentManager->create($merchandise);
+        }
     }
 }

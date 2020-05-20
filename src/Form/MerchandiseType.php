@@ -9,6 +9,7 @@ use App\Repository\MerchandiseCategoryRepository;
 use App\Repository\ProviderRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -55,6 +56,24 @@ class MerchandiseType extends AbstractType
             } else {
                 $merchandise->setProvider($this->providerRepository->find($provider));
             }
+
+            $builder->add('vat', ChoiceType::class, [
+                'label' => false,
+                'choices' => [
+                    '9%' => 0.09,
+                    '19%' => 0.19
+                ],
+                'expanded' => true
+            ])
+                ->add('paidWith', ChoiceType::class, [
+                    'label' => 'Cum se plătește?',
+                    'choices' => [
+                        'Datorie' => Merchandise::PAID_WITH_DEBT,
+                        'Factură' => Merchandise::PAID_WITH_INVOICE,
+                        'Bon' => Merchandise::PAID_WITH_BILL,
+                    ],
+                    'expanded' => true
+                ]);
         }
 
         $builder->add('category', EntityType::class, [

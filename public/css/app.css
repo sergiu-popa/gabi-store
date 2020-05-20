@@ -16,7 +16,19 @@ h1 small a {color: #787878}
 /** Forms */
 #provider_days div {display: inline-block; margin-right: 1rem;}
 .table-form {width:100%;}
-.table-form td {padding: .2em}
+.table-form td {padding: .2em; border-top: none;}
 .table-form td .form-group {margin-bottom: 0;}
 .table-form tr {background: none !important;}
 .selectize-input {min-height: 38px; padding: 8px 12px;}
+.table-form .col-form-label {
+    float: left;
+    padding: 0;
+    width: auto;
+    margin-right: 10px;
+}
+#merchandise_paidWith { display: inline-block; }
+#merchandise_paidWith .form-check, #merchandise_vat .form-check {
+    display: inline-block;
+    margin-right: 1rem;
+}
+.form-check .form-check-input {margin-top: .2rem}

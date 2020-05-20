@@ -6,6 +6,7 @@ use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\MerchandiseTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,10 +22,12 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
     use AmountTrait;
     use DateTrait;
     use DeletedAtTrait;
+    use MerchandiseTrait;
 
     public function __construct()
     {
         $this->date = new \DateTime();
+        $this->invoice();
     }
 
     /**
@@ -48,12 +51,22 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
         ];
     }
 
-    public function withInvoice()
+    public function invoice(): void
+    {
+        $this->type = self::TYPE_INVOICE;
+    }
+
+    public function paidWithInvoice(): bool
     {
         return $this->type === self::TYPE_INVOICE;
     }
 
-    public function withBill()
+    public function bill(): void
+    {
+        $this->type = self::TYPE_BILL;
+    }
+
+    public function paidWithBill(): bool
     {
         return $this->type === self::TYPE_BILL;
     }

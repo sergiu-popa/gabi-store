@@ -47,6 +47,7 @@ class MerchandiseController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->em->persist($merchandise);
+            $this->manager->createPaymentOrDebt($merchandise);
             $this->em->flush();
 
             return $this->returnRow($merchandise);

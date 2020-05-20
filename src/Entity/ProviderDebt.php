@@ -6,6 +6,7 @@ use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\MerchandiseTrait;
 use App\Entity\Traits\PaidPartiallyTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -22,6 +23,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
     use DateTrait;
     use PaidPartiallyTrait;
     use DeletedAtTrait;
+    use MerchandiseTrait;
 
     public function __construct()
     {
