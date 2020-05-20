@@ -41,9 +41,9 @@ class DayController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->manager->end($form->getData());
-
-            // TODO calculate balance and insert it please
+            /** @var Day $day */
+            $day = $form->getData();
+            $this->manager->end($day);
 
             $this->addFlash(
                 'success',

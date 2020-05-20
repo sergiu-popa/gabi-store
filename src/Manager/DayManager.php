@@ -26,11 +26,19 @@ class DayManager
     /** @var Security */
     private $security;
 
-    public function __construct(EntityManagerInterface $em, DayRepository $dayRepository, Security $security)
-    {
+    /** @var BalanceManager */
+    private $balanceManager;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        DayRepository $dayRepository,
+        Security $security,
+        BalanceManager $balanceManager
+    ) {
         $this->em = $em;
         $this->repository = $dayRepository;
         $this->security = $security;
+        $this->balanceManager = $balanceManager;
     }
 
     public function start(Day $day)
@@ -42,6 +50,9 @@ class DayManager
     {
         $day->end();
         $this->save($day);
+
+        $transactions = $this->getTransactions($day->getDate());
+        $this->balanceManager->addBalanceForToday($transactions['totals']['balance']);
     }
 
     public function confirm(Day $day, UserInterface $user)
