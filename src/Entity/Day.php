@@ -111,9 +111,14 @@ class Day
         return $this->date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
     }
 
-    public function end()
+    public function end(\DateTimeImmutable $date = null)
     {
-        $this->endedAt = new \DateTime();
+        $this->endedAt = $date ?? new \DateTimeImmutable();
+    }
+
+    public function start(\DateTimeImmutable $date = null)
+    {
+        $this->startedAt = $date ?? new \DateTimeImmutable();
     }
 
     public function hasEnded(): bool

@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Balance;
+use App\Entity\Day;
 use App\Entity\ExpenseCategory;
 use App\Entity\ProviderDebt;
 use App\Entity\DebtPayment;
@@ -57,7 +58,27 @@ class MigrateFixtures extends Fixture implements FixtureGroupInterface
         $this->migrateMonetarToMoney($manager);
         $this->migrateSoldPrecedentToBalance($manager);
 
+        $this->createDayForToday($manager);
+
         $manager->flush();
+    }
+
+    private function createDayForToday(ObjectManager $manager)
+    {
+        /** @var User $admin */
+        $admin = $this->getReference('admin');
+
+        $day = new Day($admin);
+        $day->setDate(new \DateTime());
+        $day->start((new \DateTimeImmutable())->setTime(7, 0, 0));
+        $day->end((new \DateTimeImmutable())->setTime(17, 0, 0));
+        $day->setBills50Start(1);
+        $day->setBills100Start(1);
+        $day->setBills50End(1);
+        $day->setBills100End(1);
+        $day->confirm($admin);
+
+        $manager->persist($day);
     }
 
     private function createUsers(ObjectManager $manager)
