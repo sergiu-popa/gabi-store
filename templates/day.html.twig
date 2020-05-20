@@ -12,7 +12,6 @@
         <div class="col-6">
             {{ include('expense/list.html.twig', { expenses: transactions['expenses'] }) }}
             {{ include('money/list.html.twig', { money: transactions['money'] }) }}
-            {{ include('debt/list.html.twig', { debts: transactions['debts'] }) }}
         </div>
     </div>
 
@@ -25,9 +24,35 @@
     {% if day and day.isToday and day.hasEnded == false %}
         {% if showReview %}
             {{ include('debt/list.html.twig', { debts: transactions['debts'] }) }}
-            <p>Lista distribuitori</p>
 
-            <p>Form bani 50 si 100 + Z + Send button</p>
+            {{ form_start(form) }}
+            {{ form_errors(form) }}
+            <p>Completează câți bani sunt în casă la sfârșitul zilei.</p>
+
+            <div class="row">
+                <div class="col-4">
+                    {{ form_row(form.bills_50_end) }}
+                </div>
+                <div class="col-4">
+                    {{ form_row(form.bills_100_end) }}
+                </div>
+                <div class="col-4">
+                    {{ form_row(form.z) }}
+                </div>
+            </div>
+
+            {% if form.orderProviders is defined %}
+                <div class="row">
+                    <div class="col-6">
+                        {{ form_row(form.orderProviders) }}
+                    </div>
+                    <div class="col-6">
+                        {{ form_row(form.paidProviders) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {{ form_end(form) }}
         {% else %}
             <div class="mb-3">
                 <a class="btn btn-primary" href="{{ path('day', {'showReview': true}) }}">Închide ziua</a>

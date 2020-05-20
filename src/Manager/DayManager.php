@@ -99,7 +99,7 @@ class DayManager
 
     public function getTransactions(\DateTime $date)
     {
-        $balance = $this->em->getRepository(Balance::class)->findByDay($date);
+        $balance = $this->em->getRepository(Balance::class)->findYesterday($date);
 
         $transactions = [
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),

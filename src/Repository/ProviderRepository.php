@@ -33,15 +33,25 @@ class ProviderRepository extends ServiceEntityRepository
 
     public function findByDay(\DateTimeInterface $date): array
     {
-        return $this->createQueryBuilder('p')
+        return $this->getQueryBuilder()
             ->select('p, m, c')
             ->join('p.merchandises', 'm')
             ->join('m.category', 'c')
             ->where('m.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
-            ->andWhere('m.deletedAt IS NULL')
-            ->orderBy('p.name', 'ASC')
             ->addOrderBy('m.name', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Returns the providers which came today: to order or to be paid.
+     */
+    public function findForToday(string $today): array
+    {
+        return $this->getQueryBuilder()
+            ->andWhere('p.days LIKE :today')
+            ->setParameter('today', '%'.$today.'%')
             ->getQuery()
             ->getResult();
     }

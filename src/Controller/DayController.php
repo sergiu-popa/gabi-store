@@ -43,6 +43,8 @@ class DayController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $this->manager->end($form->getData());
 
+            // TODO calculate balance and insert it please
+
             $this->addFlash(
                 'success',
                 'Ziua a fost închisă la ' . (new \DateTime())->format('H:i')
@@ -51,15 +53,13 @@ class DayController extends AbstractController
             return $this->redirectToRoute('day');
         }
 
-        $transactions = $this->manager->getTransactions($date);
-
         return $this->render('day.html.twig', [
             'showReview' => $showReview,
             'currentDate' => $date,
             'canModify' => $this->manager->userCanModifyDay($date),
             'day' => $this->manager->getDay($date),
             'form' => $form->createView(),
-            'transactions' => $transactions
+            'transactions' => $this->manager->getTransactions($date)
         ]);
     }
 

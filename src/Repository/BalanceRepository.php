@@ -18,6 +18,11 @@ class BalanceRepository extends ServiceEntityRepository
         parent::__construct($registry, Balance::class);
     }
 
+    public function findYesterday(\DateTime $date)
+    {
+        return $this->findByDay((clone $date)->modify('-1 day'));
+    }
+
     public function findByDay(\DateTime $date)
     {
         return $this->createQueryBuilder('b')

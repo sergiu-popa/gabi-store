@@ -86,12 +86,13 @@ jQuery(function ($) {
     // Inline form: Show add form
     $(document).on('click', '.js-add',  function (e) {
         var route = $(this).attr('href'),
-            $lastRow = $(this).parents('.card').find('table.js-main > tbody > tr:last').prev();
+            $lastRow = $(this).parents('.card').find('table.js-main > tbody > tr:last');
+
+        if($lastRow.hasClass('total')) $lastRow = $lastRow.prev();
 
         $.get(route, function(data) {
             $lastRow.after(data).next().find('.js-selectize').selectize();
         });
-
 
         e.preventDefault();
     })

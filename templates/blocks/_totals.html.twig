@@ -12,7 +12,7 @@
                 <small>Profit brut: {{ totals.profit|num_for }}</small>
             </li>
             <li class="list-group-item">
-                Marfă
+                Marfă achitată
                 <span class="total">{{ (totals.payments_bill + totals.payments_invoice)|num_for }} <small>RON</small></span>
                 <span class="badge badge-bonuri" data-toggle="tooltip" title="Bonuri">{{ totals.payments_bill|num_for }}</span>
                 <span class="badge badge-facturi" data-toggle="tooltip" title="Facturi">{{ totals.payments_invoice|num_for }}</span>
