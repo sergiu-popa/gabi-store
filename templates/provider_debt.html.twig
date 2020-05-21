@@ -55,7 +55,9 @@
                         {% if p.debts|length > 1 %}
                             <tr class="total">
                                 <td class="text-right"><strong>Total:</strong></td>
-                                <td colspan="5">{{ p.debts|total('remainingAmount') }}</td>
+                                <td>{{ p.debts|total }}</td>
+                                <td>{{ p.debts|total('totalPaid') }}</td>
+                                <td colspan="2">{{ p.debts|total('remainingAmount') }}</td>
                             </tr>
                         {% endif %}
                         </tbody>
