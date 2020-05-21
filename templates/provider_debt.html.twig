@@ -57,7 +57,7 @@
                                 <td class="text-right"><strong>Total:</strong></td>
                                 <td>{{ p.debts|total }}</td>
                                 <td>{{ p.debts|total('totalPaid') }}</td>
-                                <td colspan="2">{{ p.debts|total('remainingAmount') }}</td>
+                                <td colspan="3">{{ p.debts|total('remainingAmount') }}</td>
                             </tr>
                         {% endif %}
                         </tbody>
