@@ -7,9 +7,9 @@
         <small><a href="{{ path('provider_new') }}">adaugă</a></small>
     </h1>
 
-
-    <table class="table table-striped mt-3">
-        <thead>
+    <div class="card my-3 p-4">
+        <table class="table table-striped mt-3">
+            <thead>
             <tr>
                 <th>Nume</th>
                 <th>Zile</th>
@@ -20,28 +20,29 @@
                 <th>Telefon</th>
                 <th></th>
             </tr>
-        </thead>
-        <tbody>
-        {% for provider in providers %}
-            <tr>
-                <td>{{ provider.name }}</td>
-                <td class="provider-days">{% for d in provider.days %}<span class="badge badge-warning">{{ d|trans }}</span>{% endfor %}</td>
-                <td>{{ provider.agent }}</td>
-                <td>{{ provider.mobileNumber }}</td>
-                <td>{{ provider.cui }}</td>
-                <td>{{ provider.town }}</td>
-                <td>{{ provider.phoneNumber }}</td>
-                <td>
-                    <a class="btn btn-sm btn-outline-secondary" href="{{ path('provider_edit', {'id': provider.id}) }}">
-                        <i class="far fa-edit"></i></a>
-                    </a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="8">Nici un furnizor.</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+            {% for provider in providers %}
+                <tr>
+                    <td>{{ provider.name }}</td>
+                    <td class="provider-days">{% for d in provider.days %}<span class="badge badge-warning">{{ d|trans }}</span>{% endfor %}</td>
+                    <td>{{ provider.agent }}</td>
+                    <td>{{ provider.mobileNumber }}</td>
+                    <td>{{ provider.cui }}</td>
+                    <td>{{ provider.town }}</td>
+                    <td>{{ provider.phoneNumber }}</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-secondary" href="{{ path('provider_edit', {'id': provider.id}) }}">
+                            <i class="far fa-edit"></i></a>
+                        </a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Nici un furnizor.</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 {% endblock %}

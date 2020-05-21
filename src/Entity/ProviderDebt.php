@@ -49,6 +49,20 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
      */
     private $debtPayments;
 
+    public function payFully()
+    {
+        $this->paidFully = true;
+        $this->paidPartially = false;
+    }
+
+    public function payPartially(float $paidAmount)
+    {
+        $this->amount = $this->amount - $paidAmount;
+
+        $this->paidPartially = true;
+        $this->paidFully = false;
+    }
+
     public function jsonSerialize()
     {
         return [

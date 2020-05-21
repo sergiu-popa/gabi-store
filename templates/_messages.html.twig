@@ -6,7 +6,7 @@
             Swal.fire({
                     title: '{{ type|trans|capitalize }}',
                     text: '{{ message }}',
-                    timer: 3000,
+                    timer: {{ type == 'error' ? 5000 : 3000 }},
                     icon: '{{ type }}',
                     buttons: false
                 });

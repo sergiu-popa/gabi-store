@@ -17,17 +17,4 @@ class ProviderDebtRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, ProviderDebt::class);
     }
-
-    public function findAll()
-    {
-        return $this->createQueryBuilder('d')
-            ->select('d, p')
-            ->join('d.provider', 'p')
-            ->where('d.paidFully = :paid')
-            ->andWhere('d.deletedAt IS NULL')
-            ->setParameter('paid', false)
-            ->orderBy('d.date', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
 }

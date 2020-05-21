@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\ProviderDebt;
 use App\Form\ProviderDebtType;
+use App\Manager\ProviderDebtManager;
 use App\Repository\ProviderDebtRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,78 +17,44 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProviderDebtController extends AbstractController
 {
-    /** @var EntityManagerInterface */
-    private $em;
+    /** @var ProviderDebtManager */
+    private $manager;
 
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(ProviderDebtManager $manager)
     {
-        $this->em = $em;
+        $this->manager = $manager;
     }
 
     /**
      * @Route("/", name="provider_debt_index", methods={"GET"})
      */
-    public function index(ProviderDebtRepository $debtRepository): Response
+    public function index(): Response
     {
-        return $this->render('provider_debt/index.html.twig', [
-            'debts' => $debtRepository->findAll(),
+        return $this->render('provider_debt.html.twig', [
+            'providers' => $this->manager->findUnpaid()
         ]);
     }
 
     /**
-     * @Route("/new", name="provider_debt_new", methods={"GET","POST"})
-     */
-    public function new(Request $request): Response
-    {
-        $debt = new ProviderDebt();
-        $form = $this->createForm(ProviderDebtType::class, $debt);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->persist($debt);
-            $this->em->flush();
-
-            return $this->redirectToRoute('debt_index');
-        }
-
-        return $this->render('provider_debt/new.html.twig', [
-            'debt' => $debt,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}/edit", name="provider_debt_edit", methods={"GET","POST"})
+     * @Route("/{id}/pay", name="provider_debt_pay", methods={"POST"})
      */
     public function edit(Request $request, ProviderDebt $debt): Response
     {
-        $form = $this->createForm(ProviderDebtType::class, $debt);
-        $form->handleRequest($request);
+        if ($this->isCsrfTokenValid('pay'.$debt->getId(), $request->request->get('_token'))) {
+            $type = $request->request->get('type');
+            $amount = $request->request->get('amount');
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            if($type === 'partially' && $amount > $debt->getAmount()) {
+                $this->addFlash('error', 'Plata parțială nu poate fi mai mare decât datoria totală.');
 
-            return $this->redirectToRoute('debt_index');
+                return $this->redirectToRoute('provider_debt_index');
+            }
+
+            $this->manager->pay($debt, $type, $amount);
+
+            $this->addFlash('success', 'Datoria a fost plătită ' . ($type === 'fully' ? 'total' : 'parțial'));
         }
 
-        return $this->render('provider_debt/edit.html.twig', [
-            'debt' => $debt,
-            'form' => $form->createView(),
-        ]);
-    }
-
-    /**
-     * @Route("/{id}", name="provider_debt_delete", methods={"DELETE"})
-     */
-    public function delete(Request $request, ProviderDebt $debt): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$debt->getId(), $request->request->get('_token'))) {
-            $debt->delete();
-            $this->em->flush();
-
-            return $this->json(['success' => true, 'message' => 'Datoria a fost ștearsă cu success.']);
-        }
-
-        return $this->json(['success' => false], Response::HTTP_BAD_REQUEST);
+        return $this->redirectToRoute('provider_debt_index');
     }
 }

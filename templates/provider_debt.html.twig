@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Datorii{% endblock %}
+
+{% block body %}
+    <h1>Datorii</h1>
+
+    <div class="row">
+        {% for p in providers %}
+            <div class="col-6">
+                <div class="card my-3">
+                    <div class="card-header">{{ p.name }}</div>
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Cantitate</th>
+                            <th>Data</th>
+                            <th></th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for debt in p.debts %}
+                            <tr>
+                                <td>{{ debt.amount|num_for }}</td>
+                                <td>{{ debt.date ? debt.date|date('Y-m-d') : '' }}</td>
+                                <td>
+                                    <form action="{{ path('provider_debt_pay', {'id': debt.id}) }}" method="post">
+                                        <input name="amount" value="{{ debt.amount }}" type="hidden">
+                                        <input name="type" value="fully" type="hidden">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('pay' ~ debt.id) }}">
+
+                                        <button class="btn btn-success btn-sm"
+                                                onclick="return confirm('Ești sigur că vrei să plătești toată datoria de {{ debt.amount|num_for }}?');">
+                                            plătește</button>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="{{ path('provider_debt_pay', {'id': debt.id}) }}" method="post">
+                                        <input name="amount" value="" type="text" style="width: 80px;" required>
+                                        <input name="type" value="partially" type="hidden">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('pay' ~ debt.id) }}">
+
+                                        <button class="btn btn-outline-info btn-sm">plătește parțial</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+
+                        {% if p.debts|length > 1 %}
+                            <tr class="total">
+                                <td colspan="4"><strong>Total:</strong> {{ p.debts|total }}</td>
+                            </tr>
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

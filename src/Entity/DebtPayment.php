@@ -33,6 +33,11 @@ class DebtPayment implements \JsonSerializable, SnapshotableInterface
      */
     private $debt;
 
+    public function partially()
+    {
+        $this->paidPartially = true;
+    }
+
     public function jsonSerialize()
     {
         return [

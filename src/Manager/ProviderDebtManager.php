@@ -2,8 +2,10 @@
 
 namespace App\Manager;
 
+use App\Entity\DebtPayment;
 use App\Entity\Merchandise;
 use App\Entity\ProviderDebt;
+use App\Repository\ProviderRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class ProviderDebtManager
@@ -11,9 +13,13 @@ class ProviderDebtManager
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var ProviderRepository */
+    private $providerRepository;
+
+    public function __construct(EntityManagerInterface $em, ProviderRepository $providerRepository)
     {
         $this->em = $em;
+        $this->providerRepository = $providerRepository;
     }
 
     public function create(Merchandise $merchandise)
@@ -26,6 +32,45 @@ class ProviderDebtManager
 
         $this->em->persist($debt);
 
+        $this->em->flush();
+    }
+
+    public function findUnpaid()
+    {
+        return $this->providerRepository->findUnpaid();
+    }
+
+    public function pay(ProviderDebt $debt, string $type, float $amount)
+    {
+        if ($type === 'fully') {
+            $this->payFully($debt);
+        } else {
+            $this->payPartially($debt, $amount);
+        }
+    }
+
+    private function payFully(ProviderDebt $debt)
+    {
+        $debt->payFully();
+
+        $payment = new DebtPayment();
+        $payment->setDebt($debt);
+        $payment->setAmount($debt->getAmount());
+
+        $this->em->persist($payment);
+        $this->em->flush();
+    }
+
+    private function payPartially(ProviderDebt $debt, float $amount)
+    {
+        $debt->payPartially($amount);
+
+        $payment = new DebtPayment();
+        $payment->setDebt($debt);
+        $payment->setAmount($amount);
+        $payment->partially();
+
+        $this->em->persist($payment);
         $this->em->flush();
     }
 }
