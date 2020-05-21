@@ -42,7 +42,9 @@ class ProviderDebtManager
 
     public function pay(ProviderDebt $debt, string $type, float $amount)
     {
-        if ($type === 'fully') {
+        $debt->update();
+
+        if ($type === 'fully' || $amount === $debt->getRemainingAmount()) {
             $this->payFully($debt);
         } else {
             $this->payPartially($debt, $amount);
@@ -63,7 +65,7 @@ class ProviderDebtManager
 
     private function payPartially(ProviderDebt $debt, float $amount)
     {
-        $debt->payPartially($amount);
+        $debt->payPartially();
 
         $payment = new DebtPayment();
         $payment->setDebt($debt);

@@ -28,7 +28,7 @@ class DebtPayment implements \JsonSerializable, SnapshotableInterface
     }
 
     /**
-     * @ORM\ManyToOne(targetEntity="ProviderDebt", inversedBy="debtPayments")
+     * @ORM\ManyToOne(targetEntity="ProviderDebt", inversedBy="payments")
      * @ORM\JoinColumn(nullable=false)
      */
     private $debt;

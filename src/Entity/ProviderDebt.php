@@ -27,7 +27,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
 
     public function __construct()
     {
-        $this->debtPayments = new ArrayCollection();
+        $this->payments = new ArrayCollection();
         $this->date = new \DateTime();
         $this->paidFully = false;
         $this->paidPartially = false;
@@ -46,8 +46,14 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\DebtPayment", mappedBy="debt")
+     * @var DebtPayment[]
      */
-    private $debtPayments;
+    private $payments;
+
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     */
+    private $updatedAt;
 
     public function payFully()
     {
@@ -55,12 +61,26 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         $this->paidPartially = false;
     }
 
-    public function payPartially(float $paidAmount)
+    public function payPartially()
     {
-        $this->amount = $this->amount - $paidAmount;
-
         $this->paidPartially = true;
         $this->paidFully = false;
+    }
+
+    public function getRemainingAmount(): float
+    {
+        return $this->amount - $this->getTotalPaid();
+    }
+
+    public function getTotalPaid(): float
+    {
+        $total = 0;
+
+        foreach ($this->payments as $payment) {
+            $total += $payment->getAmount();
+        }
+
+        return $total;
     }
 
     public function jsonSerialize()
@@ -71,7 +91,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
             'data' => $this->date->format('Y-m-d'),
             'platit complet' => $this->paidFully,
             'platit partial' => $this->paidPartially,
-            'plati' => $this->debtPayments->count()
+            'plati' => $this->payments->count()
         ];
     }
 
@@ -102,15 +122,15 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
     /**
      * @return Collection|DebtPayment[]
      */
-    public function getDebtPayments(): Collection
+    public function getPayments(): Collection
     {
-        return $this->debtPayments;
+        return $this->payments;
     }
 
     public function addDebtPayment(DebtPayment $debtPayment): self
     {
-        if (!$this->debtPayments->contains($debtPayment)) {
-            $this->debtPayments[] = $debtPayment;
+        if (!$this->payments->contains($debtPayment)) {
+            $this->payments[] = $debtPayment;
             $debtPayment->setDebt($this);
         }
 
@@ -119,8 +139,8 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
 
     public function removeDebtPayment(DebtPayment $debtPayment): self
     {
-        if ($this->debtPayments->contains($debtPayment)) {
-            $this->debtPayments->removeElement($debtPayment);
+        if ($this->payments->contains($debtPayment)) {
+            $this->payments->removeElement($debtPayment);
             // set the owning side to null (unless already changed)
             if ($debtPayment->getDebt() === $this) {
                 $debtPayment->setDebt(null);
@@ -128,5 +148,22 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         }
 
         return $this;
+    }
+
+    public function getUpdatedAt(): ?\DateTimeInterface
+    {
+        return $this->updatedAt;
+    }
+
+    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    public function update()
+    {
+        $this->updatedAt = new \DateTime();
     }
 }

@@ -7,15 +7,17 @@
 
     <div class="row">
         {% for p in providers %}
-            <div class="col-6">
+            <div class="col-12">
                 <div class="card my-3">
                     <div class="card-header">{{ p.name }}</div>
 
                     <table class="table table-striped">
                         <thead>
                         <tr>
-                            <th>Cantitate</th>
                             <th>Data</th>
+                            <th>Cantitate</th>
+                            <th>Achitat</th>
+                            <th>Rămas</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -23,8 +25,10 @@
                         <tbody>
                         {% for debt in p.debts %}
                             <tr>
-                                <td>{{ debt.amount|num_for }}</td>
                                 <td>{{ debt.date ? debt.date|date('Y-m-d') : '' }}</td>
+                                <td>{{ debt.amount|num_for }}</td>
+                                <td>{{ debt.totalPaid|num_for }}</td>
+                                <td>{{ debt.remainingAmount|num_for }}</td>
                                 <td>
                                     <form action="{{ path('provider_debt_pay', {'id': debt.id}) }}" method="post">
                                         <input name="amount" value="{{ debt.amount }}" type="hidden">
@@ -32,7 +36,7 @@
                                         <input type="hidden" name="_token" value="{{ csrf_token('pay' ~ debt.id) }}">
 
                                         <button class="btn btn-success btn-sm"
-                                                onclick="return confirm('Ești sigur că vrei să plătești toată datoria de {{ debt.amount|num_for }}?');">
+                                                onclick="return confirm('Ești sigur că vrei să plătești toată datoria de {{ debt.remainingAmount|num_for }}?');">
                                             plătește</button>
                                     </form>
                                 </td>
@@ -50,7 +54,7 @@
 
                         {% if p.debts|length > 1 %}
                             <tr class="total">
-                                <td colspan="4"><strong>Total:</strong> {{ p.debts|total }}</td>
+                                <td colspan="6"><strong>Total:</strong> {{ p.debts|total }}</td>
                             </tr>
                         {% endif %}
                         </tbody>
