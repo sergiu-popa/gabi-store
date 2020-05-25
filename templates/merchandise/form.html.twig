@@ -28,9 +28,9 @@
             </tr>
             {% if merchandise.id is null %}
             <tr>
-                <td>{{ form_row(form.isDebt) }}</td>
+                <td>{% if form.isDebt is defined %}{{ form_row(form.isDebt) }}{% endif %}</td>
                 <td colspan="{{ includeProvider ? 3 : 2 }}">
-                    {{ form_row(form.paymentType) }}
+                    {% if form.paymentType is defined %}{{ form_row(form.paymentType) }}{% endif %}
                 </td>
                 <td>
                     {{ form_row(form.vat) }}

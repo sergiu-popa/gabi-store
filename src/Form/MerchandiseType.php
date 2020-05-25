@@ -53,7 +53,24 @@ class MerchandiseType extends AbstractType
                     },
                     'attr' => ['class' => 'js-selectize', 'placeholder' => 'Selectează'],
                     'label' => false
-                ]);
+                ])
+                    ->add('isDebt', ChoiceType::class, [
+                        'label' => 'Plătești?',
+                        'choices' => [
+                            'Da' => false, // if you pay, it's not debt
+                            'Nu' => true
+                        ],
+                        'expanded' => true
+                    ])
+                    ->add('paymentType', ChoiceType::class, [
+                        'label' => 'Cum plătești?',
+                        'choices' => [
+                            'Factură' => MerchandisePayment::TYPE_INVOICE,
+                            'Bon' => MerchandisePayment::TYPE_BILL,
+                        ],
+                        'expanded' => true,
+                        'attr' => ['class' => 'hidden']
+                    ]);
             } else {
                 $merchandise->setProvider($this->providerRepository->find($provider));
             }
@@ -65,24 +82,7 @@ class MerchandiseType extends AbstractType
                     '19%' => 0.19
                 ],
                 'required' => false,
-            ])
-                ->add('isDebt', ChoiceType::class, [
-                    'label' => 'Plătești?',
-                    'choices' => [
-                        'Da' => false, // if you pay, it's not debt
-                        'Nu' => true
-                    ],
-                    'expanded' => true
-                ])
-                ->add('paymentType', ChoiceType::class, [
-                    'label' => 'Cum plătești?',
-                    'choices' => [
-                        'Factură' => MerchandisePayment::TYPE_INVOICE,
-                        'Bon' => MerchandisePayment::TYPE_BILL,
-                    ],
-                    'expanded' => true,
-                    'attr' => ['class' => 'hidden']
-                ]);
+            ]);
         }
 
         $builder->add('category', EntityType::class, [
