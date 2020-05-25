@@ -113,7 +113,7 @@ jQuery(function ($) {
 
         if($enterPriceInput.val().length > 0) {
             var enterPrice = parseFloat($enterPriceInput.val()),
-                priceWithVAT = enterPrice * $(this).val() + enterPrice,
+                priceWithVAT = enterPrice * ($(this).val() / 100) + enterPrice,
                 recommendedPrice = priceWithVAT * 1.30;
 
             $enterPriceInput.val(priceWithVAT.toFixed(2));

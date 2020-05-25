@@ -35,7 +35,9 @@ class MerchandiseController extends AbstractController
     public function new(Request $request): Response
     {
         // TODO get isDebt/paymentType from previous Merchandise added today if exists?
-        $merchandise = new Merchandise($request->query->get('date'));
+        $merchandise = new Merchandise(
+            $request->query->get('date')
+        );
         $merchandise->setDate(new \DateTime($request->query->get('date')));
         $provider = $request->query->get('provider');
 

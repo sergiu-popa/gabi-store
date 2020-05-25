@@ -28,7 +28,7 @@
                                 <td>{{ debt.date ? debt.date|date('Y-m-d') : '' }}</td>
                                 <td>{{ debt.amount|num_for }}</td>
                                 <td>{{ debt.totalPaid|num_for }}</td>
-                                <td>{{ debt.paymentTypeLabel }}</td>
+                                <td>{{ debt.paymentTypeLabel(true) }}</td>
                                 <td>
                                     <form action="{{ path('provider_debt_pay', {'id': debt.id}) }}" method="post">
                                         <input name="amount" value="{{ debt.amount }}" type="hidden">

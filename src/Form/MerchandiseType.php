@@ -7,6 +7,7 @@ use App\Entity\MerchandiseCategory;
 use App\Entity\MerchandisePayment;
 use App\Entity\Provider;
 use App\Repository\MerchandiseCategoryRepository;
+use App\Repository\MerchandiseRepository;
 use App\Repository\ProviderRepository;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
@@ -24,12 +25,17 @@ class MerchandiseType extends AbstractType
     /** @var MerchandiseCategoryRepository */
     private $categoryRepository;
 
+    /** @var MerchandiseRepository */
+    private $repository;
+
     public function __construct(
         ProviderRepository $providerRepository,
-        MerchandiseCategoryRepository $categoryRepository
+        MerchandiseCategoryRepository $categoryRepository,
+        MerchandiseRepository $repository
     ) {
         $this->providerRepository = $providerRepository;
         $this->categoryRepository = $categoryRepository;
+        $this->repository = $repository;
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
@@ -72,14 +78,21 @@ class MerchandiseType extends AbstractType
                         'attr' => ['class' => 'hidden']
                     ]);
             } else {
-                $merchandise->setProvider($this->providerRepository->find($provider));
+                $provider = $this->providerRepository->find($provider);
+                $merchandise->setProvider($provider);
+
+                $similarMerchandise = $this->repository->findSimilar($provider);
+                if($similarMerchandise) {
+                    $merchandise->setPaymentType($similarMerchandise->getPaymentType());
+                    $merchandise->setIsDebt($similarMerchandise->isDebt());
+                }
             }
 
             $builder->add('vat', ChoiceType::class, [
                 'label' => false,
                 'choices' => [
-                    '9%' => 0.09,
-                    '19%' => 0.19
+                    '9%' => 9,
+                    '19%' => 19
                 ],
                 'required' => false,
             ]);

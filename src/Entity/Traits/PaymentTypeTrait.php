@@ -35,8 +35,12 @@ trait PaymentTypeTrait
         return $this->paymentType === MerchandisePayment::TYPE_BILL;
     }
     
-    public function getPaymentTypeLabel(): string
+    public function getPaymentTypeLabel($singular = false): string
     {
+        if ($singular) {
+            return $this->paymentType === MerchandisePayment::TYPE_INVOICE ? 'factură' : 'bon';
+        }
+
         return $this->paymentType === MerchandisePayment::TYPE_INVOICE ? 'facturi' : 'bonuri';
     }
 

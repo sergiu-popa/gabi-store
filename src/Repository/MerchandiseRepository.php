@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Merchandise;
+use App\Entity\Provider;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -156,5 +157,21 @@ class MerchandiseRepository extends ServiceEntityRepository
         }
 
         return $data;
+    }
+
+    /**
+     * Returns a similiar merchandise for the Provider today.
+     */
+    public function findSimilar(Provider $provider): ?Merchandise
+    {
+        return $this->createQueryBuilder('m')
+            ->where('m.provider = :provider')
+            ->setParameter('provider', $provider)
+            ->andWhere('m.date = :today')
+            ->setParameter('today', (new \DateTime())->format('Y-m-d'))
+            ->orderBy('m.date', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
     }
 }
