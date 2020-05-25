@@ -39,8 +39,8 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
     private $provider;
 
     /**
-     * @ORM\Column(type="string", length=10, options={"default"="invoice"})
-     * @var string
+     * @ORM\Column(type="smallint", options={"default"="2"})
+     * @var int
      */
     protected $paymentType;
 
@@ -88,6 +88,11 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
     public function update()
     {
         $this->updatedAt = new \DateTime();
+    }
+
+    public function incrementAmount(float $amount): void
+    {
+        $this->amount += $amount;
     }
 
     public function jsonSerialize()
@@ -170,15 +175,12 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         return $this;
     }
 
-    public function getPaymentType(): ?string
+    public function getPaymentType(): ?int
     {
         return $this->paymentType;
     }
 
-    /**
-     * @param string $paymentType
-     */
-    public function setPaymentType(string $paymentType): void
+    public function setPaymentType(int $paymentType): void
     {
         $this->paymentType = $paymentType;
     }

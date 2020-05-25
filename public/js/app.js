@@ -124,7 +124,7 @@ jQuery(function ($) {
     // Merchandise paidWith sweet alert
     $(document).on('click', '#merchandise_paidWith input', function(e) {
         var paidWith = $(this).val(),
-            message = 'Se va genera o <strong>datorie nouă</strong>.'
+            message = 'Se va genera/actualiza <strong>datoria</strong>.'
 
         switch (paidWith) {
             case 'bill':

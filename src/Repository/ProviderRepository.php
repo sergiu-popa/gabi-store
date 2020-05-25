@@ -66,8 +66,9 @@ class ProviderRepository extends ServiceEntityRepository
             ->select('p, m, c')
             ->join('p.merchandises', 'm')
             ->join('m.category', 'c')
-            ->where('m.date = :date')
+            ->andWhere('m.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
+            ->andWhere('m.deletedAt IS NULL')
             ->addOrderBy('m.name', 'ASC')
             ->getQuery()
             ->getResult();

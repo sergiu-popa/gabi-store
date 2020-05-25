@@ -3,6 +3,8 @@
 namespace App\Twig;
 
 use App\Entity\Merchandise;
+use App\Entity\MerchandisePayment;
+use App\Form\MerchandisePaymentType;
 use Twig\Environment;
 use Twig\Extension\AbstractExtension;
 use Twig\Extension\CoreExtension;
@@ -24,6 +26,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('snapshot_verb', [$this, 'snapshotVerb']),
             new TwigFilter('snapshot_content', [$this, 'snapshotContent']),
             new TwigFilter('snapshot_type', [$this, 'snapshotType']),
+            new TwigFilter('payment_type', [$this, 'paymentType']),
         );
     }
 
@@ -143,5 +146,10 @@ class AppExtension extends AbstractExtension
         );
 
         return $formatter->format($date->getTimestamp());
+    }
+
+    public function paymentType(int $type)
+    {
+        return $type === MerchandisePayment::TYPE_BILL ? 'bon' : 'factură';
     }
 }

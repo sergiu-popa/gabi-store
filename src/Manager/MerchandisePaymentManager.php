@@ -35,15 +35,16 @@ class MerchandisePaymentManager
         $this->em->flush();
     }
 
-    public function createFromDebt(ProviderDebt $debt, float $amount, string $paymentType)
+    public function createFromDebt(ProviderDebt $debt, float $amount)
     {
         $payment = new MerchandisePayment();
         $payment->setAmount($amount);
 
-        if($paymentType === Merchandise::PAID_WITH_BILL) {
+        if($debt->getPaymentType() === MerchandisePayment::TYPE_BILL) {
             $payment->bill();
         }
 
+        $payment->setType($debt->getPaymentType());
         $payment->setProvider($debt->getProvider());
         $payment->setDate($debt->getDate());
 
