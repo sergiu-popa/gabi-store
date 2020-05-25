@@ -7,6 +7,8 @@ use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\PaidPartiallyTrait;
+use App\Entity\Traits\PaymentTypeTrait;
+use App\Entity\Traits\UpdatedAtTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -21,7 +23,9 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
     use AmountTrait;
     use DateTrait;
     use PaidPartiallyTrait;
+    use PaymentTypeTrait;
     use DeletedAtTrait;
+    use UpdatedAtTrait;
 
     public function __construct()
     {
@@ -39,12 +43,6 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
     private $provider;
 
     /**
-     * @ORM\Column(type="smallint", options={"default"="2"})
-     * @var int
-     */
-    protected $paymentType;
-
-    /**
      * @ORM\Column(type="boolean")
      */
     private $paidFully;
@@ -54,11 +52,6 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
      * @var DebtPayment[]
      */
     private $payments;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $updatedAt;
 
     public function payFully()
     {
@@ -85,11 +78,6 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         return $total;
     }
 
-    public function update()
-    {
-        $this->updatedAt = new \DateTime();
-    }
-
     public function incrementAmount(float $amount): void
     {
         $this->amount += $amount;
@@ -101,7 +89,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
             'furnizor' => $this->provider->getName(),
             'cantitate' => $this->amount,
             'data' => $this->date->format('Y-m-d'),
-            'plata tip' => $this->paymentType === MerchandisePayment::TYPE_INVOICE ? 'facuta' : 'bon',
+            'plata tip' => $this->getPaymentTypeLabel(),
             'platit complet' => $this->paidFully,
             'platit partial' => $this->paidPartially,
             'plati' => $this->payments->count()
@@ -161,27 +149,5 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         }
 
         return $this;
-    }
-
-    public function getUpdatedAt(): ?\DateTimeInterface
-    {
-        return $this->updatedAt;
-    }
-
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
-    {
-        $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function getPaymentType(): ?int
-    {
-        return $this->paymentType;
-    }
-
-    public function setPaymentType(int $paymentType): void
-    {
-        $this->paymentType = $paymentType;
     }
 }

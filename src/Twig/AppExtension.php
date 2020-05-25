@@ -147,9 +147,4 @@ class AppExtension extends AbstractExtension
 
         return $formatter->format($date->getTimestamp());
     }
-
-    public function paymentType(int $type)
-    {
-        return $type === MerchandisePayment::TYPE_BILL ? 'bon' : 'factură';
-    }
 }

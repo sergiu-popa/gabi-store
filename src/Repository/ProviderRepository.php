@@ -69,7 +69,7 @@ class ProviderRepository extends ServiceEntityRepository
             ->andWhere('m.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
             ->andWhere('m.deletedAt IS NULL')
-            ->addOrderBy('m.name', 'ASC')
+            ->orderBy('m.date')
             ->getQuery()
             ->getResult();
     }

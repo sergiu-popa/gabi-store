@@ -6,6 +6,7 @@ use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
+use App\Entity\Traits\PaymentTypeTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -21,17 +22,13 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
     use AmountTrait;
     use DateTrait;
     use DeletedAtTrait;
+    use PaymentTypeTrait;
 
     public function __construct()
     {
         $this->date = new \DateTime();
         $this->invoice();
     }
-
-    /**
-     * @ORM\Column(type="smallint")
-     */
-    private $type;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Provider", inversedBy="merchandisePayments")
@@ -45,45 +42,13 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
             'furnizor' => $this->provider->getName(),
             'cantitate' => $this->amount,
             'data' => $this->date->format('Y-m-d'),
-            'tip' => $this->type === self::TYPE_BILL ? 'bon' : 'factura'
+            'tip' => $this->paymentType === self::TYPE_BILL ? 'bon' : 'factura'
         ];
     }
 
-    public function invoice(): void
+    public function incrementAmount(float $amount): void
     {
-        $this->type = self::TYPE_INVOICE;
-    }
-
-    public function paidWithInvoice(): bool
-    {
-        return $this->type === self::TYPE_INVOICE;
-    }
-
-    public function bill(): void
-    {
-        $this->type = self::TYPE_BILL;
-    }
-
-    public function paidWithBill(): bool
-    {
-        return $this->type === self::TYPE_BILL;
-    }
-
-    public function getType(): ?int
-    {
-        return $this->type;
-    }
-
-    public function getTypeLabel(): string
-    {
-        return $this->type === 1 ? 'bonuri' : 'facturi';
-    }
-
-    public function setType(int $type): self
-    {
-        $this->type = $type;
-
-        return $this;
+        $this->amount += $amount;
     }
 
     public function getProvider(): ?Provider

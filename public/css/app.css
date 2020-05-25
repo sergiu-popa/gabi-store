@@ -26,8 +26,8 @@ h1 small a {color: #787878}
     width: auto;
     margin-right: 10px;
 }
-#merchandise_paidWith { display: inline-block; }
-#merchandise_paidWith .form-check, #merchandise_vat .form-check {
+#merchandise_paymentType { display: inline-block; }
+#merchandise_isDebt .form-check, #merchandise_paymentType .form-check, #merchandise_vat .form-check {
     display: inline-block;
     margin-right: 1rem;
 }

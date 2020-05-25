@@ -160,7 +160,7 @@ class DayManager
         return $total;
     }
 
-    private function filterBy(array $items, int $value, string $property = 'type'): array
+    private function filterBy(array $items, int $value, string $property = 'paymentType'): array
     {
         $filtered = [];
 

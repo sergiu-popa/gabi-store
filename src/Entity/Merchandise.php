@@ -7,6 +7,7 @@ use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\NameTrait;
+use App\Entity\Traits\PaymentTypeTrait;
 use App\Entity\Traits\SnapshotsTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
@@ -17,14 +18,11 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 class Merchandise implements \JsonSerializable, SnapshotableInterface
 {
-    public const PAID_WITH_DEBT = 'debt';
-    public const PAID_WITH_BILL = 'bill';
-    public const PAID_WITH_INVOICE = 'invoice';
-
     use IdTrait;
     use NameTrait;
     use DateTrait;
     use AmountTrait;
+    use PaymentTypeTrait;
     use DeletedAtTrait;
     use SnapshotsTrait;
 
@@ -70,10 +68,11 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
     private $vat;
 
     /**
-     * @ORM\Column(type="string", length=15, nullable=true)
-     * @Assert\NotBlank()
+     * @ORM\Column(type="boolean")
+     * @Assert\Type("bool")
+     * @var bool
      */
-    private $paidWith;
+    private $isDebt;
 
     public function jsonSerialize()
     {
@@ -85,7 +84,8 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
             'pret intrare' => $this->enterPrice,
             'pret iesire' => $this->exitPrice,
             'TVA' => $this->vat,
-            'plata' => $this->paidWith
+            'datorie' => $this->isDebt() ? 'da' : 'nu',
+            'plata' => $this->getPaymentTypeLabel(),
         ];
     }
 
@@ -169,15 +169,18 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
         return $this;
     }
 
-    public function getPaidWith(): ?string
+    public function isDebt(): ?bool
     {
-        return $this->paidWith;
+        return $this->isDebt;
     }
 
-    public function setPaidWith(?string $paidWith): self
+    public function getIsDebt(): ?bool
     {
-        $this->paidWith = $paidWith;
+        return $this->isDebt;
+    }
 
-        return $this;
+    public function setIsDebt(bool $isDebt): void
+    {
+        $this->isDebt = $isDebt;
     }
 }

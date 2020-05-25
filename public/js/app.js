@@ -107,8 +107,8 @@ jQuery(function ($) {
     });
 
     // Merchandise pice calculation and VAT
-    $(document).on('click', '#merchandise_vat input', function(e) {
-        var $radioInput = $(this),
+    $(document).on('change', '#merchandise_vat', function(e) {
+        var $selectInput = $(this),
             $enterPriceInput = $('#merchandise_enterPrice');
 
         if($enterPriceInput.val().length > 0) {
@@ -117,7 +117,7 @@ jQuery(function ($) {
                 recommendedPrice = priceWithVAT * 1.30;
 
             $enterPriceInput.val(priceWithVAT.toFixed(2));
-            $radioInput.parents('td').next().find('.js-recommended-price').text(recommendedPrice.toFixed(2));
+            $selectInput.parents('td').next().find('.js-recommended-price').text(recommendedPrice.toFixed(2));
         }
     })
 

@@ -45,10 +45,10 @@ class MerchandiseManager
 
     public function createPaymentOrDebt(Merchandise $merchandise)
     {
-        if($merchandise->getPaidWith() === Merchandise::PAID_WITH_DEBT) {
+        if($merchandise->isDebt()) {
             $this->debtManager->update($merchandise);
         } else {
-            $this->paymentManager->create($merchandise);
+            $this->paymentManager->update($merchandise);
         }
     }
 }

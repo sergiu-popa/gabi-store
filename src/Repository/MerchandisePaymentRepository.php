@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\MerchandisePayment;
+use App\Entity\Provider;
+use App\Entity\ProviderDebt;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -18,6 +20,20 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
 
     /** @var Connection */
     private $conn;
+
+    public function findTodayForProvider(Provider $provider, int $paymentType): ?MerchandisePayment
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.date = :today')
+            ->setParameter('today', (new \DateTime())->format('Y-m-d'))
+            ->andWhere('p.provider = :provider')
+            ->setParameter('provider', $provider)
+            ->andWhere('p.paymentType = :type')
+            ->setParameter('type', $paymentType)
+            ->andWhere('p.deletedAt IS NULL')
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 
     public function findByDay(\DateTime $date)
     {

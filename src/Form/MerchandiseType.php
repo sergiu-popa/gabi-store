@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Merchandise;
 use App\Entity\MerchandiseCategory;
+use App\Entity\MerchandisePayment;
 use App\Entity\Provider;
 use App\Repository\MerchandiseCategoryRepository;
 use App\Repository\ProviderRepository;
@@ -63,16 +64,24 @@ class MerchandiseType extends AbstractType
                     '9%' => 0.09,
                     '19%' => 0.19
                 ],
-                'expanded' => true
+                'required' => false,
             ])
-                ->add('paidWith', ChoiceType::class, [
-                    'label' => 'Cum se plătește?',
+                ->add('isDebt', ChoiceType::class, [
+                    'label' => 'Plătești?',
                     'choices' => [
-                        'Datorie' => Merchandise::PAID_WITH_DEBT,
-                        'Factură' => Merchandise::PAID_WITH_INVOICE,
-                        'Bon' => Merchandise::PAID_WITH_BILL,
+                        'Da' => false, // if you pay, it's not debt
+                        'Nu' => true
                     ],
                     'expanded' => true
+                ])
+                ->add('paymentType', ChoiceType::class, [
+                    'label' => 'Cum plătești?',
+                    'choices' => [
+                        'Factură' => MerchandisePayment::TYPE_INVOICE,
+                        'Bon' => MerchandisePayment::TYPE_BILL,
+                    ],
+                    'expanded' => true,
+                    'attr' => ['class' => 'hidden']
                 ]);
         }
 

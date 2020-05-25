@@ -2,10 +2,10 @@
 
 namespace App\Manager;
 
-use App\Entity\Debt;
 use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
 use App\Entity\ProviderDebt;
+use App\Repository\MerchandisePaymentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 
 class MerchandisePaymentManager
@@ -13,24 +13,34 @@ class MerchandisePaymentManager
     /** @var EntityManagerInterface */
     private $em;
 
-    public function __construct(EntityManagerInterface $em)
+    /** @var MerchandisePaymentRepository */
+    private $repository;
+
+    public function __construct(EntityManagerInterface $em, MerchandisePaymentRepository $repository)
     {
         $this->em = $em;
+        $this->repository = $repository;
     }
 
-    public function create(Merchandise $merchandise)
+    public function update(Merchandise $merchandise)
     {
-        $payment = new MerchandisePayment();
-        $payment->setAmount($merchandise->getTotalEnterValue());
+        $payment = $this->repository->findTodayForProvider($merchandise->getProvider(), $merchandise->getPaymentType());
 
-        if($merchandise->getPaidWith() === Merchandise::PAID_WITH_BILL) {
-            $payment->bill();
+        if($payment) {
+            $payment->incrementAmount($merchandise->getTotalEnterValue());
+        } else {
+            $payment = new MerchandisePayment();
+            $payment->setAmount($merchandise->getTotalEnterValue());
+
+            if ($merchandise->paidWithBill()) {
+                $payment->bill();
+            }
+
+            $payment->setProvider($merchandise->getProvider());
+            $payment->setDate($merchandise->getDate());
+
+            $this->em->persist($payment);
         }
-
-        $payment->setProvider($merchandise->getProvider());
-        $payment->setDate($merchandise->getDate());
-
-        $this->em->persist($payment);
 
         $this->em->flush();
     }
