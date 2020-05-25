@@ -3,7 +3,7 @@
 {% block title %}Datorii{% endblock %}
 
 {% block body %}
-    <h1>Datorii</h1>
+    <h1>Datorii <small class="text-muted">{{ total|num_for }}</small></h1>
 
     <div class="row">
         {% for p in providers %}

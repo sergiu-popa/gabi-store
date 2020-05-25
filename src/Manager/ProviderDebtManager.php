@@ -46,6 +46,11 @@ class ProviderDebtManager
         return $this->providerRepository->findUnpaid();
     }
 
+    public function findUnpaidTotalAmount(): float
+    {
+        return $this->providerRepository->findUnpaidTotalAmount();
+    }
+
     public function pay(ProviderDebt $debt, string $type, float $amount, string $paymentType)
     {
         $debt->update();

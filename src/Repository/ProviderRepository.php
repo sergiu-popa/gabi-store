@@ -37,14 +37,27 @@ class ProviderRepository extends ServiceEntityRepository
     public function findUnpaid()
     {
         return $this->createQueryBuilder('p')
-            ->select('p, d')
+            ->select('p, d, payments')
             ->join('p.debts', 'd')
-            ->where('d.paidFully = :paid')
+            ->leftJoin('d.payments', 'payments')
+            ->where('d.paidFully = 0')
             ->andWhere('d.deletedAt IS NULL')
-            ->setParameter('paid', false)
             ->orderBy('d.date', 'DESC')
             ->getQuery()
             ->getResult();
+    }
+
+    /**
+     * Returns all debts paid fully = false.
+     */
+    public function findUnpaidTotalAmount()
+    {
+        return $this->createQueryBuilder('p')
+            ->select('SUM(d.amount) as total')
+            ->join('p.debts', 'd')
+            ->where('d.paidFully = 0')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
     public function findByDay(\DateTimeInterface $date): array

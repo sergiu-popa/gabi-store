@@ -31,7 +31,8 @@ class ProviderDebtController extends AbstractController
     public function index(): Response
     {
         return $this->render('provider_debt.html.twig', [
-            'providers' => $this->manager->findUnpaid()
+            'providers' => $this->manager->findUnpaid(),
+            'total' => $this->manager->findUnpaidTotalAmount()
         ]);
     }
 
