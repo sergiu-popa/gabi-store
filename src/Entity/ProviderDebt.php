@@ -29,6 +29,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         $this->date = new \DateTime();
         $this->paidFully = false;
         $this->paidPartially = false;
+        $this->paymentType = MerchandisePayment::TYPE_INVOICE;
     }
 
     /**
@@ -36,6 +37,12 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
      * @ORM\JoinColumn(nullable=false)
      */
     private $provider;
+
+    /**
+     * @ORM\Column(type="string", length=10, options={"default"="invoice"})
+     * @var string
+     */
+    protected $paymentType;
 
     /**
      * @ORM\Column(type="boolean")
@@ -89,6 +96,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
             'furnizor' => $this->provider->getName(),
             'cantitate' => $this->amount,
             'data' => $this->date->format('Y-m-d'),
+            'plata tip' => $this->paymentType === MerchandisePayment::TYPE_INVOICE ? 'facuta' : 'bon',
             'platit complet' => $this->paidFully,
             'platit partial' => $this->paidPartially,
             'plati' => $this->payments->count()
@@ -160,5 +168,18 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    public function getPaymentType(): ?string
+    {
+        return $this->paymentType;
+    }
+
+    /**
+     * @param string $paymentType
+     */
+    public function setPaymentType(string $paymentType): void
+    {
+        $this->paymentType = $paymentType;
     }
 }
