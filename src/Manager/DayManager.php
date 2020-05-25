@@ -183,11 +183,8 @@ class DayManager
 
         foreach ($providers as $provider) {
             foreach ($provider->getMerchandises() as $merchandise) {
-                $enterAmount = $merchandise->getAmount() * $merchandise->getEnterPrice();
-                $exitAmount = $merchandise->getAmount() * $merchandise->getExitPrice();
-
-                $enterTotal += $exitAmount;
-                $profit += $exitAmount - $enterAmount;
+                $enterTotal += $merchandise->getTotalEnterValue();
+                $profit += $merchandise->getGrossProfit();
             }
         }
 
