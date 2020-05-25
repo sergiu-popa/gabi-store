@@ -35,6 +35,6 @@ class BalanceRepository extends ServiceEntityRepository
             ->andWhere('b.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 }

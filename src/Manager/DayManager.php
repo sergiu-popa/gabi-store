@@ -110,7 +110,7 @@ class DayManager
 
     public function getTransactions(\DateTime $date)
     {
-        $balance = $this->em->getRepository(Balance::class)->findLast();
+        $balance = $this->balanceManager->findForTodayOrLast($date);
 
         $transactions = [
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),
@@ -144,7 +144,13 @@ class DayManager
 
         $totals['day'] = $totalDay;
         $totals['balance_previous'] = $balance->getAmount();
-        $totals['balance'] = $balance->getAmount() + $totals['merchandise'] - $totalDay;
+
+        if($balance->isForToday()) {
+            $totals['balance'] = $balance->getAmount();
+            $totals['balance_previous'] = $this->balanceManager->findPrevious($balance->getDate())->getAmount();
+        } else {
+            $totals['balance'] = $balance->getAmount() + $totals['merchandise'] - $totalDay;
+        }
 
         return $totals;
     }
