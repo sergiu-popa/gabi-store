@@ -12,6 +12,7 @@ use App\Entity\Traits\SnapshotsTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MerchandiseRepository")
@@ -87,6 +88,18 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
             'datorie' => $this->isDebt() ? 'da' : 'nu',
             'plata' => $this->getPaymentTypeLabel(),
         ];
+    }
+
+    /**
+     * @Assert\Callback
+     */
+    public function validate(ExecutionContextInterface $context, $payload)
+    {
+        if ($this->paidWithInvoice() && $this->vat === null) {
+            $context->buildViolation('Această valoare nu ar trebui să fie goală.')
+                ->atPath('vat')
+                ->addViolation();
+        }
     }
 
     public function getTotalEnterValue()
