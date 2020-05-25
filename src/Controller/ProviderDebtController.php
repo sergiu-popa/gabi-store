@@ -44,7 +44,7 @@ class ProviderDebtController extends AbstractController
             $type = $request->request->get('type');
             $amount = $request->request->get('amount');
 
-            if($type === 'partially' && $amount > $debt->getRemainingAmount()) {
+            if($type === 'partially' && $amount > $debt->getAmount()) {
                 $this->addFlash('error', 'Plata parțială nu poate fi mai mare decât datoria totală.');
 
                 return $this->redirectToRoute('provider_debt_index');

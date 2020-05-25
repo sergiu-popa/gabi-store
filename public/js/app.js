@@ -161,8 +161,6 @@ jQuery(function ($) {
         e.preventDefault();
     })
 
-
-
     var $changeDayPicker = $('#js-change-day-datepicker');
 
     $changeDayPicker.datepicker({

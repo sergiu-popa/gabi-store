@@ -16,10 +16,17 @@ class ProviderDebtManager
     /** @var ProviderRepository */
     private $providerRepository;
 
-    public function __construct(EntityManagerInterface $em, ProviderRepository $providerRepository)
-    {
+    /** @var MerchandisePaymentManager */
+    private $paymentManager;
+
+    public function __construct(
+        EntityManagerInterface $em,
+        ProviderRepository $providerRepository,
+        MerchandisePaymentManager $paymentManager
+    ) {
         $this->em = $em;
         $this->providerRepository = $providerRepository;
+        $this->paymentManager = $paymentManager;
     }
 
     public function create(Merchandise $merchandise)
@@ -27,7 +34,6 @@ class ProviderDebtManager
         $debt = new ProviderDebt();
         $debt->setAmount($merchandise->getTotalEnterValue());
         $debt->setProvider($merchandise->getProvider());
-        $debt->setMerchandise($merchandise);
         $debt->setDate($merchandise->getDate());
 
         $this->em->persist($debt);
@@ -40,15 +46,17 @@ class ProviderDebtManager
         return $this->providerRepository->findUnpaid();
     }
 
-    public function pay(ProviderDebt $debt, string $type, float $amount)
+    public function pay(ProviderDebt $debt, string $type, float $amount, string $paymentType)
     {
         $debt->update();
 
-        if ($type === 'fully' || $amount === $debt->getRemainingAmount()) {
+        if ($type === 'fully' || $amount === $debt->getAmount()) {
             $this->payFully($debt);
         } else {
             $this->payPartially($debt, $amount);
         }
+
+        $this->paymentManager->createFromDebt($debt, $amount, $paymentType);
     }
 
     private function payFully(ProviderDebt $debt)
@@ -65,7 +73,7 @@ class ProviderDebtManager
 
     private function payPartially(ProviderDebt $debt, float $amount)
     {
-        $debt->payPartially();
+        $debt->payPartially($amount);
 
         $payment = new DebtPayment();
         $payment->setDebt($debt);

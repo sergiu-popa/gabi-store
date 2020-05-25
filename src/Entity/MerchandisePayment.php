@@ -6,7 +6,6 @@ use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
-use App\Entity\Traits\MerchandiseTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -22,7 +21,6 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
     use AmountTrait;
     use DateTrait;
     use DeletedAtTrait;
-    use MerchandiseTrait;
 
     public function __construct()
     {

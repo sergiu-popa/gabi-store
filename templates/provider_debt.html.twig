@@ -17,7 +17,7 @@
                             <th>Data</th>
                             <th>Suma</th>
                             <th>Achitat</th>
-                            <th>Rămas</th>
+                            <th>Ce este</th>
                             <th></th>
                             <th></th>
                         </tr>
@@ -28,7 +28,7 @@
                                 <td>{{ debt.date ? debt.date|date('Y-m-d') : '' }}</td>
                                 <td>{{ debt.amount|num_for }}</td>
                                 <td>{{ debt.totalPaid|num_for }}</td>
-                                <td>{{ debt.remainingAmount|num_for }}</td>
+                                <td>Factura/Bon</td>
                                 <td>
                                     <form action="{{ path('provider_debt_pay', {'id': debt.id}) }}" method="post">
                                         <input name="amount" value="{{ debt.amount }}" type="hidden">
@@ -36,8 +36,9 @@
                                         <input type="hidden" name="_token" value="{{ csrf_token('pay' ~ debt.id) }}">
 
                                         <button class="btn btn-success btn-sm"
-                                                onclick="return confirm('Ești sigur că vrei să plătești toată datoria de {{ debt.remainingAmount|num_for }}?');">
-                                            plătește</button>
+                                                onclick="return confirm('Ești sigur că vrei să plătești toată datoria de {{ debt.amount|num_for }}?');">
+                                            plătește
+                                        </button>
                                     </form>
                                 </td>
                                 <td>
@@ -56,8 +57,7 @@
                             <tr class="total">
                                 <td class="text-right"><strong>Total:</strong></td>
                                 <td>{{ p.debts|total }}</td>
-                                <td>{{ p.debts|total('totalPaid') }}</td>
-                                <td colspan="3">{{ p.debts|total('remainingAmount') }}</td>
+                                <td colspan="4">{{ p.debts|total('totalPaid') }}</td>
                             </tr>
                         {% endif %}
                         </tbody>

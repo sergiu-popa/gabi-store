@@ -6,7 +6,6 @@ use App\Entity\Traits\AmountTrait;
 use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
-use App\Entity\Traits\MerchandiseTrait;
 use App\Entity\Traits\PaidPartiallyTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -23,7 +22,6 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
     use DateTrait;
     use PaidPartiallyTrait;
     use DeletedAtTrait;
-    use MerchandiseTrait;
 
     public function __construct()
     {
@@ -61,15 +59,12 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         $this->paidPartially = false;
     }
 
-    public function payPartially()
+    public function payPartially(float $paidAmount)
     {
+        $this->amount = $this->amount - $paidAmount;
+
         $this->paidPartially = true;
         $this->paidFully = false;
-    }
-
-    public function getRemainingAmount(): float
-    {
-        return $this->amount - $this->getTotalPaid();
     }
 
     public function getTotalPaid(): float
@@ -81,6 +76,11 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         }
 
         return $total;
+    }
+
+    public function update()
+    {
+        $this->updatedAt = new \DateTime();
     }
 
     public function jsonSerialize()
@@ -160,10 +160,5 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         $this->updatedAt = $updatedAt;
 
         return $this;
-    }
-
-    public function update()
-    {
-        $this->updatedAt = new \DateTime();
     }
 }
