@@ -47,14 +47,14 @@ class Day
     /**
      * @var int
      * @ORM\Column(type="smallint", nullable=true, options={"unsigned":"true"})
-     * @Assert\Positive()
+     * @Assert\PositiveOrZero()
      */
     private $bills_50_end;
 
     /**
      * @var int
      * @ORM\Column(type="smallint", nullable=true, options={"unsigned":"true"})
-     * @Assert\Positive()
+     * @Assert\PositiveOrZero()
      */
     private $bills_100_end;
 
@@ -81,7 +81,7 @@ class Day
     /**
      * @ORM\Column(type="float", nullable=true)
      * @Assert\Type("numeric")
-     * @Assert\Positive()
+     * @Assert\PositiveOrZero()
      */
     private $z;
 
