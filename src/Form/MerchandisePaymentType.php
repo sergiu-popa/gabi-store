@@ -22,7 +22,7 @@ class MerchandisePaymentType extends AbstractType
             'query_builder' => function (ProviderRepository $r) { return $r->getQueryBuilder(); },
             'attr' => ['class' => 'js-selectize', 'placeholder' => 'Selectează']
         ])
-            ->add('type', ChoiceType::class, [
+            ->add('paymentType', ChoiceType::class, [
                 'label' => false,
                 'choices' => [
                     'Factură' => MerchandisePayment::TYPE_INVOICE,
