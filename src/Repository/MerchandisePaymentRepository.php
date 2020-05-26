@@ -75,7 +75,7 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
     public function getYearlySum()
     {
         $results = $this->conn->createQueryBuilder()
-            ->select("DATE_FORMAT(date, '%Y') as year, SUM(amount) as total, type")
+            ->select("DATE_FORMAT(date, '%Y') as year, SUM(amount) as total, paymentType")
             ->from('merchandise_payment')
             ->groupBy('year, type')
             ->orderBy('year', 'DESC')
@@ -88,10 +88,10 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
     public function getMonthlySum(int $year)
     {
         $results = $this->conn->createQueryBuilder()
-            ->select("DATE_FORMAT(date, '%m') as month, SUM(amount) as total, type")
+            ->select("DATE_FORMAT(date, '%m') as month, SUM(amount) as total, paymentType")
             ->from('merchandise_payment')
             ->where("date BETWEEN ? and ?")
-            ->groupBy('month, type')
+            ->groupBy('month, paymentType')
             ->orderBy('date', 'ASC')
             ->setParameter(0, $year . '-01-01')
             ->setParameter(1, $year . '-12-31')

@@ -54,7 +54,7 @@ class MerchandisePaymentManager
             $payment->bill();
         }
 
-        $payment->setType($debt->getPaymentType());
+        $payment->setPaymentType($debt->getPaymentType());
         $payment->setProvider($debt->getProvider());
         $payment->setDate($debt->getDate());
 
