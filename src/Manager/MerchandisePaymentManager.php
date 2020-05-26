@@ -56,7 +56,7 @@ class MerchandisePaymentManager
 
         $payment->setPaymentType($debt->getPaymentType());
         $payment->setProvider($debt->getProvider());
-        $payment->setDate($debt->getDate());
+        $payment->setDate(new \DateTime());
 
         $this->em->persist($payment);
 
