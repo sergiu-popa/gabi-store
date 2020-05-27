@@ -62,6 +62,7 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->select('m, p')
             ->join('m.provider', 'p')
             ->andWhere('m.name LIKE :name')
+            ->andWhere('m.deletedAt is NULL')
             ->setParameter('name', "%$name%")
             ->orderBy('m.date', 'DESC')
             ->setMaxResults(50)
@@ -76,6 +77,7 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->addSelect('SUM(amount * enter_price) as enterTotal')
             ->addSelect('SUM(amount * exit_price) as exitTotal')
             ->from('merchandise')
+            ->andWhere('deletedAt is NULL')
             ->groupBy('year')
             ->orderBy('year', 'DESC');
 
@@ -101,6 +103,7 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->addSelect('SUM(amount * enter_price) as enterTotal')
             ->addSelect('SUM(amount * exit_price) as exitTotal')
             ->from('merchandise')
+            ->andWhere('deletedAt is NULL')
             ->where("date BETWEEN ? and ?")
             ->groupBy('month')
             ->orderBy('date', 'ASC')

@@ -21,6 +21,12 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
     /** @var Connection */
     private $conn;
 
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, MerchandisePayment::class);
+        $this->conn = $registry->getConnection();
+    }
+
     public function findTodayForProvider(Provider $provider, int $paymentType): ?MerchandisePayment
     {
         return $this->createQueryBuilder('p')
@@ -48,12 +54,6 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, MerchandisePayment::class);
-        $this->conn = $registry->getConnection();
-    }
-
     /**
      * @return MerchandisePayment[]
      */
@@ -77,6 +77,7 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
         $results = $this->conn->createQueryBuilder()
             ->select("DATE_FORMAT(date, '%Y') as year, SUM(amount) as total, paymentType")
             ->from('merchandise_payment')
+            ->andWhere('deletedAt is NULL')
             ->groupBy('year, type')
             ->orderBy('year', 'DESC')
             ->execute()
@@ -91,6 +92,7 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
             ->select("DATE_FORMAT(date, '%m') as month, SUM(amount) as total, paymentType")
             ->from('merchandise_payment')
             ->where("date BETWEEN ? and ?")
+            ->andWhere('deletedAt is NULL')
             ->groupBy('month, paymentType')
             ->orderBy('date', 'ASC')
             ->setParameter(0, $year . '-01-01')

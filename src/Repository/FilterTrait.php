@@ -15,5 +15,12 @@ trait FilterTrait
         $qb->andWhere($prefix . '.date BETWEEN :start AND :end')
             ->setParameter('start', $startDate)
             ->setParameter('end', $endDate);
+
+        $this->applyDeletedFilter($qb, $prefix);
+    }
+
+    private function applyDeletedFilter(QueryBuilder $qb, $prefix)
+    {
+        $qb->andWhere($prefix . '.deletedAt IS NULL');
     }
 }
