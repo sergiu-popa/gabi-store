@@ -66,12 +66,12 @@ class DayManager
         return $this->repository->getToday();
     }
 
-    public function getLastDay()
+    public function getLastDay(): ?Day
     {
         return $this->repository->getLastDay();
     }
 
-    public function getDay(\DateTime $date)
+    public function getDay(\DateTime $date): ?Day
     {
         return $this->repository->getByDay($date);
     }

@@ -26,10 +26,10 @@ class DayController extends AbstractController
     public function day(Request $request)
     {
         $date = (new \DateTime($request->request->get('date', 'now')))->setTime(0, 0, 0);
-        $today = $this->manager->getCurrentDay();
+        $day = $this->manager->getDay($date);
         $showReview = $request->query->get('showReview', false);
 
-        if ($today === null && $this->dateIsToday($date)) {
+        if ($day === null && $this->dateIsToday($date)) {
             return $this->redirectToRoute('start');
         }
 
@@ -37,7 +37,7 @@ class DayController extends AbstractController
             $this->addFlash('warning', 'Ca să închizi ziua, verifică fiecare secțiune.');
         }
 
-        $form = $this->createForm(DayEndType::class, $today);
+        $form = $this->createForm(DayEndType::class, $day ?? new Day($this->getUser()));
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -57,9 +57,10 @@ class DayController extends AbstractController
             'showReview' => $showReview,
             'currentDate' => $date,
             'canModify' => $this->manager->userCanModifyDay($date),
-            'day' => $this->manager->getDay($date),
+            'day' => $day,
             'form' => $form->createView(),
-            'transactions' => $this->manager->getTransactions($date)
+            'transactions' => $this->manager->getTransactions($date),
+            'closeAlert' => $this->dontForgetToCloseTheDayAlert($day)
         ]);
     }
 
@@ -99,5 +100,30 @@ class DayController extends AbstractController
     private function dateIsToday(\DateTime $date): bool
     {
         return $date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
+    }
+
+    private function dontForgetToCloseTheDayAlert(?Day $day)
+    {
+        if($day === null) {
+            return false;
+        }
+
+        if($day->isToday() === false) {
+            return false;
+        }
+
+        if($day->isClosed()) {
+            return false;
+        }
+
+        if(date('H') < 17) {
+            return false;
+        }
+
+        if(date('H') === 17 && date('i') < 45) {
+            return false;
+        }
+
+        return true;
     }
 }

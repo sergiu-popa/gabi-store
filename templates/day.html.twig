@@ -5,6 +5,10 @@
 {% block body %}
     {{ include('blocks/_day_header.html.twig', { 'date': currentDate, 'totals': transactions['totals'] }) }}
 
+    {% if closeAlert %}
+    <div class="alert alert-danger">Nu uita să închizi ziua înainte să pleci!</div>
+    {% endif %}
+
     <div class="row">
         <div class="col-6">
             {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}

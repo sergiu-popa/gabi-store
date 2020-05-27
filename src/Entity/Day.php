@@ -106,6 +106,11 @@ class Day
         $this->confirmed = false;
     }
 
+    public function isClosed(): bool
+    {
+        return $this->endedAt !== null;
+    }
+
     public function isToday(): bool
     {
         return $this->date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
