@@ -30,22 +30,25 @@ class BalanceManager
         $this->em->flush();
     }
 
-    public function findForTodayOrLast(\DateTime $date)
+    public function findForDate(\DateTime $date)
     {
-        $balance = $this->repository->findByDay($date);
-
-        if($balance === null) {
-            $balance = $this->repository->findLast();
-        }
-
-        return $balance;
+        return $this->repository->findByDay($date);
     }
 
-    public function findPrevious(?\DateTime $date): Balance
+    /**
+     * For sundays, it returns the last one before yesterday.
+     */
+    public function findPrevious(\DateTime $date): Balance
     {
         $yesterday = clone $date;
         $yesterday->modify('-1 day');
 
-        return $this->repository->findByDay($yesterday);
+        $previous = $this->repository->findByDay($yesterday);
+
+        if($previous === null) {
+            return $this->repository->findLastBeforeDate($yesterday);
+        }
+
+        return $previous;
     }
 }

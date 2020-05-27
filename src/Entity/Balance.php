@@ -39,9 +39,4 @@ class Balance implements \JsonSerializable, SnapshotableInterface
             'data' => $this->date->format('Y-m-d')
         ];
     }
-
-    public function isForToday(): bool
-    {
-        return $this->date->format('Y-m-d') === (new \DateTime())->format('Y-m-d');
-    }
 }

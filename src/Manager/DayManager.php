@@ -110,7 +110,8 @@ class DayManager
 
     public function getTransactions(\DateTime $date)
     {
-        $balance = $this->balanceManager->findForTodayOrLast($date);
+        $todayBalance = $this->balanceManager->findForDate($date);
+        $previousBalance = $this->balanceManager->findPrevious($date);
 
         $transactions = [
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),
@@ -120,13 +121,13 @@ class DayManager
             'debts' => $this->em->getRepository(Debt::class)->findByDay($date),
         ];
 
-        $transactions['totals'] = $this->calculateTotals($balance, $transactions);
+        $transactions['totals'] = $this->calculateTotals($previousBalance, $transactions, $todayBalance);
 
         return $transactions;
     }
 
     // TODO refactor this using illuminate/collections (dev?)
-    private function calculateTotals(Balance $balance, array $transactions): array
+    private function calculateTotals(Balance $previousBalance, array $transactions, Balance $todayBalance = null): array
     {
         $payments_bill =  $this->filterBy($transactions['payments'], MerchandisePayment::TYPE_BILL);
         $payments_invoice =  $this->filterBy($transactions['payments'], MerchandisePayment::TYPE_INVOICE);
@@ -143,13 +144,12 @@ class DayManager
         $totals = array_merge($totals, $this->calculateTotalMerchandise($transactions['providers']));
 
         $totals['day'] = $totalDay;
-        $totals['balance_previous'] = $balance->getAmount();
+        $totals['balance_previous'] = $previousBalance->getAmount();
 
-        if($balance->isForToday()) {
-            $totals['balance'] = $balance->getAmount();
-            $totals['balance_previous'] = $this->balanceManager->findPrevious($balance->getDate())->getAmount();
+        if($todayBalance) {
+            $totals['balance'] = $todayBalance->getAmount();
         } else {
-            $totals['balance'] = $balance->getAmount() + $totals['merchandise'] - $totalDay;
+            $totals['balance'] = $previousBalance->getAmount() + $totals['merchandise'] - $totalDay;
         }
 
         return $totals;

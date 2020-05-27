@@ -18,10 +18,12 @@ class BalanceRepository extends ServiceEntityRepository
         parent::__construct($registry, Balance::class);
     }
 
-    public function findLast()
+    public function findLastBeforeDate(\DateTime $date)
     {
         return $this->createQueryBuilder('b')
             ->where('b.deletedAt IS NULL')
+            ->andWhere('b.date < :date')
+            ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('b.date', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
