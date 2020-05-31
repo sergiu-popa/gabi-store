@@ -95,6 +95,7 @@ class MerchandiseType extends AbstractType
                     '19%' => 19
                 ],
                 'required' => false,
+                'attr' => ['class' => 'js-merchandise-vat']
             ]);
         }
 
@@ -114,7 +115,7 @@ class MerchandiseType extends AbstractType
             ])
             ->add('enterPrice', NumberType::class, [
                 'label' => false,
-                'attr' => ['placeholder' => 'P. Intrare']
+                'attr' => ['placeholder' => 'P. Intrare', 'class' => 'js-merchandise-enter-price']
             ])
             ->add('exitPrice', NumberType::class, [
                 'label' => false,

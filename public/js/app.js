@@ -106,10 +106,10 @@ jQuery(function ($) {
         });
     });
 
-    // Merchandise pice calculation and VAT
-    $(document).on('change', '#merchandise_vat', function(e) {
+    // Merchandise price calculation with VAT
+    $(document).on('change', '.js-merchandise-vat', function() {
         var $selectInput = $(this),
-            $enterPriceInput = $('#merchandise_enterPrice');
+            $enterPriceInput = $(this).parents('tr').prev().find('.js-merchandise-enter-price');
 
         if($enterPriceInput.val().length > 0) {
             var enterPrice = parseFloat($enterPriceInput.val()),
@@ -119,6 +119,14 @@ jQuery(function ($) {
             $enterPriceInput.val(priceWithVAT.toFixed(2));
             $selectInput.parents('td').next().find('.js-recommended-price').text(recommendedPrice.toFixed(2));
         }
+    })
+
+    // Merchandise exit price calculation with profit
+    $(document).on('change', '.js-merchandise-enter-price', function() {
+        var recommendedPrice = parseFloat($(this).val()) * 1.30,
+            $recommendedPriceWrapper = $(this).parents('tr').next().find('.js-recommended-price');
+
+        $recommendedPriceWrapper.text(recommendedPrice.toFixed(2));
     })
 
     // Merchandise paidWith sweet alert
