@@ -12,7 +12,7 @@
                 <small>
                     Profit brut: {{ totals.profit|num_for }}
                     {% if totals.merchandise != 0 %}
-                    <span class="text-muted">({{ (totals.profit / totals.merchandise * 100) | num_for }}%)</span>
+                    <span class="text-muted">({{ (totals.profit / totals.merchandise_cost * 100) | num_for }}%)</span>
                     {% endif %}
                 </small>
             </li>

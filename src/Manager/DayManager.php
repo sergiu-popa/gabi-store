@@ -184,15 +184,18 @@ class DayManager
      */
     private function calculateTotalMerchandise(array $providers): array
     {
+        $cost = 0;
         $total = 0;
         $profit = 0;
 
         foreach ($providers as $provider) {
+            $cost += $provider->totalEnterAmount();
             $total += $provider->totalExitAmount();
             $profit += $provider->totalGrossProfit();
         }
 
         return [
+            'merchandise_cost' => $cost,
             'merchandise' => $total,
             'profit' => $profit
         ];
