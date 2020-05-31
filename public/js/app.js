@@ -123,8 +123,16 @@ jQuery(function ($) {
 
     // Merchandise exit price calculation with profit
     $(document).on('change', '.js-merchandise-enter-price', function() {
-        var recommendedPrice = parseFloat($(this).val()) * 1.30,
-            $recommendedPriceWrapper = $(this).parents('tr').next().find('.js-recommended-price');
+        var enterPrice = parseFloat($(this).val()),
+            recommendedPrice = enterPrice * 1.30,
+            $nextRow = $(this).parents('tr').next(),
+            $recommendedPriceWrapper = $nextRow.find('.js-recommended-price'),
+            vat = $nextRow.find('.js-merchandise-vat').val();
+
+        if (vat.length > 0) {
+            var priceWithVAT = enterPrice * ($(this).val() / 100) + enterPrice;
+            recommendedPrice = priceWithVAT * 1.30;
+        }
 
         $recommendedPriceWrapper.text(recommendedPrice.toFixed(2));
     })
