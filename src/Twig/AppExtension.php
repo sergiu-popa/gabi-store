@@ -77,9 +77,9 @@ class AppExtension extends AbstractExtension
         return $total;
     }
 
-    function number_format($number, $decimals = 2)
+    function number_format($number, $decimals = 2, $thousands = ' ')
     {
-        return number_format((float) $number, $decimals, '.', ' ');
+        return number_format((float) $number, $decimals, '.', $thousands);
     }
 
     /**

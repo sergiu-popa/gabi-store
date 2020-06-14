@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="{{ asset('css/datepicker.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/selectize.css') }}">
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+
+    {% block header %}{% endblock %}
 </head>
 <body>
 {% set route = app.request.attributes.get('_route') %}

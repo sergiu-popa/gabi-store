@@ -2,10 +2,20 @@
 
 {% block title %}Raport vanzare lunar{% endblock %}
 
-{% block body %}
-    <h1>Raport vanzare lunar</h1>
+{% block header %}
+<script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
 
-    <div class="card my-3">
+{% block body %}
+    <h1>Raport vanzare lunar
+        <small class="text-muted">{{ include('blocks/_date_month.html.twig', {'date': (year_month ~ '-01')|date}) }}</small>
+    </h1>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
+
+    <div class="card mb-3">
         <table class="table table-striped">
             <thead class="card-header card-header-table">
             <tr>
@@ -34,17 +44,75 @@
             {% endfor %}
             </tbody>
             <tfoot>
-                <tr>
-                    <td></td>
-                    <td>{{ month.days|total('totalSales') }}</td>
-                    <td>{{ month.days|total('totalMoney') }}</td>
-                    <td>{{ month.days|total('totalExpenses') }}</td>
-                    <td>{{ month.days|total('totalMerchandisePaymentsInvoice') }}</td>
-                    <td>{{ month.days|total('totalMerchandisePaymentsBill') }}</td>
-                    <td>{{ month.days|total('totalMerchandiseGrossProfit') }}</td>
-                    <td>{{ month.days|total('totalMerchandiseEnterValue') }}</td>
-                </tr>
+            <tr>
+                <td></td>
+                <td>{{ month.days|total('totalSales') }}</td>
+                <td>{{ month.days|total('totalMoney') }}</td>
+                <td>{{ month.days|total('totalExpenses') }}</td>
+                <td>{{ month.days|total('totalMerchandisePaymentsInvoice') }}</td>
+                <td>{{ month.days|total('totalMerchandisePaymentsBill') }}</td>
+                <td>{{ month.days|total('totalMerchandiseGrossProfit') }}</td>
+                <td>{{ month.days|total('totalMerchandiseEnterValue') }}</td>
+            </tr>
             </tfoot>
         </table>
     </div>
+{% endblock %}
+
+{% block js %}
+<script>
+    Highcharts.chart('chart', {
+        title: {
+            text: ''
+        },
+        subtitle: {
+            text: ''
+        },
+        yAxis: {
+            title: {
+                text: ''
+            }
+        },
+        legend: {
+            layout: 'horizontal',
+            align: 'center',
+            verticalAlign: 'bottom'
+        },
+        plotOptions: {
+            series: {
+                pointPlacement: 'on'
+            }
+        },
+        xAxis: {
+            categories: [{% for day, data in month.days %}'{{ include('blocks/_day.html.twig') }}'{{ not loop.last ? ', ' }}{% endfor %}]
+        },
+
+        series: [{
+            name: 'Vanzare zi',
+            data: [{% for index, day in month.days %}{{ day.totalSales|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+        }, {
+            name: 'Monetar',
+            data: [{% for index, day in month.days %}{{ day.totalMoney|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+        }, {
+            name: 'Iesiri diverse',
+            data: [{% for index, day in month.days %}{{ day.totalExpenses|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+        }, {
+            name: 'Marfa facturi',
+            data: [{% for index, day in month.days %}{{ day.totalMerchandisePaymentsInvoice|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+        }, {
+            name: 'Marfa bonuri',
+            data: [{% for index, day in month.days %}{{ day.totalMerchandisePaymentsBill|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+        }, {
+            name: 'Profit Brut',
+            data: [{% for index, day in month.days %}{{ day.totalMerchandiseGrossProfit|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+        }, {
+            name: 'Intrare marfa',
+            data: [{% for index, day in month.days %}{{ day.totalMerchandiseEnterValue|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+        }],
+
+        credits: {
+            enabled: false
+        }
+    });
+</script>
 {% endblock %}

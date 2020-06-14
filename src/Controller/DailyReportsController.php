@@ -22,6 +22,7 @@ class DailyReportsController extends AbstractController
     {
         $year = $year ?? date('Y');
         $month = $month ?? date('m');
+        $yearMonth = $year . '-' . $month;
 
         //$month = '04'; // TODO aprilie -> 04
         $em = $this->getDoctrine()->getManager();
@@ -40,8 +41,8 @@ class DailyReportsController extends AbstractController
         $month->addItemsInEachDay('merchandise', $merchandise);
         $month->addItemsInEachDay('merchandisePayments', $merchandisePayments);
 
-        // TODO chart
         return $this->render('reports/daily/sales.html.twig', [
+            'year_month' => $yearMonth,
             'month' => $month
         ]);
     }
