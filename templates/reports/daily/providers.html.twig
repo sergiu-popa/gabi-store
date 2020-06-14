@@ -3,17 +3,11 @@
 {% block title %}Raport furnizori{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper table { width: 100% }
-        .example-wrapper table td { border: 1px solid #eaeaea; padding: 3px; }
-    </style>
+    <h1>Raport furnizori</h1>
 
-    <div class="example-wrapper">
-        <h1>Raport furnizori</h1>
-
-        <table class="table">
-            <thead class="thead-dark">
+    <div class="card my-3">
+        <table class="table table-striped">
+            <thead class="card-header card-header-table">
             <tr>
                 <th scope="col">Zi</th>
                 <th scope="col">Marfa facturi</th>
@@ -24,11 +18,18 @@
             {% for index, day in month.days %}
                 <tr>
                     <th scope="row">{{ index }}</th>
-                    <td>{{ day.totalMerchandisePaymentsInvoice|number_format(2)|dash }}</td>
-                    <td>{{ day.totalMerchandisePaymentsBill|number_format(2)|dash }}</td>
+                    <td>{{ day.totalMerchandisePaymentsInvoice|num_for|dash }}</td>
+                    <td>{{ day.totalMerchandisePaymentsBill|num_for|dash }}</td>
                 </tr>
             {% endfor %}
             </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td>{{ month.days|total('totalMerchandisePaymentsInvoice') }}</td>
+                <td>{{ month.days|total('totalMerchandisePaymentsBill') }}</td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 {% endblock %}

@@ -3,21 +3,15 @@
 {% block title %}Raport iesiri{% endblock %}
 
 {% block body %}
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper table { width: 100% }
-        .example-wrapper table td { border: 1px solid #eaeaea; padding: 3px; }
-    </style>
+    <h1>Raport iesiri</h1>
 
-    <div class="example-wrapper">
-        <h1>Raport iesiri</h1>
-
-        <table class="table">
-            <thead class="thead-dark">
+    <div class="card my-3">
+        <table class="table table-striped">
+            <thead class="card-header card-header-table">
             <tr>
                 <th scope="col">Zi</th>
                 {% for c in categories %}
-                <th scope="col">{{ c.name }}</th>
+                    <th scope="col">{{ c.name }}</th>
                 {% endfor %}
             </tr>
             </thead>
@@ -26,11 +20,19 @@
                 <tr>
                     <th scope="row">{{ index }}</th>
                     {% for c in categories %}
-                    <td>{{ day.categories[c.id] is defined ? day.categories[c.id]|number_format(2) : '–' }}</td>
+                        <td>{{ day.categories[c.id] is defined ? day.categories[c.id]|num_for : '–' }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
             </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                {% for c in categories %}
+                    <td>{{ month.days|total_category(c.id)|num_for|dash }}</td>
+                {% endfor %}
+            </tr>
+            </tfoot>
         </table>
     </div>
 {% endblock %}

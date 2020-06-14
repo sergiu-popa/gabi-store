@@ -3,18 +3,11 @@
 {% block title %}Raport anual{% endblock %}
 
 {% block body %}
+    <h1>Raport anual</h1>
 
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper table { width: 100% }
-        .example-wrapper table td { border: 1px solid #eaeaea; padding: 3px; }
-    </style>
-
-    <div class="example-wrapper">
-        <h1>Raport anual</h1>
-
-        <table class="table">
-            <thead class="thead-dark">
+    <div class="card my-3">
+        <table class="table table-striped">
+            <thead class="card-header card-header-table">
             <tr>
                 <th scope="col">An</th>
                 {% for c in categories %}
@@ -25,13 +18,21 @@
             <tbody>
             {% for year in years %}
                 <tr>
-                    <th scope="row">{{ year }}</th>
+                    <th scope="row" style="width: 70px;">{{ year }}</th>
                     {% for c in categories %}
-                        <td>{{ merchandise[year] is defined ? merchandise[year][c['category'].id]|number_format(2, '.', ' ') : '-' }}</td>
+                        <td>{{ merchandise[year] is defined ? merchandise[year][c['category'].id]|num_for : '-' }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
             </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                {% for c in categories %}
+                    <td>{{ merchandise|total(c['category'].id)|dash }}</td>
+                {% endfor %}
+            </tr>
+            </tfoot>
         </table>
     </div>
 {% endblock %}

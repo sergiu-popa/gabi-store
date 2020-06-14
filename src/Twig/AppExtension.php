@@ -20,6 +20,7 @@ class AppExtension extends AbstractExtension
         return array(
             new TwigFilter('unique_categories', [$this, 'uniqueCategories']),
             new TwigFilter('total', [$this, 'calculateTotal']),
+            new TwigFilter('total_category', [$this, 'calculateTotalCategoryExpenses']),
             new TwigFilter('num_for', [$this, 'number_format']),
             new TwigFilter('roDate', [$this, 'roDate'], ['needs_environment' => true]),
             new TwigFilter('dash', [$this, 'dash']),
@@ -48,10 +49,32 @@ class AppExtension extends AbstractExtension
         $total = 0;
 
         foreach($items as $item) {
-            $total += $item->{'get' . ucfirst($property)}();
+            if (is_object($item)) {
+                $total += $item->{'get' . ucfirst($property)}();
+            } else {
+                $total += $item[$property];
+            }
         }
 
         return $this->number_format($total);
+    }
+
+    /**
+     * @param DailyCategoryExpenses[] $dailyExpenses
+     */
+    public function calculateTotalCategoryExpenses(array $dailyExpenses, int $categoryId)
+    {
+        $total = 0;
+
+        foreach($dailyExpenses as $expense) {
+            $categories = $expense->getCategories();
+
+            if(isset($categories[$categoryId])) {
+                $total += $categories[$categoryId];
+            }
+        }
+
+        return $total;
     }
 
     function number_format($number, $decimals = 2)

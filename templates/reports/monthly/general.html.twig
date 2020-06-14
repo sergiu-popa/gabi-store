@@ -3,18 +3,11 @@
 {% block title %}Raport lunar{% endblock %}
 
 {% block body %}
+    <h1>Raport lunar</h1>
 
-    <style>
-        .example-wrapper { margin: 1em auto; max-width: 1200px; width: 95%; font: 18px/1.5 sans-serif; }
-        .example-wrapper table { width: 100% }
-        .example-wrapper table td { border: 1px solid #eaeaea; padding: 3px; }
-    </style>
-
-    <div class="example-wrapper">
-        <h1>Raport lunar</h1>
-
-        <table class="table">
-            <thead class="thead-dark">
+    <div class="card my-3">
+        <table class="table table-striped">
+            <thead class="card-header card-header-table">
             <tr>
                 <th scope="col">Luna</th>
                 <th scope="col">Vanzare zi</th>
@@ -29,15 +22,26 @@
             {% for month, data in data %}
                 <tr>
                     <th scope="row">{{ month }}</th>
-                    <td>{{ data.sales|number_format(2, '.', ' ')|dash }}</td>
-                    <td>{{ data.money|number_format(2, '.', ' ')|dash }}</td>
-                    <td>{{ data.expenses|number_format(2, '.', ' ')|dash }}</td>
-                    <td>{{ data.payments_invoice|number_format(2, '.', ' ')|dash }}</td>
-                    <td>{{ data.payments_bill|number_format(2, '.', ' ')|dash }}</td>
-                    <td>{{ data.profit|number_format(2, '.', ' ')|dash }}</td>
+                    <td>{{ data.sales|num_for|dash }}</td>
+                    <td>{{ data.money|num_for|dash }}</td>
+                    <td>{{ data.expenses|num_for|dash }}</td>
+                    <td>{{ data.payments_invoice|num_for|dash }}</td>
+                    <td>{{ data.payments_bill|num_for|dash }}</td>
+                    <td>{{ data.profit|num_for|dash }}</td>
                 </tr>
             {% endfor %}
             </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                <td>{{ data|total('sales') }}</td>
+                <td>{{ data|total('money') }}</td>
+                <td>{{ data|total('expenses') }}</td>
+                <td>{{ data|total('payments_invoice') }}</td>
+                <td>{{ data|total('payments_bill') }}</td>
+                <td>{{ data|total('profit') }}</td>
+            </tr>
+            </tfoot>
         </table>
     </div>
 {% endblock %}

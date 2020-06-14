@@ -77,7 +77,7 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->addSelect('SUM(amount * enter_price) as enterTotal')
             ->addSelect('SUM(amount * exit_price) as exitTotal')
             ->from('merchandise')
-            ->andWhere('deletedAt is NULL')
+            ->andWhere('deleted_at is NULL')
             ->groupBy('year')
             ->orderBy('year', 'DESC');
 
@@ -103,7 +103,7 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->addSelect('SUM(amount * enter_price) as enterTotal')
             ->addSelect('SUM(amount * exit_price) as exitTotal')
             ->from('merchandise')
-            ->andWhere('deletedAt is NULL')
+            ->andWhere('deleted_at is NULL')
             ->where("date BETWEEN ? and ?")
             ->groupBy('month')
             ->orderBy('date', 'ASC')

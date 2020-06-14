@@ -49,8 +49,11 @@ class DailyReportsController extends AbstractController
     /**
      * @Route("/reports/daily/expenses/{year}/{month}", name="report_expenses")
      */
-    public function expenses($year = '2020', $month = '04')
+    public function expenses($year = null, $month = null)
     {
+        $year = $year ?? date('Y');
+        $month = $month ?? date('m');
+
         $em = $this->getDoctrine()->getManager();
         $expenses = $em->getRepository(Expense::class)->getForYearAndMonth($year, $month);
         $categories = $em->getRepository(ExpenseCategory::class)->findAll();
