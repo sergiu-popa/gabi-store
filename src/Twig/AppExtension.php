@@ -59,24 +59,6 @@ class AppExtension extends AbstractExtension
         return $this->number_format($total);
     }
 
-    /**
-     * @param DailyCategoryExpenses[] $dailyExpenses
-     */
-    public function calculateTotalCategoryExpenses(array $dailyExpenses, int $categoryId)
-    {
-        $total = 0;
-
-        foreach($dailyExpenses as $expense) {
-            $categories = $expense->getCategories();
-
-            if(isset($categories[$categoryId])) {
-                $total += $categories[$categoryId];
-            }
-        }
-
-        return $total;
-    }
-
     function number_format($number, $decimals = 2, $thousands = ' ')
     {
         return number_format((float) $number, $decimals, '.', $thousands);

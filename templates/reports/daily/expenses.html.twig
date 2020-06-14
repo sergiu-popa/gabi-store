@@ -2,8 +2,17 @@
 
 {% block title %}Raport iesiri{% endblock %}
 
+
+{% block header %}
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
+
 {% block body %}
-    <h1>Raport iesiri</h1>
+    <h1>Raport ieșiri</h1>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
 
     <div class="card my-3">
         <table class="table table-striped">
@@ -29,10 +38,65 @@
             <tr>
                 <td></td>
                 {% for c in categories %}
-                    <td>{{ month.days|total_category(c.id)|num_for|dash }}</td>
+                    <td>{{ month.totalsByCategory[c.id]|num_for|dash }}</td>
                 {% endfor %}
             </tr>
             </tfoot>
         </table>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        Highcharts.chart('chart', {
+            chart: {
+                plotBackgroundColor: null,
+                plotBorderWidth: null,
+                plotShadow: false,
+                type: 'pie'
+            },
+            title: {
+                text: ''
+            },
+            tooltip: {
+                pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+            },
+            accessibility: {
+                point: {
+                    valueSuffix: '%'
+                }
+            },
+            plotOptions: {
+                pie: {
+                    allowPointSelect: true,
+                    cursor: 'pointer',
+                    dataLabels: {
+                        enabled: false
+                    },
+                    showInLegend: true
+                }
+            },
+
+            series: [{
+                name: 'Iesiri',
+                colorByPoint: true,
+                data: [
+                    {% for c in categories %}
+                    {
+                        name: '{{ c.name }}',
+                        y: {{ month.percentages[c.id] }},
+                        {% if month.percentages[c.id] == month.maxPercentage %}
+                        sliced: true,
+                        selected: true
+                        {% endif %}
+                    }{{ not loop.last ? ', ' }}
+                    {% endfor %}
+                ]
+            }],
+
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
 {% endblock %}

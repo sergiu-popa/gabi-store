@@ -59,10 +59,8 @@ class DailyReportsController extends AbstractController
         $expenses = $em->getRepository(Expense::class)->getForYearAndMonth($year, $month);
         $categories = $em->getRepository(ExpenseCategory::class)->findAll();
 
-        $month = new MonthlyExpenses($year, $month);
-        $month->addExpensesInEachDay($expenses);
+        $month = new MonthlyExpenses($year, $month, $categories, $expenses);
 
-        // TODO chart
         return $this->render('reports/daily/expenses.html.twig', [
             'categories' => $categories,
             'month' => $month
