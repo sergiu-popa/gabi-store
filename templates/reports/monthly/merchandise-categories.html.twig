@@ -1,13 +1,25 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Raport anual{% endblock %}
+{% block title %}Raport lunar{% endblock %}
 
 {% block header %}
     <script src="https://code.highcharts.com/highcharts.src.js"></script>
 {% endblock %}
 
 {% block body %}
-    <h1>Raport anual categorii ieșiri</h1>
+    <h1>Raport lunar categorii <small class="text-muted">intrare marfă</small></h1>
+
+    <form method="get" class="form-inline">
+        <div class="form-group mr-2">
+            <select class="form-control" name="year">
+                {% for y in years %}
+                    <option value="{{ y }}" {{ y == year ? 'selected="selected"' }}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="btn btn-outline-primary">Selectează</button>
+    </form>
 
     <div class="card my-3 p-4">
         <div id="chart"></div>
@@ -17,18 +29,18 @@
         <table class="table table-striped">
             <thead class="card-header card-header-table">
             <tr>
-                <th scope="col">An</th>
+                <th scope="col">Luna</th>
                 {% for c in categories %}
                     <th>{{ c['category'].name }}</th>
                 {% endfor %}
             </tr>
             </thead>
             <tbody>
-            {% for year in years %}
+            {% for month, name in months %}
                 <tr>
-                    <th scope="row" style="width: 70px;">{{ year }}</th>
+                    <th scope="row" style="width: 70px;">{{ month }}</th>
                     {% for c in categories %}
-                        <td>{{ merchandise[year] is defined ? merchandise[year][c['category'].id]|num_for : '-' }}</td>
+                        <td>{{ merchandise[month] is defined ? merchandise[month][c['category'].id]|num_for : '-' }}</td>
                     {% endfor %}
                 </tr>
             {% endfor %}
@@ -70,14 +82,14 @@
                 }
             },
             xAxis: {
-                categories: [{% for year in years|reverse %}'{{ year }}'{{ not loop.last ? ', ' }}{% endfor %}]
+                categories: [{% for month in months %}'{{ month }}'{{ not loop.last ? ', ' }}{% endfor %}]
             },
 
             series: [
                 {% for c in categories %}
                 {
                     name: '{{ c['category'].name }}',
-                    data: [{% for year in years|reverse %}{{ merchandise[year] is defined ? merchandise[year][c['category'].id]|num_for(0, '') : 0 }}{{ not loop.last ? ', ' }}{% endfor %}]
+                    data: [{% for month, name in months %}{{ merchandise[month] is defined ? merchandise[month][c['category'].id]|num_for(0, '') : 0 }}{{ not loop.last ? ', ' }}{% endfor %}]
                 }{{ not loop.last ? ', ' }}
                 {% endfor %}
             ],

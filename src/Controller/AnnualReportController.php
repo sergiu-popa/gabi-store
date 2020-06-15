@@ -57,7 +57,7 @@ class AnnualReportController extends AbstractController
         $merchandise = $em->getRepository(Merchandise::class)->getYearlySum(true);
         $categories = $em->getRepository(MerchandiseCategory::class)->findAll();
 
-        return $this->render('reports/annual/expenses.html.twig', [
+        return $this->render('reports/annual/merchandise-categories.html.twig', [
             'years' => $years,
             'merchandise' => $merchandise,
             'categories' => $categories

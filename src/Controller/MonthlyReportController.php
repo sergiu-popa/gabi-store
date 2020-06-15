@@ -65,7 +65,7 @@ class MonthlyReportController extends AbstractController
         $merchandise = $em->getRepository(Merchandise::class)->getMonthlySum($year, true);
         $categories = $em->getRepository(MerchandiseCategory::class)->findAll();
 
-        return $this->render('reports/monthly/expenses.html.twig', [
+        return $this->render('reports/monthly/merchandise-categories.html.twig', [
             'years' => range(date('Y'), 2016),
             'year' => $year,
             'months' => Months::get(),
