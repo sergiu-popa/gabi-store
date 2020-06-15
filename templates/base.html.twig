@@ -86,12 +86,17 @@
             </li>
         </ul>
 
+        <form method="get" class="form-inline mr-3" action="{{ path('report_merchandise') }}">
+            <input class="form-control mr-sm-2" type="search" name="query" placeholder="marfă">
+            <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit"><i class="fas fa-search"></i></button>
+        </form>
+
         <span class="navbar-text">
             {{ app.user.name }} <a href="{{ path('app_logout') }}" class="btn btn-dark" data-toggle="tooltip" title="Desconectare"><i class="fas fa-sign-out"></i></a>
         </span>
     </div>
 
-    <!-- #TODO search form, mergi la masa, mergi la marfa & dropdown for user to logout (numele utilizatorului) -->
+    <!-- #TODO mergi la masa, mergi la marfa -->
 </nav>
 
 <div class="container pt-3">

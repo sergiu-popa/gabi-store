@@ -56,18 +56,23 @@ class MerchandiseRepository extends ServiceEntityRepository
     /**
      * @return Merchandise[]
      */
-    public function searchMerchandise($name)
+    public function searchMerchandise($query, $provider = null)
     {
-        return $this->createQueryBuilder('m')
+        $qb = $this->createQueryBuilder('m')
             ->select('m, p')
             ->join('m.provider', 'p')
+            ->where('m.deletedAt is NULL')
             ->andWhere('m.name LIKE :name')
-            ->andWhere('m.deletedAt is NULL')
-            ->setParameter('name', "%$name%")
-            ->orderBy('m.date', 'DESC')
-            ->setMaxResults(50)
-            ->getQuery()
-            ->getResult();
+            ->setParameter('name', "%$query%");
+
+        if($provider) {
+            $qb->andWhere('m.provider = :provider')
+                ->setParameter('provider', $provider);
+        }
+
+        return $qb->orderBy('m.provider')
+            ->addOrderBy('m.date', 'DESC')
+            ->addOrderBy('m.enterPrice', 'DESC');
     }
 
     public function getYearlySum($groupByCategory = false)

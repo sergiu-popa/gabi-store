@@ -11,11 +11,15 @@ use App\Entity\Traits\PaymentTypeTrait;
 use App\Entity\Traits\SnapshotsTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\Index;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\MerchandiseRepository")
+ * @ORM\Table(indexes={
+ *     @Index(name="merchandise_name_idx", columns={"name"})
+ * })
  */
 class Merchandise implements \JsonSerializable, SnapshotableInterface
 {

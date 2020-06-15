@@ -3,35 +3,67 @@
 {% block title %}Raport marfa{% endblock %}
 
 {% block body %}
-    <h1>Raport marfa</h1>
+    <h1>
+        Raport marfă
+        {% if pagination.totalItemCount is defined %}
+            <small class="text-muted">
+                {{ pagination.getTotalItemCount }}
+            </small>
+        {% endif %}
+    </h1>
 
-    <div class="card my-3">
-        <table class="table table-striped">
-            <thead class="card-header card-header-table">
-            <tr>
-                <th scope="col">Data intrare</th>
-                <th scope="col">Firma</th>
-                <th scope="col">Denumire</th>
-                <th scope="col">Cantiate</th>
-                <th scope="col">Pret intrare</th>
-                <th scope="col">Pret iesire</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for m in merchandise %}
+    <form method="get" class="form-inline">
+        <div class="form-group mr-2">
+            <select class="form-control" name="provider">
+                <option value="">Toti furnizorii</option>
+                {% for p in providers %}
+                    <option value="{{ p.id }}" {{ p.id == provider ? 'selected="selected"' }}>{{ p.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mr-2">
+            <input type="text" name="query" class="form-control" placeholder="Cuvânt" value="{{ query ?? '' }}">
+        </div>
+
+        <button class="btn btn-outline-primary">Caută</button>
+    </form>
+
+    {% if merchandise|length > 0 %}
+        <div class="card my-3">
+            <table class="table table-striped">
+                <thead class="card-header card-header-table">
                 <tr>
-                    <td>{{ include('blocks/_date.html.twig', {'date': m.date}) }}</td>
-                    <td>{{ m.provider.name }}</td>
-                    <td>{{ m.name }}</td>
-                    <td>{{ m.amount }}</td>
-                    <td>{{ m.enterPrice|num_for }}</td>
-                    <td>
-                        {{ m.exitPrice|num_for }}
-                        <span class="text-muted">({{ m.grossProfitPercent|num_for(0) }}%)</span>
-                    </td>
+                    <th scope="col">Data intrare</th>
+                    <th scope="col">Firma</th>
+                    <th scope="col">Denumire</th>
+                    <th scope="col">Cantiate</th>
+                    <th scope="col">Pret intrare</th>
+                    <th scope="col">Pret iesire</th>
                 </tr>
-            {% endfor %}
-            </tbody>
-        </table>
-    </div>
+                </thead>
+                <tbody>
+                {% for m in merchandise %}
+                    <tr>
+                        <td>{{ include('blocks/_date.html.twig', {'date': m.date}) }}</td>
+                        <td>{{ m.provider.name }}</td>
+                        <td>{{ m.name }}</td>
+                        <td>{{ m.amount }}</td>
+                        <td>{{ m.enterPrice|num_for }}</td>
+                        <td>
+                            {{ m.exitPrice|num_for }}
+                            <span class="text-muted">({{ m.grossProfitPercent|num_for(0) }}%)</span>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr><td>Nici un rezultat.</td></tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+            <div class="navigation">
+                {{ knp_pagination_render(pagination) }}
+            </div>
+        </div>
+    {% endif %}
 {% endblock %}

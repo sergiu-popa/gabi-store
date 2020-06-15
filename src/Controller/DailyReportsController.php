@@ -11,6 +11,7 @@ use App\Entity\Money;
 use App\Domain\Month;
 use App\Entity\Provider;
 use App\Util\Months;
+use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -99,16 +100,29 @@ class DailyReportsController extends AbstractController
     }
 
     /**
-     * @Route("/reports/daily/merchandise/{name}", name="report_merchandise")
+     * @Route("/reports/daily/merchandise/search", name="report_merchandise")
      */
-    public function merchandise($name = null)
+    public function merchandise(Request $request, PaginatorInterface $paginator)
     {
+        $query = $request->query->get('query');
+        $provider = $request->query->get('provider');
         $em = $this->getDoctrine()->getManager();
-        $merchandise = $em->getRepository(Merchandise::class)->searchMerchandise($name);
+        $providers = $em->getRepository(Provider::class)->findAll();
 
-        // TODO search and pagination
+        if($query) {
+            $pagination = $paginator->paginate(
+                $em->getRepository(Merchandise::class)->searchMerchandise($query, $provider),
+                $request->query->getInt('page', 1), /*page number*/
+                50
+            );
+        }
+
         return $this->render('reports/daily/merchandise.html.twig', [
-            'merchandise' => $merchandise
+            'query' => $query,
+            'provider' => $provider,
+            'providers' => $providers,
+            'pagination' => $query ? $pagination : [],
+            'merchandise' => $query ? $pagination->getItems() : []
         ]);
     }
 }
