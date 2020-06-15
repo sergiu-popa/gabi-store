@@ -2,8 +2,28 @@
 
 {% block title %}Raport lunar{% endblock %}
 
+{% block header %}
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
+
 {% block body %}
-    <h1>Raport lunar</h1>
+    <h1>Raport lunar categorii ieșiri</h1>
+
+    <form method="get" class="form-inline">
+        <div class="form-group mr-2">
+            <select class="form-control" name="year">
+                {% for y in years %}
+                    <option value="{{ y }}" {{ y == year ? 'selected="selected"' }}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="btn btn-outline-primary">Selectează</button>
+    </form>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
 
     <div class="card my-3">
         <table class="table table-striped">
@@ -16,7 +36,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for month in months %}
+            {% for month, name in months %}
                 <tr>
                     <th scope="row" style="width: 70px;">{{ month }}</th>
                     {% for c in categories %}
@@ -35,4 +55,48 @@
             </tfoot>
         </table>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        Highcharts.chart('chart', {
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            },
+            plotOptions: {
+                series: {
+                    pointPlacement: 'on'
+                }
+            },
+            xAxis: {
+                categories: [{% for month in months %}'{{ month }}'{{ not loop.last ? ', ' }}{% endfor %}]
+            },
+
+            series: [
+                {% for c in categories %}
+                {
+                    name: '{{ c['category'].name }}',
+                    data: [{% for month, name in months %}{{ merchandise[month] is defined ? merchandise[month][c['category'].id]|num_for(0, '') : 0 }}{{ not loop.last ? ', ' }}{% endfor %}]
+                }{{ not loop.last ? ', ' }}
+                {% endfor %}
+            ],
+
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
 {% endblock %}

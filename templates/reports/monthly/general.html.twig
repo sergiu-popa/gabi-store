@@ -2,8 +2,28 @@
 
 {% block title %}Raport lunar{% endblock %}
 
+{% block header %}
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
+
 {% block body %}
     <h1>Raport lunar</h1>
+
+    <form method="get" class="form-inline">
+        <div class="form-group mr-2">
+            <select class="form-control" name="year">
+                {% for y in years %}
+                    <option value="{{ y }}" {{ y == year ? 'selected="selected"' }}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="btn btn-outline-primary">Selectează</button>
+    </form>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
 
     <div class="card my-3">
         <table class="table table-striped">
@@ -44,4 +64,59 @@
             </tfoot>
         </table>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        Highcharts.chart('chart', {
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            },
+            plotOptions: {
+                series: {
+                    pointPlacement: 'on'
+                }
+            },
+            xAxis: {
+                categories: [{% for index, month in months %}'{{ month }}'{{ not loop.last ? ', ' }}{% endfor %}]
+            },
+
+            series: [{
+                name: 'Vanzare zi',
+                data: [{% for month, data in data %}{{ data.sales|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Monetar',
+                data: [{% for month, data in data %}{{ data.money|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Iesiri diverse',
+                data: [{% for month, data in data %}{{ data.expenses|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Marfa facturi',
+                data: [{% for month, data in data %}{{ data.payments_invoice|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Marfa bonuri',
+                data: [{% for month, data in data %}{{ data.payments_bill|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Profit Brut',
+                data: [{% for month, data in data %}{{ data.profit|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }],
+
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
 {% endblock %}

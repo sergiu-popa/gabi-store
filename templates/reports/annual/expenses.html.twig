@@ -2,8 +2,16 @@
 
 {% block title %}Raport anual{% endblock %}
 
+{% block header %}
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
+
 {% block body %}
-    <h1>Raport anual</h1>
+    <h1>Raport anual categorii ieșiri</h1>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
 
     <div class="card my-3">
         <table class="table table-striped">
@@ -35,4 +43,48 @@
             </tfoot>
         </table>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        Highcharts.chart('chart', {
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            },
+            plotOptions: {
+                series: {
+                    pointPlacement: 'on'
+                }
+            },
+            xAxis: {
+                categories: [{% for year in years|reverse %}'{{ year }}'{{ not loop.last ? ', ' }}{% endfor %}]
+            },
+
+            series: [
+                {% for c in categories %}
+                {
+                    name: '{{ c['category'].name }}',
+                    data: [{% for year in years|reverse %}{{ merchandise[year] is defined ? merchandise[year][c['category'].id]|num_for(0, '') : 0 }}{{ not loop.last ? ', ' }}{% endfor %}]
+                }{{ not loop.last ? ', ' }}
+                {% endfor %}
+            ],
+
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
 {% endblock %}

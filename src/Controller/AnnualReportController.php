@@ -41,6 +41,7 @@ class AnnualReportController extends AbstractController
         }
 
         return $this->render('reports/annual/general.html.twig', [
+            'years' => $years,
             'data' => $data
         ]);
     }

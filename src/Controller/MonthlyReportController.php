@@ -7,20 +7,21 @@ use App\Entity\Merchandise;
 use App\Entity\MerchandiseCategory;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
+use App\Util\Months;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MonthlyReportController extends AbstractController
 {
     /**
-     * @Route("/reports/monthly/{year}", name="monthly_report", requirements={"year":"\d+"})
+     * @Route("/reports/monthly/general", name="monthly_report", requirements={"year":"\d+"})
      */
-    public function report($year = null)
+    public function report(Request $request)
     {
-        $year = $year ?? (int) date('Y');
+        $year = $request->query->getInt('year', date('Y'));
 
-        // TODO refactor this to month name and change in repositories, than translate
-        $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+        $months = Months::get();
         $data = [];
 
         $em = $this->getDoctrine()->getManager();
@@ -30,7 +31,7 @@ class MonthlyReportController extends AbstractController
         $merchandise = $em->getRepository(Merchandise::class)->getMonthlySum($year);
 
         // TODO move this to domain service?
-        foreach ($months as $month) {
+        foreach ($months as $month => $name) {
             $data[$month] = [
                 'money' => $money[$month] ?? 0,
                 'expenses' => $expense[$month] ?? 0,
@@ -44,18 +45,19 @@ class MonthlyReportController extends AbstractController
         }
 
         return $this->render('reports/monthly/general.html.twig', [
+            'years' => range(date('Y'), 2016),
+            'year' => $year,
+            'months' => $months,
             'data' => $data
         ]);
     }
 
     /**
-     * @Route("/reports/monthly/expenses/{year}", name="monthly_expenses_report")
+     * @Route("/reports/monthly/expenses", name="monthly_expenses_report")
      */
-    public function expenses($year = null)
+    public function expenses(Request $request)
     {
-        $year = $year ?? (int) date('Y');
-
-        $months = ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12'];
+        $year = $request->query->getInt('year', date('Y'));
 
         $em = $this->getDoctrine()->getManager();
 
@@ -64,7 +66,9 @@ class MonthlyReportController extends AbstractController
         $categories = $em->getRepository(MerchandiseCategory::class)->findAll();
 
         return $this->render('reports/monthly/expenses.html.twig', [
-            'months' => $months,
+            'years' => range(date('Y'), 2016),
+            'year' => $year,
+            'months' => Months::get(),
             'merchandise' => $merchandise,
             'categories' => $categories
         ]);

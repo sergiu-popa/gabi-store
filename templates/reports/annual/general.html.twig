@@ -2,8 +2,16 @@
 
 {% block title %}Raport anual{% endblock %}
 
+{% block header %}
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
+
 {% block body %}
     <h1>Raport anual</h1>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
 
     <div class="card my-3">
         <table class="table table-striped">
@@ -44,4 +52,59 @@
             </tfoot>
         </table>
     </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        Highcharts.chart('chart', {
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            },
+            plotOptions: {
+                series: {
+                    pointPlacement: 'on'
+                }
+            },
+            xAxis: {
+                categories: [{% for index, year in years|reverse %}'{{ year }}'{{ not loop.last ? ', ' }}{% endfor %}]
+            },
+
+            series: [{
+                name: 'Vanzare zi',
+                data: [{% for year, data in data|reverse %}{{ data.sales|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Monetar',
+                data: [{% for year, data in data|reverse %}{{ data.money|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Iesiri diverse',
+                data: [{% for year, data in data|reverse %}{{ data.expenses|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Marfa facturi',
+                data: [{% for year, data in data|reverse %}{{ data.payments_invoice|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Marfa bonuri',
+                data: [{% for year, data in data|reverse %}{{ data.payments_bill|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }, {
+                name: 'Profit Brut',
+                data: [{% for year, data in data|reverse %}{{ data.profit|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }],
+
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
 {% endblock %}
