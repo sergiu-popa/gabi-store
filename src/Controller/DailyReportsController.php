@@ -10,7 +10,9 @@ use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use App\Domain\Month;
 use App\Entity\Provider;
+use App\Util\Months;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class DailyReportsController extends AbstractController
@@ -70,23 +72,29 @@ class DailyReportsController extends AbstractController
     /**
      * @Route("/reports/daily/providers/{provider}/{year}/{month}", name="report_providers")
      */
-    public function payments($provider = null, $year = null, $month = null)
+    public function payments($provider = null, $year = null, $month = null, Request $request)
     {
-        $year = $year ?? date('Y');
-        $month = $month ?? date('m');
+        $year = $request->query->getInt('year', date('Y'));
+        $month = $request->query->getInt('month', date('m'));
+        $providerId = $request->query->getInt('provider', 1);
 
-        // TODO search box
         $em = $this->getDoctrine()->getManager();
-        $provider = $em->getRepository(Provider::class)->find($provider);
+        $provider = $em->getRepository(Provider::class)->find($providerId);
+        $providers = $em->getRepository(Provider::class)->findAll();
         $merchandisePayments = $em->getRepository(MerchandisePayment::class)
             ->getForYearAndMonth($year, $month, $provider);
 
-        $month = new Month($year, $month);
-        $month->addItemsInEachDay('merchandisePayments', $merchandisePayments);
+        $collection = new Month($year, $month);
+        $collection->addItemsInEachDay('merchandisePayments', $merchandisePayments);
 
-        // TODO chart
         return $this->render('reports/daily/providers.html.twig', [
-            'month' => $month
+            'years' => range(date('Y'), 2016),
+            'year' => $year,
+            'month' => $month,
+            'months' => Months::get(),
+            'provider' => $provider,
+            'providers' => $providers,
+            'collection' => $collection
         ]);
     }
 
