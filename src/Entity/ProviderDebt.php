@@ -72,7 +72,9 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         $total = 0;
 
         foreach ($this->payments as $payment) {
-            $total += $payment->getAmount();
+            if(! $payment->isDeleted()) {
+                $total += $payment->getAmount();
+            }
         }
 
         return $total;
