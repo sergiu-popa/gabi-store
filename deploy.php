@@ -20,7 +20,7 @@ set('migrations_config', '');
 
 // Hosts
 
-host('89.33.25.175')
+host('89.39.83.204')
     ->user('admin')
     ->identityFile('~/.ssh/id_rsa')
     ->port(22)
