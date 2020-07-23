@@ -35,7 +35,7 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
     {
         $this->date = new \DateTime($date ?? 'now');
 
-        if ($this->provider) {
+        if ($provider) {
             $this->provider = $provider;
         }
     }

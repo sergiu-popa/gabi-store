@@ -176,8 +176,9 @@ class MerchandiseRepository extends ServiceEntityRepository
             ->where('m.provider = :provider')
             ->setParameter('provider', $provider)
             ->andWhere('m.date = :today')
+            ->andWHere('m.deletedAt IS NULL')
             ->setParameter('today', (new \DateTime())->format('Y-m-d'))
-            ->orderBy('m.date', 'DESC')
+            ->orderBy('m.id', 'DESC')
             ->setMaxResults(1)
             ->getQuery()
             ->getOneOrNullResult();

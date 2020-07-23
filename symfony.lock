@@ -2,6 +2,18 @@
     "composer/package-versions-deprecated": {
         "version": "1.10.99"
     },
+    "dama/doctrine-test-bundle": {
+        "version": "4.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes-contrib",
+            "branch": "master",
+            "version": "4.0",
+            "ref": "56eaa387b5e48ebcc7c95a893b47dfa1ad51449c"
+        },
+        "files": [
+            "config/packages/test/dama_doctrine_test_bundle.yaml"
+        ]
+    },
     "doctrine/annotations": {
         "version": "1.0",
         "recipe": {
@@ -98,6 +110,9 @@
     },
     "egulias/email-validator": {
         "version": "2.1.18"
+    },
+    "fzaninotto/faker": {
+        "version": "v1.9.1"
     },
     "knplabs/knp-components": {
         "version": "v2.4.2"
@@ -542,5 +557,8 @@
     },
     "webmozart/assert": {
         "version": "1.9.1"
+    },
+    "zenstruck/foundry": {
+        "version": "v1.1.0"
     }
 }

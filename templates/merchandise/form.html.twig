@@ -5,7 +5,7 @@
     %}
     {% set mode = merchandise.id ? 'edit' : 'insert' %}
     <td class="p-0" colspan="6">
-        {{ form_start(form) }}
+        {{ form_start(form, {'attr': {'novalidate':'novalidate'}}) }}
         <table class="table-form">
             <tr>
                 {% if includeProvider %}<td style="width: 200px;">{{ form_row(form.provider) }}</td>{% endif %}
@@ -15,7 +15,7 @@
                 <td style="width: 150px;">{{ form_row(form.enterPrice) }}</td>
                 <td style="width: 150px">{{ form_row(form.exitPrice) }}</td>
                 <td style="width: 80px;" class="pt-2">
-                    <button class="js-save btn btn-sm btn-success align-text-bottom" data-href="{{ path }}"
+                    <button id="test-submit" class="js-save btn btn-sm btn-success align-text-bottom" data-href="{{ path }}"
                             data-mode="{{ mode }}" data-refresh="{{ includeProvider ? 'true' : 'false' }}">
                         <i class="fas fa-check"></i></button>
 
