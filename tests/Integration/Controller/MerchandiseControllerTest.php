@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tests\Integration;
+namespace App\Tests\Integration\Controller;
 
 use App\Entity\MerchandisePayment;
 use App\Factory\MerchandiseFactory;
@@ -15,9 +15,7 @@ class MerchandiseControllerTest extends WebTestCase
 {
     use ResetDatabase, Factories;
 
-    /**
-     * @var \Symfony\Bundle\FrameworkBundle\KernelBrowser
-     */
+    /** @var \Symfony\Bundle\FrameworkBundle\KernelBrowser */
     private $client;
 
     public function setUp()
@@ -35,7 +33,7 @@ class MerchandiseControllerTest extends WebTestCase
         // Arrange: create merchandises for today, one deleted and one correct
         $provider = ProviderFactory::new()->create();
 
-        $merchandiseDeleted = MerchandiseFactory::new()->deleted()->create([
+        MerchandiseFactory::new()->deleted()->create([
             'provider' => $provider,
             'paymentType' => MerchandisePayment::TYPE_BILL,
             'isDebt' => false
@@ -59,10 +57,10 @@ class MerchandiseControllerTest extends WebTestCase
         ]);
 
         // Assert
-        $merchandiseInserted = self::$container->get(MerchandiseRepository::class)->find(3);
+        $newMerchandise = self::$container->get(MerchandiseRepository::class)->find(3);
 
-        static::assertSame($merchandise->getPaymentType(), $merchandiseInserted->getPaymentType());
-        static::assertSame($merchandise->getIsDebt(), $merchandiseInserted->getIsDebt());
+        static::assertSame($merchandise->getPaymentType(), $newMerchandise->getPaymentType());
+        static::assertSame($merchandise->getIsDebt(), $newMerchandise->getIsDebt());
 
         $this->assertResponseIsSuccessful();
     }
