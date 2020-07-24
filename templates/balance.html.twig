@@ -1,0 +1,77 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sold zilnic{% endblock %}
+
+{% block header %}
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1>Sold <small class="text-muted">zilnic</small></h1>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
+
+    <div class="card mb-3">
+        <table class="table table-striped">
+            <thead class="card-header card-header-table">
+            <tr>
+                <th>Ziua</th>
+                <th>Cantitate</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for b in balances|reverse %}
+                <tr>
+                    <td>{{ include('blocks/_date.html.twig', {'date': b.date}) }}</td>
+                    <td>{{ b.amount|num_for }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}
+
+{% set balances = balances|slice(balances|length - 365) %}
+
+{% block js %}
+    <script>
+        Highcharts.chart('chart', {
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                enabled: false
+            },
+            plotOptions: {
+                series: {
+                    pointPlacement: 'on'
+                }
+            },
+            xAxis: {
+                categories: [{% for b in balances %}'{{ include('blocks/_date.html.twig', {'date': b.date}) }}'{{ not loop.last ? ', ' }}{% endfor %}],
+                labels: {
+                    enabled: false
+                }
+            },
+
+            series: [{
+                name: 'Sold',
+                data: [{% for b in balances %}{{ b.amount|num_for(0, '') }}{{ not loop.last ? ', ' }}{% endfor %}]
+            }],
+
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
+{% endblock %}

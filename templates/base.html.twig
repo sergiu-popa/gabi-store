@@ -30,8 +30,6 @@
                 <a href="{{ path('monthly_situation') }}" class="nav-link">Situatia lunară</a>
             </li>
 
-
-
             <li class="nav-item dropdown {{ 'category' in route ? 'active' }}">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownCategoriesLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     Furnizori
@@ -84,6 +82,12 @@
                     {% endif %}
                 </div>
             </li>
+
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item {{ route == 'balance' ? 'active' }}">
+                    <a href="{{ path('balance') }}" class="nav-link">Sold</a>
+                </li>
+            {% endif %}
         </ul>
 
         <form method="get" class="form-inline mr-3" action="{{ path('report_merchandise') }}">
