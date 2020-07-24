@@ -22,24 +22,55 @@ class MerchandisePaymentManager
         $this->repository = $repository;
     }
 
-    public function update(Merchandise $merchandise)
+    public function create(Merchandise $merchandise)
     {
-        $payment = $this->repository->findTodayForProvider($merchandise->getProvider(), $merchandise->getPaymentType());
+        $payment = new MerchandisePayment();
+        $payment->setAmount($merchandise->getTotalEnterValue());
 
-        if($payment) {
-            $payment->incrementAmount($merchandise->getTotalEnterValue());
-        } else {
-            $payment = new MerchandisePayment();
-            $payment->setAmount($merchandise->getTotalEnterValue());
+        if ($merchandise->paidWithBill()) {
+            $payment->bill();
+        }
 
-            if ($merchandise->paidWithBill()) {
-                $payment->bill();
+        $payment->setProvider($merchandise->getProvider());
+        $payment->setDate($merchandise->getDate());
+
+        $this->em->persist($payment);
+
+        $this->em->flush();
+    }
+
+    public function update(int $previousTotalEnterValue, Merchandise $merchandise)
+    {
+        $payment = $this->repository->findForDateAndProvider($merchandise);
+
+        $difference = abs($merchandise->getTotalEnterValue() - $previousTotalEnterValue);
+
+        if($difference !== 0) {
+            if ($merchandise->getTotalEnterValue() > $previousTotalEnterValue) {
+                $payment->incrementAmount($difference);
+            } else {
+                $payment->decrementAmount($difference);
             }
 
-            $payment->setProvider($merchandise->getProvider());
-            $payment->setDate($merchandise->getDate());
+            $this->updateOrDeletePayment($payment);
+        }
+    }
 
-            $this->em->persist($payment);
+    public function delete(Merchandise $merchandise)
+    {
+        $debt = $this->repository->findForDateAndProvider($merchandise);
+
+        $debt->decrementAmount($merchandise->getTotalEnterValue());
+
+        $this->updateOrDeletePayment($debt);
+    }
+
+    private function updateOrDeletePayment(?MerchandisePayment $payment): void
+    {
+        if ($payment->getAmount() === 0.0) {
+            $payment->delete();
+        } else {
+            $payment->update();
         }
 
         $this->em->flush();

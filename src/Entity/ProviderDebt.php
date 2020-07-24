@@ -80,11 +80,6 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         return $total;
     }
 
-    public function incrementAmount(float $amount): void
-    {
-        $this->amount += $amount;
-    }
-
     public function jsonSerialize()
     {
         return [

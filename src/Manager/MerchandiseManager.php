@@ -46,9 +46,31 @@ class MerchandiseManager
     public function createPaymentOrDebt(Merchandise $merchandise)
     {
         if($merchandise->isDebt()) {
-            $this->debtManager->update($merchandise);
+            $this->debtManager->create($merchandise);
         } else {
-            $this->paymentManager->update($merchandise);
+            $this->paymentManager->create($merchandise);
         }
+    }
+
+    public function update(int $previousTotalEnterValue, Merchandise $merchandise)
+    {
+        if ($merchandise->isDebt()) {
+            $this->debtManager->update($previousTotalEnterValue, $merchandise);
+        } else {
+            $this->paymentManager->update($previousTotalEnterValue, $merchandise);
+        }
+    }
+
+    public function delete(Merchandise $merchandise)
+    {
+        $merchandise->delete();
+
+        if ($merchandise->isDebt()) {
+            $this->debtManager->delete($merchandise);
+        } else {
+            $this->paymentManager->delete($merchandise);
+        }
+
+        $this->em->flush();
     }
 }

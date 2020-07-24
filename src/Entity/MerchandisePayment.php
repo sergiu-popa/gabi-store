@@ -7,6 +7,7 @@ use App\Entity\Traits\DateTrait;
 use App\Entity\Traits\DeletedAtTrait;
 use App\Entity\Traits\IdTrait;
 use App\Entity\Traits\PaymentTypeTrait;
+use App\Entity\Traits\UpdatedAtTrait;
 use App\Util\SnapshotableInterface;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -23,6 +24,7 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
     use DateTrait;
     use DeletedAtTrait;
     use PaymentTypeTrait;
+    use UpdatedAtTrait;
 
     public function __construct()
     {
@@ -44,11 +46,6 @@ class MerchandisePayment implements \JsonSerializable, SnapshotableInterface
             'data' => $this->date->format('Y-m-d'),
             'tip' => $this->paymentType === self::TYPE_BILL ? 'bon' : 'factura'
         ];
-    }
-
-    public function incrementAmount(float $amount): void
-    {
-        $this->amount += $amount;
     }
 
     public function getProvider(): ?Provider

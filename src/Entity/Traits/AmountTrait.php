@@ -26,4 +26,14 @@ trait AmountTrait
 
         return $this;
     }
+
+    public function incrementAmount(float $amount): void
+    {
+        $this->amount += $amount;
+    }
+
+    public function decrementAmount(float $amount): void
+    {
+        $this->amount -= $amount;
+    }
 }

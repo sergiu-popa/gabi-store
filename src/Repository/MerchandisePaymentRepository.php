@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
 use App\Entity\Provider;
 use App\Entity\ProviderDebt;
@@ -27,15 +28,23 @@ class MerchandisePaymentRepository extends ServiceEntityRepository
         $this->conn = $registry->getConnection();
     }
 
-    public function findTodayForProvider(Provider $provider, int $paymentType): ?MerchandisePayment
+    public function findAll()
+    {
+        return $this->createQueryBuilder('p')
+            ->where('p.deletedAt IS NULL')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findForDateAndProvider(Merchandise $merchandise): ?MerchandisePayment
     {
         return $this->createQueryBuilder('p')
             ->where('p.date = :today')
-            ->setParameter('today', (new \DateTime())->format('Y-m-d'))
+            ->setParameter('today', $merchandise->getDate())
             ->andWhere('p.provider = :provider')
-            ->setParameter('provider', $provider)
+            ->setParameter('provider', $merchandise->getProvider())
             ->andWhere('p.paymentType = :type')
-            ->setParameter('type', $paymentType)
+            ->setParameter('type', $merchandise->getPaymentType())
             ->andWhere('p.deletedAt IS NULL')
             ->getQuery()
             ->getOneOrNullResult();

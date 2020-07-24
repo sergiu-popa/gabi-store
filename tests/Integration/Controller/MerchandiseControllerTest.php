@@ -21,7 +21,6 @@ class MerchandiseControllerTest extends WebTestCase
     public function setUp()
     {
         $this->client = static::createClient();
-
         $this->client->loginUser(self::$container->get(UserRepository::class)->find(1));
     }
 

@@ -35,23 +35,41 @@ class ProviderDebtManager
         $this->debtRepository = $debtRepository;
     }
 
-    public function update(Merchandise $merchandise)
+    public function create(Merchandise $merchandise)
     {
-        $debt = $this->debtRepository->findTodayForProvider($merchandise->getProvider());
+        $debt = new ProviderDebt();
+        $debt->setAmount($merchandise->getTotalEnterValue());
+        $debt->setProvider($merchandise->getProvider());
+        $debt->setDate($merchandise->getDate());
 
-        if ($debt) {
-            $debt->incrementAmount($merchandise->getTotalEnterValue());
-            $debt->update();
-        } else {
-            $debt = new ProviderDebt();
-            $debt->setAmount($merchandise->getTotalEnterValue());
-            $debt->setProvider($merchandise->getProvider());
-            $debt->setDate($merchandise->getDate());
-
-            $this->em->persist($debt);
-        }
+        $this->em->persist($debt);
 
         $this->em->flush();
+    }
+
+    public function update(int $previousTotalEnterValue, Merchandise $merchandise)
+    {
+        $debt = $this->debtRepository->findForDateAndProvider($merchandise);
+        $difference = abs($merchandise->getTotalEnterValue() - $previousTotalEnterValue);
+
+        if($difference !== 0) {
+            if ($merchandise->getTotalEnterValue() > $previousTotalEnterValue) {
+                $debt->incrementAmount($difference);
+            } else {
+                $debt->decrementAmount($difference);
+            }
+
+            $this->updateOrDeleteDebt($debt);
+        }
+    }
+
+    public function delete(Merchandise $merchandise)
+    {
+        $debt = $this->debtRepository->findForDateAndProvider($merchandise);
+
+        $debt->decrementAmount($merchandise->getTotalEnterValue());
+
+        $this->updateOrDeleteDebt($debt);
     }
 
     public function findUnpaid()
@@ -99,6 +117,17 @@ class ProviderDebtManager
         $payment->partially();
 
         $this->em->persist($payment);
+        $this->em->flush();
+    }
+
+    private function updateOrDeleteDebt(?ProviderDebt $debt): void
+    {
+        if ($debt->getAmount() === 0.0) {
+            $debt->delete();
+        } else {
+            $debt->update();
+        }
+
         $this->em->flush();
     }
 }

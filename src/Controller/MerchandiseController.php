@@ -70,11 +70,12 @@ class MerchandiseController extends AbstractController
     public function edit(Request $request, Merchandise $merchandise): Response
     {
         $form = $this->createForm(MerchandiseType::class, $merchandise);
+        $previousTotalEnterValue = $merchandise->getTotalEnterValue();
 
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $this->em->flush();
+            $this->manager->update($previousTotalEnterValue, $merchandise);
 
             return $this->returnRow($merchandise);
         }
@@ -92,8 +93,7 @@ class MerchandiseController extends AbstractController
     public function delete(Request $request, Merchandise $merchandise): Response
     {
         if ($this->isCsrfTokenValid('delete'.$merchandise->getId(), $request->request->get('_token'))) {
-            $merchandise->delete();
-            $this->em->flush();
+            $this->manager->delete($merchandise);
 
             return $this->json(['success' => true, 'message' => 'Intrarea a fost ștearsă cu success.']);
         }
