@@ -20,10 +20,6 @@ variables:
 phpunit:
   stage: test
   before_script:
-    - curl -o- -L https://yarnpkg.com/install.sh | bash
-    - /usr/bin/yarn --version
-    - /usr/bin/yarn install && /usr/bin/yarn build
-
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
   script:

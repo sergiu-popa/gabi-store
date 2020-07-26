@@ -21,3 +21,6 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 # Node & Yarn
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash && \
     apt-get install -y nodejs
+
+RUN npm i -g yarn
+
