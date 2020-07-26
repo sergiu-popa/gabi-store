@@ -18,9 +18,6 @@ RUN docker-php-ext-install pdo_mysql zip intl
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd
 
-# Node &Yarn
+# Node & Yarn
 RUN curl -sL https://deb.nodesource.com/setup_12.x | bash && \
     apt-get install -y nodejs
-
-RUN curl -o- -L https://yarnpkg.com/install.sh | bash && \
-    export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"

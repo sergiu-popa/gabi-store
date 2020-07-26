@@ -21,11 +21,10 @@ phpunit:
   stage: test
   before_script:
     - curl -o- -L https://yarnpkg.com/install.sh | bash
-    - yarn --version
-    - export PATH="$HOME/.yarn/bin:$HOME/.config/yarn/global/node_modules/.bin:$PATH"
-    - yarn install && yarn build
+    - /usr/bin/yarn --version
+    - /usr/bin/yarn install && /usr/bin/yarn build
 
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
   script:
-    - php bin/phpunit --testsuite=unit,integration,functional --no-coverage
+    - SYMFONY_DEPRECATIONS_HELPER=disabled php bin/phpunit --testsuite=unit,integration,functional --no-coverage
