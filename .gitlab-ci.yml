@@ -1,4 +1,4 @@
-image: registry.gitlab.com/sergiupopa/gabi-store:latest
+image: registry.gitlab.com/popadevs/gabi-store:latest
 
 services:
   - mysql:5.7
