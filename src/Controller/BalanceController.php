@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Manager\DayManager;
 use App\Repository\BalanceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,10 +18,27 @@ class BalanceController extends AbstractController
      */
     public function show(BalanceRepository $repository): Response
     {
-        return $this->render('balance.html.twig', [
+        return $this->render('balance/index.html.twig', [
             'balances' => $repository->findAll(),
         ]);
     }
 
-    // TODO trigger update sold for each day and create snapshots?
+    /**
+     * @Route("/recalculate", name="balance_recalculate", methods={"GET"})
+     */
+    public function update(BalanceRepository $repository, DayManager $dayManager): Response
+    {
+        $balances = $repository->findLastMonth();
+
+        foreach($balances as $balance) {
+            $recalculatedBalance = $dayManager->getTransactions($balance->getDate());
+            $balance->setRecalculatedAmount($recalculatedBalance['totals']['balance']);
+        }
+
+        // TODO From to confirm manually modified balances to update the database
+
+        return $this->render('balance/update.html.twig', [
+            'balances' => $balances,
+        ]);
+    }
 }

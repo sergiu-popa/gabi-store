@@ -21,16 +21,16 @@ class Balance implements \JsonSerializable, SnapshotableInterface
     use DateTrait;
     use DeletedAtTrait;
 
+    private $recalculatedAmount;
+
     public function __construct()
     {
         $this->date = new \DateTime();
     }
 
-    /**
-     * @ORM\Column(type="date", unique=true)
-     * @Assert\Type("\DateTimeInterface")
-     */
-    private $date;
+    public function amountHasChanged(): bool {
+        return $this->amount !== $this->recalculatedAmount;
+    }
 
     public function jsonSerialize()
     {
@@ -38,5 +38,15 @@ class Balance implements \JsonSerializable, SnapshotableInterface
             'cantitate' => $this->amount,
             'data' => $this->date->format('Y-m-d')
         ];
+    }
+
+    public function getRecalculatedAmount(): ?float
+    {
+        return $this->recalculatedAmount;
+    }
+
+    public function setRecalculatedAmount(float $recalculatedAmount): void
+    {
+        $this->recalculatedAmount = $recalculatedAmount;
     }
 }
