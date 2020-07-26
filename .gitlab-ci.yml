@@ -20,6 +20,8 @@ variables:
 phpunit:
   stage: test
   before_script:
+    - node --version
+    - whereis yarn
     - yarn install && yarn build
     - curl -sS https://getcomposer.org/installer | php
     - php composer.phar install
