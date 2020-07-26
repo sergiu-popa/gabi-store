@@ -1,0 +1,27 @@
+image: registry.gitlab.com/sergiupopa/devetech:latest
+
+services:
+  - mysql:5.7
+cache:
+  paths:
+    - node_modules
+    - .yarn
+    - vendor
+
+stages:
+  - connect
+  - test
+
+variables:
+  # Configure mysql environment variables (https://hub.docker.com/_/mysql/)
+  MYSQL_DATABASE: magazin_test
+  MYSQL_ROOT_PASSWORD: root
+
+phpunit:
+  stage: test
+  before_script:
+    - yarn install && yarn build
+    - curl -sS https://getcomposer.org/installer | php
+    - php composer.phar install
+  script:
+    - php bin/phpunit --testsuite=unit,integration,functional --no-coverage
