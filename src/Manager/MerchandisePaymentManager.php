@@ -22,19 +22,25 @@ class MerchandisePaymentManager
         $this->repository = $repository;
     }
 
-    public function create(Merchandise $merchandise)
+    public function add(Merchandise $merchandise)
     {
-        $payment = new MerchandisePayment();
-        $payment->setAmount($merchandise->getTotalEnterValue());
+        $payment = $this->repository->findForDateAndProvider($merchandise);
 
-        if ($merchandise->paidWithBill()) {
-            $payment->bill();
+        if($payment === null) {
+            $payment = new MerchandisePayment();
+            $payment->setAmount($merchandise->getTotalEnterValue());
+
+            if ($merchandise->paidWithBill()) {
+                $payment->bill();
+            }
+
+            $payment->setProvider($merchandise->getProvider());
+            $payment->setDate($merchandise->getDate());
+
+            $this->em->persist($payment);
+        } else {
+            $payment->incrementAmount($merchandise->getTotalEnterValue());
         }
-
-        $payment->setProvider($merchandise->getProvider());
-        $payment->setDate($merchandise->getDate());
-
-        $this->em->persist($payment);
 
         $this->em->flush();
     }

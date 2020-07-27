@@ -53,6 +53,20 @@ class MerchandiseManagerTest extends WebTestCase
     }
 
     /** @test */
+    public function new_merchandise_as_debt_increase_existing_provider_debt_with_same_amount()
+    {
+        static::$container->get(MerchandiseManager::class)->createPaymentOrDebt($this->merchandisePaidWithDebt->object());
+        static::$container->get(MerchandiseManager::class)->createPaymentOrDebt($this->merchandisePaidWithDebt->object());
+
+        /** @var MerchandisePayment $debt */
+        $debts = static::$container->get(ProviderDebtRepository::class)->findAll();
+        $debt = $debts[0];
+
+        static::assertCount(1, $debts);
+        static::assertSame($this->merchandisePaidWithDebt->getTotalEnterValue() * 2, $debt->getAmount());
+    }
+
+    /** @test */
     public function increment_merchandise_as_debt_increments_debt_with_difference_amount()
     {
         // Create the initial debt for total amount of 100
@@ -115,6 +129,21 @@ class MerchandiseManagerTest extends WebTestCase
         $payment = static::$container->get(MerchandisePaymentRepository::class)->find(1);
 
         static::assertSame($this->merchandisePaidWithPayment->getTotalEnterValue(), $payment->getAmount());
+        static::assertSame($this->merchandisePaidWithPayment->getPaymentType(), $payment->getPaymentType());
+    }
+
+    /** @test */
+    public function new_merchandise_increase_existing_payment_with_same_amount()
+    {
+        static::$container->get(MerchandiseManager::class)->createPaymentOrDebt($this->merchandisePaidWithPayment->object());
+        static::$container->get(MerchandiseManager::class)->createPaymentOrDebt($this->merchandisePaidWithPayment->object());
+
+        /** @var MerchandisePayment $payment */
+        $payments = static::$container->get(MerchandisePaymentRepository::class)->findAll();
+        $payment = $payments[0];
+
+        static::assertCount(1, $payments);
+        static::assertSame($this->merchandisePaidWithPayment->getTotalEnterValue() * 2, $payment->getAmount());
         static::assertSame($this->merchandisePaidWithPayment->getPaymentType(), $payment->getPaymentType());
     }
 

@@ -46,9 +46,9 @@ class MerchandiseManager
     public function createPaymentOrDebt(Merchandise $merchandise)
     {
         if($merchandise->isDebt()) {
-            $this->debtManager->create($merchandise);
+            $this->debtManager->add($merchandise);
         } else {
-            $this->paymentManager->create($merchandise);
+            $this->paymentManager->add($merchandise);
         }
     }
 

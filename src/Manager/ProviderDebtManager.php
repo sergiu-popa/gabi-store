@@ -35,14 +35,20 @@ class ProviderDebtManager
         $this->debtRepository = $debtRepository;
     }
 
-    public function create(Merchandise $merchandise)
+    public function add(Merchandise $merchandise)
     {
-        $debt = new ProviderDebt();
-        $debt->setAmount($merchandise->getTotalEnterValue());
-        $debt->setProvider($merchandise->getProvider());
-        $debt->setDate($merchandise->getDate());
+        $debt = $this->debtRepository->findForDateAndProvider($merchandise);
 
-        $this->em->persist($debt);
+        if($debt === null) {
+            $debt = new ProviderDebt();
+            $debt->setAmount($merchandise->getTotalEnterValue());
+            $debt->setProvider($merchandise->getProvider());
+            $debt->setDate($merchandise->getDate());
+
+            $this->em->persist($debt);
+        } else {
+            $debt->incrementAmount($merchandise->getTotalEnterValue());
+        }
 
         $this->em->flush();
     }
