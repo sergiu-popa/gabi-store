@@ -232,4 +232,9 @@ class Day
 
         return $this;
     }
+
+    public function isConfirmed(): bool
+    {
+        return $this->confirmed;
+    }
 }

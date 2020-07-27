@@ -3,32 +3,97 @@
 {% block title %}Istoric{% endblock %}
 
 {% block body %}
-    <div class="example-wrapper">
-        <h1>Istoric {{ date|date('d-m-Y') }}</h1>
+    <h1>Istoric tranzactii
+        <small>{{ include('blocks/_date.html.twig', {'date': currentDate}) }}</small>
+    </h1>
 
-        Filtru: alege alta data
+    <div class="row">
+        <div class="col-8">
+            <form method="get" class="form-inline mb-3">
+                {{ include('blocks/_select_providers.html.twig') }}
 
-        <table class="table">
-            <thead>
-            <tr>
-                <th>Actiune</th>
-                <th>Hora</th>
-                <th>Detalii</th>
-            </tr>
-            </thead>
-            <tbody>
-            {% for s in snapshots %}
-                <tr>
-                    <td>{{ s.author.name }} a <strong>{{ s.type|snapshot_verb }}</strong> <em>{{ s.class|snapshot_type }}</em></td>
-                    <td>{{ s.createdAt|date('H:i:s') }}</td>
-                    <td>{{ s.type != 'delete' ? s.content|snapshot_content }}</td>
-                </tr>
-            {% else %}
-                <tr>
-                    <td colspan="5">no records found</td>
-                </tr>
-            {% endfor %}
-            </tbody>
-        </table>
+                <button class="btn btn-outline-primary">
+                    Caută <span class="badge badge-light">{{ snapshots|length|default(0) }}</span>
+                </button>
+
+            </form>
+            {# TODO filtru persoana, filtru actiune, filtru tip #}
+
+            <div class="card mb-3">
+                <table class="table table-striped">
+                    <thead class="card-header card-header-table">
+                    <tr>
+                        <th>#</th>
+                        <th>Persoana</th>
+                        <th>Acțiunea</th>
+                        <th>Tip</th>
+                        <th>Ora</th>
+                        <th>Detalii</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {% for s in snapshots %}
+                        <tr>
+                            <td>{{ loop.index }}</td>
+                            <td>{{ s.author.name }}</td>
+                            <td>{{ s.type|snapshot_verb }}</td>
+                            <td><span class="badge badge-secondary">{{ s.class|snapshot_type }}</span></td>
+                            <td>{{ s.createdAt|date('H:i:s') }}</td>
+                            <td>{{ s.content|snapshot_content }}</td>
+                        </tr>
+                    {% else %}
+                        <tr>
+                            <td colspan="6">Nici o tranzactie</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-4">
+            <ul class="list-group mb-3">
+                <li class="list-group-item disabled list-group-flush">Început zi</li>
+                <li class="list-group-item"><strong>{{ day.author.name }}</strong> a deschis la <strong>{{ day.startedAt|date('H:s')|default('') }}</strong></li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 50
+                    <span class="badge badge-primary badge-pill">{{ day.bills50Start|default(0) }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 100
+                    <span class="badge badge-primary badge-pill">{{ day.bills100Start|default(0) }}</span>
+                </li>
+            </ul>
+
+            <ul class="list-group">
+                <li class="list-group-item disabled list-group-flush">Terminare zi</li>
+                <li class="list-group-item">Ziua a fost închisă la <strong>{{ day.endedAt|date('H:s')|default('') }}</strong></li>
+                {% if day.confirmed %}
+                    <li class="list-group-item">Confirmată <strong>{{ day.confirmedBy.name }}</strong></li>
+                {% endif %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 50
+                    <span class="badge badge-primary badge-pill">{{ day.bills50End|default(0) }}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 100
+                    <span class="badge badge-primary badge-pill">{{ day.bills100End|default(0) }}</span>
+                </li>
+                <li class="list-group-item"><strong>Z</strong>: {{ day.z|num_for }}</strong></li>
+            </ul>
+
+            {# TODO debt for this day #}
+
+            {% if day.orderProviders %}
+                <ul class="list-group mb-4">
+                    <li class="list-group-item disabled list-group-flush">Furnizorii la care a dat comandă astăzi</li>
+                    {% for p in day.orderProviders %}<li class="list-group-item">{{ p }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+
+            {% if day.paidProviders %}
+                <ul class="list-group mb-4">
+                    <li class="list-group-item disabled list-group-flush">Furnizorii care au fost plățiți astăzi</li>
+                    {% for p in day.paidProviders %}<li class="list-group-item">{{ p }}</li>{% endfor %}
+                </ul>
+            {% endif %}
+        </div>
     </div>
+
 {% endblock %}

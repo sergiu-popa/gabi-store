@@ -11,6 +11,7 @@ use App\Entity\Money;
 use App\Domain\Month;
 use App\Entity\Provider;
 use App\Util\Months;
+use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,11 +103,10 @@ class DailyReportsController extends AbstractController
     /**
      * @Route("/reports/daily/merchandise/search", name="report_merchandise")
      */
-    public function merchandise(Request $request, PaginatorInterface $paginator)
+    public function merchandise(Request $request, PaginatorInterface $paginator, EntityManagerInterface $em)
     {
         $query = $request->query->get('query');
         $provider = $request->query->get('provider');
-        $em = $this->getDoctrine()->getManager();
         $providers = $em->getRepository(Provider::class)->findAll();
 
         if($query) {

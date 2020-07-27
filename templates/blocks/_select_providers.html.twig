@@ -1,0 +1,8 @@
+<div class="form-group mr-2">
+    <select class="form-control js-selectize" name="provider" style="width: 200px; padding-top: 5px;">
+        <option value="">Toti furnizorii</option>
+        {% for p in providers %}
+            <option value="{{ p.id }}" {{ p.id == provider ? 'selected="selected"' }}>{{ p.name }}</option>
+        {% endfor %}
+    </select>
+</div>

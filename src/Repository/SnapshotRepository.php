@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Provider;
 use App\Entity\Snapshot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -22,19 +23,26 @@ class SnapshotRepository extends ServiceEntityRepository
     /**
      * @return Snapshot[]
      */
-    public function findByDate(\DateTime $date): array
+    public function findByDate(\DateTime $date, $providerId = null): array
     {
         $date->setTime(0, 0, 0);
 
-        return $this->createQueryBuilder('s')
+        $qb = $this->createQueryBuilder('s')
             ->select('s', 'a')
             ->innerJoin('s.author', 'a')
             ->orderBy('s.createdAt', 'ASC')
             ->where('s.createdAt >= :date')
             ->andWhere('s.class != :class')
             ->setParameter('date', $date)
-            ->setParameter('class', 'App\Entity\Day')
-            ->getQuery()
-            ->getResult();
+            ->setParameter('class', 'App\Entity\Day');
+
+        if($providerId) {
+            $provider = $this->_em->getRepository(Provider::class)->find($providerId);
+
+            $qb->andWhere('s.content LIKE :provider')
+                ->setParameter('provider', '%'.$provider->getName().'%');
+        }
+
+        return $qb->getQuery()->getResult();
     }
 }

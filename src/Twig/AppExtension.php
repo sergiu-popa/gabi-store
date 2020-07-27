@@ -24,8 +24,8 @@ class AppExtension extends AbstractExtension
             new TwigFilter('num_for', [$this, 'number_format']),
             new TwigFilter('roDate', [$this, 'roDate'], ['needs_environment' => true]),
             new TwigFilter('dash', [$this, 'dash']),
-            new TwigFilter('snapshot_verb', [$this, 'snapshotVerb']),
-            new TwigFilter('snapshot_content', [$this, 'snapshotContent']),
+            new TwigFilter('snapshot_verb', [$this, 'snapshotVerb'], ['is_safe' => ['html']]),
+            new TwigFilter('snapshot_content', [$this, 'snapshotContent'], ['is_safe' => ['html']]),
             new TwigFilter('snapshot_type', [$this, 'snapshotType']),
             new TwigFilter('payment_type', [$this, 'paymentType']),
         );
@@ -70,9 +70,9 @@ class AppExtension extends AbstractExtension
     public function snapshotVerb(string $type)
     {
         $verbs = [
-            'create' => 'creat',
-            'update' => 'actualizat',
-            'delete' => 'șters'
+            'create' => '<span class="badge badge-success">CREARE</span>',
+            'update' => '<span class="badge badge-warning">MODIFICARE</span>',
+            'delete' => '<span class="badge badge-danger">ȘTERGERE</span>'
         ];
 
         return $verbs[$type];
@@ -84,8 +84,8 @@ class AppExtension extends AbstractExtension
     public function snapshotContent(string $json)
     {
         return str_replace(
-            ['"','{', '}'],
-            ['','',''],
+            ['"','{', '}', ',', ':'],
+            ['', '', '', '<br>', ': '],
             $json
         );
     }
@@ -103,13 +103,14 @@ class AppExtension extends AbstractExtension
             'DebtPayment' => 'plata marfă',
             'Expense' => 'ieșire',
             'Merchandise' => 'intrare marfă',
+            'MerchandisePayment' => 'plată marfă',
             'MerchandiseCategory' => 'categorie intrare marfă',
             'Money' => 'monetar',
             'Provider' => 'furnizor',
             'ProviderDebt' => 'datorie furnizor',
         ];
 
-        return $types[$type];
+        return mb_strtoupper($types[$type]);
     }
 
     /**

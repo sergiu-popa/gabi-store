@@ -5,13 +5,16 @@ namespace App\Controller;
 use App\Manager\DayManager;
 use App\Repository\BalanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
+ * @IsGranted("ROLE_ADMIN")
  * @Route("/balance")
  */
+
 class BalanceController extends AbstractController
 {
     /**

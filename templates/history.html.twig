@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Istoricul zilei{% endblock %}
+
+{% block body %}
+    {{ include('blocks/_day_header.html.twig', { 'date': currentDate, 'totals': transactions['totals'] }) }}
+
+    <div class="row">
+        <div class="col-12">
+            History goes here
+        </div>
+    </div>
+{% endblock %}
