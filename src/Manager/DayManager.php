@@ -145,12 +145,7 @@ class DayManager
 
         $totals['day'] = $totalDay;
         $totals['balance_previous'] = $previousBalance->getAmount();
-
-        if($todayBalance) {
-            $totals['balance'] = $todayBalance->getAmount();
-        } else {
-            $totals['balance'] = $previousBalance->getAmount() + $totals['merchandise'] - $totalDay;
-        }
+        $totals['balance'] = $previousBalance->getAmount() + $totals['merchandise'] - $totalDay;
 
         return $totals;
     }
