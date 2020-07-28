@@ -65,7 +65,9 @@
 
             <ul class="list-group">
                 <li class="list-group-item disabled list-group-flush">Terminare zi</li>
+                {% if day.endedAt %}
                 <li class="list-group-item">Ziua a fost închisă la <strong>{{ day.endedAt|date('H:s')|default('') }}</strong></li>
+                {% endif %}
                 {% if day.confirmed %}
                     <li class="list-group-item">Confirmată <strong>{{ day.confirmedBy.name }}</strong></li>
                 {% endif %}
