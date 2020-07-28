@@ -118,6 +118,7 @@ class DayManager
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),
             'expenses' => $this->em->getRepository(Expense::class)->findByDay($date),
             'money' => $this->em->getRepository(Money::class)->findByDay($date),
+            'providers' => $this->em->getRepository(Provider::class)->findByDay($date),
             'merchandise' => $this->em->getRepository(Merchandise::class)->findByDay($date),
             'debts' => $this->em->getRepository(Debt::class)->findByDay($date),
         ];

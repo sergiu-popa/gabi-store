@@ -3,11 +3,7 @@
 namespace App\Twig;
 
 use App\Entity\Merchandise;
-use App\Entity\MerchandisePayment;
-use App\Form\MerchandisePaymentType;
-use Twig\Environment;
 use Twig\Extension\AbstractExtension;
-use Twig\Extension\CoreExtension;
 use Twig\TwigFilter;
 
 class AppExtension extends AbstractExtension
@@ -26,8 +22,7 @@ class AppExtension extends AbstractExtension
             new TwigFilter('dash', [$this, 'dash']),
             new TwigFilter('snapshot_verb', [$this, 'snapshotVerb'], ['is_safe' => ['html']]),
             new TwigFilter('snapshot_content', [$this, 'snapshotContent'], ['is_safe' => ['html']]),
-            new TwigFilter('snapshot_type', [$this, 'snapshotType']),
-            new TwigFilter('payment_type', [$this, 'paymentType']),
+            new TwigFilter('snapshot_type', [$this, 'snapshotType'])
         );
     }
 

@@ -21,7 +21,12 @@
 
     {% for p in providers %}
         <div class="js-unverified card mb-2">
-            <div class="card-header">{{ p.name }}</div>
+            {% set m = p.merchandises[0] %}
+            <div class="card-header">{{ p.name }}
+                <span class="badge badge-secondary badge-pill">{{ m.isDebt ? 'Datorie' : 'Cu plată' }}</span>
+                <span class="badge badge-secondary badge-pill">{{ m.paidWithBill == 1 ? 'Bon' : 'Factură' }}</span>
+                {% if m.vat %}<span class="badge badge-secondary badge-pill">{{ m.vat }}%</span>{% endif %}
+            </div>
 
             <table class="js-main table table-striped" style="border-top: none;">
                 <thead>
