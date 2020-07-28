@@ -2,8 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Balance;
 use App\Manager\DayManager;
-use App\Repository\BalanceRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -17,32 +17,49 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class BalanceController extends AbstractController
 {
+    /** @var EntityManagerInterface */
+    private $em;
+
+    /** @var \App\Repository\BalanceRepository */
+    private $repository;
+
+    public function __construct(EntityManagerInterface $em)
+    {
+        $this->em = $em;
+        $this->repository = $em->getRepository(Balance::class);
+    }
+
     /**
      * @Route("/", name="balance", methods={"GET"})
      */
-    public function show(BalanceRepository $repository): Response
+    public function show(): Response
     {
         return $this->render('balance.html.twig', [
-            'balances' => $repository->findAll(),
+            'balances' => $this->repository->findAll(),
         ]);
     }
 
     /**
-     * @Route("/recalculate", name="balance_recalculate", methods={"GET"})
+     * @Route("/recalculate/{date}", name="balance_recalculate", methods={"GET"})
      */
-    public function update(BalanceRepository $repository, DayManager $dayManager, EntityManagerInterface $em): Response
+    public function update($date, DayManager $dayManager): Response
     {
-        $balances = $repository->findLastMonth();
+        $balances = $this->repository->findFromDate($date);
+        $count = 0;
 
         foreach($balances as $balance) {
-            $recalculatedBalance = $dayManager->getTransactions($balance->getDate());
-            $balance->setRecalculatedAmount($recalculatedBalance['totals']['balance']);
-            $balance->setAmount($recalculatedBalance['totals']['balance']);
+            $transactions = $dayManager->getTransactions($balance->getDate());
+            $recalculatedBalance = $transactions['totals']['balance'];
 
-            $em->flush();
+            if($recalculatedBalance !== $balance->getAmount()) {
+                $balance->setAmount($recalculatedBalance);
+                $count++;
+            }
+
+            $this->em->flush();
         }
 
-        $this->addFlash('success', 'Soldurile au fost recalculate pentru ultima lună.');
+        $this->addFlash('success', 'Toate soldurile au fost recalculate. Actualizări: '.$count);
 
         return $this->redirectToRoute('balance');
     }

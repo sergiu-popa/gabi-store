@@ -6,6 +6,7 @@ use App\Entity\Balance;
 use App\Entity\Day;
 use App\Entity\Debt;
 use App\Entity\Expense;
+use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
 use App\Entity\Provider;
@@ -117,7 +118,7 @@ class DayManager
             'payments' => $this->em->getRepository(MerchandisePayment::class)->findByDay($date),
             'expenses' => $this->em->getRepository(Expense::class)->findByDay($date),
             'money' => $this->em->getRepository(Money::class)->findByDay($date),
-            'providers' => $this->em->getRepository(Provider::class)->findByDay($date),
+            'merchandise' => $this->em->getRepository(Merchandise::class)->findByDay($date),
             'debts' => $this->em->getRepository(Debt::class)->findByDay($date),
         ];
 
@@ -141,7 +142,7 @@ class DayManager
 
         $totalDay = array_sum($totals);
 
-        $totals = array_merge($totals, $this->calculateTotalMerchandise($transactions['providers']));
+        $totals = array_merge($totals, $this->calculateTotalMerchandise($transactions['merchandise']));
 
         $totals['day'] = $totalDay;
         $totals['balance_previous'] = $previousBalance->getAmount();
@@ -175,18 +176,18 @@ class DayManager
     }
 
     /**
-     * @param Provider[] $providers
+     * @param Merchandise[] $merchandises
      */
-    private function calculateTotalMerchandise(array $providers): array
+    private function calculateTotalMerchandise(array $merchandises): array
     {
         $cost = 0;
         $total = 0;
         $profit = 0;
 
-        foreach ($providers as $provider) {
-            $cost += $provider->totalEnterAmount();
-            $total += $provider->totalExitAmount();
-            $profit += $provider->totalGrossProfit();
+        foreach ($merchandises as $merchandise) {
+            $cost += $merchandise->getTotalEnterValue();
+            $total += $merchandise->getTotalExitValue();
+            $profit += $merchandise->getGrossProfit();
         }
 
         return [

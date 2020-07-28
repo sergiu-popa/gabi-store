@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Day;
+use App\Entity\Number;
 use App\Form\DayEndType;
 use App\Form\DayStartType;
 use App\Manager\DayManager;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;

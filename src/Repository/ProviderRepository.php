@@ -60,6 +60,9 @@ class ProviderRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    /**
+     * @return Provider[] array
+     */
     public function findByDay(\DateTimeInterface $date): array
     {
         return $this->getQueryBuilder()

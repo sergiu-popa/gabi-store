@@ -21,8 +21,7 @@ class BalanceRepository extends ServiceEntityRepository
     public function findLastBeforeDate(\DateTime $date)
     {
         return $this->createQueryBuilder('b')
-            ->where('b.deletedAt IS NULL')
-            ->andWhere('b.date < :date')
+            ->where('b.date < :date')
             ->setParameter('date', $date->format('Y-m-d'))
             ->orderBy('b.date', 'DESC')
             ->setMaxResults(1)
@@ -33,20 +32,18 @@ class BalanceRepository extends ServiceEntityRepository
     public function findByDay(\DateTime $date)
     {
         return $this->createQueryBuilder('b')
-            ->where('b.deletedAt IS NULL')
-            ->andWhere('b.date = :date')
+            ->where('b.date = :date')
             ->setParameter('date', $date->format('Y-m-d'))
             ->getQuery()
             ->getOneOrNullResult();
     }
 
-    public function findLastMonth()
+    public function findFromDate($date)
     {
         return $this->createQueryBuilder('b')
-            ->where('b.deletedAt IS NULL')
-            ->andWhere('b.date >= :date')
-            ->setParameter('date', (new \DateTime('today last month'))->format('Y-m-d'))
-            ->orderBy('b.date', 'DESC')
+            ->andWhere('b.date > :date')
+            ->setParameter('date', $date)
+            ->orderBy('b.date', 'ASC')
             ->getQuery()
             ->getResult();
     }

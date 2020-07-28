@@ -14,22 +14,15 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  * @ORM\Entity(repositoryClass="App\Repository\BalanceRepository")
  * @UniqueEntity("date")
  */
-class Balance implements \JsonSerializable, SnapshotableInterface
+class Balance implements \JsonSerializable
 {
     use IdTrait;
     use AmountTrait;
     use DateTrait;
-    use DeletedAtTrait;
-
-    private $recalculatedAmount;
 
     public function __construct()
     {
         $this->date = new \DateTime();
-    }
-
-    public function amountHasChanged(): bool {
-        return $this->amount !== $this->recalculatedAmount;
     }
 
     public function jsonSerialize()
@@ -38,15 +31,5 @@ class Balance implements \JsonSerializable, SnapshotableInterface
             'cantitate' => $this->amount,
             'data' => $this->date->format('Y-m-d')
         ];
-    }
-
-    public function getRecalculatedAmount(): ?float
-    {
-        return $this->recalculatedAmount;
-    }
-
-    public function setRecalculatedAmount(float $recalculatedAmount): void
-    {
-        $this->recalculatedAmount = $recalculatedAmount;
     }
 }

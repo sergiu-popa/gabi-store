@@ -31,13 +31,9 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
     use DeletedAtTrait;
     use SnapshotsTrait;
 
-    public function __construct($date = null, $provider = null)
+    public function __construct($date = null)
     {
         $this->date = new \DateTime($date ?? 'now');
-
-        if ($provider) {
-            $this->provider = $provider;
-        }
     }
 
     /**
@@ -123,7 +119,7 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
 
     public function getGrossProfit()
     {
-        return $this->exitPrice - $this->enterPrice;
+        return $this->getTotalExitValue() - $this->getTotalEnterValue();
     }
 
     public function getProvider(): ?Provider

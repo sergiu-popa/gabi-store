@@ -16,6 +16,11 @@
         data-toggle="tooltip" title="Vezi istoricul zilei">
             <i class="fas fa-history" aria-hidden="true"></i>
         </a>
+
+        <a href="{{ path('balance_recalculate', {'date': date|date('Y-m-d')}) }}" class="btn btn-outline-secondary btn-sm align-top"
+        data-toggle="tooltip" title="Recalculează soldurile posterioare">
+            <i class="fas fa-calculator" aria-hidden="true"></i>
+        </a>
     </div>
     <div class="col-6 text-right">
         {% if day is not null %}

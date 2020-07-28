@@ -26,6 +26,17 @@ class MerchandiseRepository extends ServiceEntityRepository
         $this->conn = $registry->getConnection();
     }
 
+    public function findByDay(\DateTimeInterface $date): array
+    {
+        return $this->createQueryBuilder('m')
+            ->andWhere('m.date = :date')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->andWhere('m.deletedAt IS NULL')
+            ->orderBy('m.date')
+            ->getQuery()
+            ->getResult();
+    }
+
     /**
      * @return Merchandise[]
      */
