@@ -37,6 +37,9 @@ class DayEndType extends AbstractType
             ])
             ->add('z', NumberType::class, [
                 'label' => 'Completează Z-ul'
+            ])
+            ->add('debt', NumberType::class, [
+                'label' => 'Datorii PayPoint'
             ]);
 
         $providersForToday = $this->providerManager->getForDay($day->getDate());

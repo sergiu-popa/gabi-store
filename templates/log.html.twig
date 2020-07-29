@@ -64,23 +64,23 @@
             </ul>
 
             {% if day.endedAt %}
-            <ul class="list-group">
-                <li class="list-group-item disabled list-group-flush">Terminare zi</li>
-                <li class="list-group-item">Ziua a fost închisă la <strong>{{ day.endedAt|date('H:s')|default('') }}</strong></li>
-                {% if day.confirmed %}
-                    <li class="list-group-item">Confirmată <strong>{{ day.confirmedBy.name }}</strong></li>
-                {% endif %}
-                <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 50
-                    <span class="badge badge-primary badge-pill">{{ day.bills50End|default(0) }}</span>
-                </li>
-                <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 100
-                    <span class="badge badge-primary badge-pill">{{ day.bills100End|default(0) }}</span>
-                </li>
-                <li class="list-group-item"><strong>Z</strong>: {{ day.z|num_for }}</strong></li>
-            </ul>
+                <ul class="list-group">
+                    <li class="list-group-item disabled list-group-flush">Terminare zi</li>
+                    <li class="list-group-item">Ziua a fost închisă la <strong>{{ day.endedAt|date('H:s')|default('') }}</strong></li>
+                    {% if day.confirmed %}
+                        <li class="list-group-item">Confirmată <strong>{{ day.confirmedBy.name }}</strong></li>
+                    {% endif %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 50
+                        <span class="badge badge-primary badge-pill">{{ day.bills50End|default(0) }}</span>
+                    </li>
+                    <li class="list-group-item d-flex justify-content-between align-items-center">Bancnote de 100
+                        <span class="badge badge-primary badge-pill">{{ day.bills100End|default(0) }}</span>
+                    </li>
+                    <li class="list-group-item">Z: {{ day.z|num_for }}</strong></li>
+                    <li class="list-group-item">Datorii PayPoint: {{ day.debt|num_for|default(0.00) }}</li>
+                </ul>
             {% endif %}
 
-            {# TODO debt for this day #}
 
             {% if day.orderProviders %}
                 <ul class="list-group mb-4">

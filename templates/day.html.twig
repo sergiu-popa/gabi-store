@@ -27,21 +27,22 @@
 
     {% if day and day.isToday and day.hasEnded == false %}
         {% if showReview %}
-            {{ include('debt/list.html.twig', { debts: transactions['debts'] }) }}
-
             {{ form_start(form) }}
             {{ form_errors(form) }}
             <p>Completează câți bani sunt în casă la sfârșitul zilei.</p>
 
             <div class="row">
-                <div class="col-4">
+                <div class="col-3">
                     {{ form_row(form.bills_50_end) }}
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     {{ form_row(form.bills_100_end) }}
                 </div>
-                <div class="col-4">
+                <div class="col-3">
                     {{ form_row(form.z) }}
+                </div>
+                <div class="col-3">
+                    {{ form_row(form.debt) }}
                 </div>
             </div>
 

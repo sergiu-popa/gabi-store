@@ -86,6 +86,13 @@ class Day
     private $z;
 
     /**
+     * @ORM\Column(type="float", nullable=true)
+     * @Assert\Type("numeric")
+     * @Assert\PositiveOrZero()
+     */
+    private $debt;
+
+    /**
      * @ORM\Column(type="simple_array", nullable=true)
      */
     private $orderProviders = [];
@@ -236,5 +243,17 @@ class Day
     public function isConfirmed(): bool
     {
         return $this->confirmed;
+    }
+
+    public function getDebt(): ?float
+    {
+        return $this->debt;
+    }
+
+    public function setDebt(float $debt): self
+    {
+        $this->debt = $debt;
+
+        return $this;
     }
 }
