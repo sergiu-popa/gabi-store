@@ -188,7 +188,7 @@ class DayManager
         foreach ($merchandises as $merchandise) {
             $cost += $merchandise->getTotalEnterValue();
             $total += $merchandise->getTotalExitValue();
-            $profit += $merchandise->getGrossProfit();
+            $profit += $merchandise->getTotalGrossProfit();
         }
 
         return [
