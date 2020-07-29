@@ -11,6 +11,7 @@ framework:
         save_path: '%kernel.project_dir%/var/sessions/%kernel.environment%'
         cookie_secure: auto
         cookie_samesite: lax
+        cookie_lifetime: 43200 # 12 hours in seconds
 
     #esi: true
     #fragments: true
