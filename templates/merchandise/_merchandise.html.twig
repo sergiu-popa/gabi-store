@@ -1,11 +1,11 @@
 <tr>
-    <td>{{ m.category }}</td>
+    <td class="d-none d-md-table-cell">{{ m.category }}</td>
     <td>{{ m.name }}</td>
     <td style="width: 100px">{{ m.amount }}</td>
     <td>{{ m.enterPrice }}</td>
     <td>{{ m.exitPrice }} <span class="text-muted">({{ m.grossProfitPercent }}%)</span></td>
     {% if canModify %}
-        <td style="width: 100px;">
+        <td style="width: 100px;" class="d-none d-md-table-cell">
             {{ include('blocks/_edit_button.html.twig', { href: path('merchandise_edit', {'id': m.id }) }) }}
             {{ include('blocks/_delete_button.html.twig', { route: 'merchandise_delete', 'id': m.id, item: 'intrarea' }) }}
         </td>

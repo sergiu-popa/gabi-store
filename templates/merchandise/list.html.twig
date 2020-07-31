@@ -31,12 +31,12 @@
             <table class="js-main table table-striped" style="border-top: none;">
                 <thead>
                 <tr>
-                    <th style="width: 200px;">Categorie</th>
+                    <th style="width: 200px;" class="d-none d-md-table-cell">Categorie</th>
                     <th>Nume</th>
-                    <th style="width: 120px;">Cantitate</th>
-                    <th style="width: 150px;">Preț intrare</th>
-                    <th style="width: 150px;">Preț ieșire</th>
-                    {% if canModify %}<th></th>{% endif %}
+                    <th style="width: 120px;"><span class="d-none d-md-inline">Cantitate</span><span class="d-inline d-md-none">C.</span></th>
+                    <th style="width: 150px;"><span class="d-none d-md-inline">Preț intrare</span><span class="d-inline d-md-none">P.I.</span></th>
+                    <th style="width: 150px;"><span class="d-none d-md-inline">Preț ieșire</span><span class="d-inline d-md-none">P.E.</span></th>
+                    {% if canModify %}<th class="d-none d-md-table-cell"></th>{% endif %}
                 </tr>
                 </thead>
                 <tbody>
@@ -47,7 +47,7 @@
                 {% endfor %}
 
                 {% if p.merchandises|length > 0 %}
-                    <tr class="total">
+                    <tr class="total d-none d-md-table-row">
                         <td colspan="3">
                             <strong>Profit</strong>: {{ p.totalGrossProfit|num_for }}
                             <span class="text-muted">({{ p.totalGrossProfitPercent|num_for(1) }}%)</span>

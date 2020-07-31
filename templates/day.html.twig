@@ -10,10 +10,10 @@
     {% endif %}
 
     <div class="row">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}
         </div>
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             {{ include('expense/list.html.twig', { expenses: transactions['expenses'] }) }}
             {{ include('money/list.html.twig', { money: transactions['money'] }) }}
         </div>

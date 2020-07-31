@@ -16,10 +16,10 @@
     {{ include('blocks/_totals.html.twig', { 'totals': transactions['totals'] }) }}
 
     <div class="row mt-3">
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             {{ include('merchandise_payment/list.html.twig', { payments: transactions['payments'] }) }}
         </div>
-        <div class="col-6">
+        <div class="col-12 col-md-6">
             {{ include('expense/list.html.twig', { expenses: transactions['expenses'] }) }}
             {{ include('money/list.html.twig', { money: transactions['money'] }) }}
         </div>

@@ -25,7 +25,7 @@
             {% for b in balances|reverse %}
                 <tr>
                     <td>{{ include('blocks/_date.html.twig', {'date': b.date}) }}</td>
-                    <td>{{ b.amount|num_for }}</td>
+                    <td style="min-width: 125px;">{{ b.amount|num_for }}</td>
                 </tr>
             {% endfor %}
             </tbody>

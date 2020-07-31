@@ -8,7 +8,7 @@
     </h1>
 
     <div class="row">
-        <div class="col-8">
+        <div class="col-12 col-md-8">
             <form method="get" class="form-inline mb-3">
                 {{ include('blocks/_select_providers.html.twig') }}
 
@@ -20,26 +20,35 @@
             {# TODO filtru persoana, filtru actiune, filtru tip #}
 
             <div class="card mb-3">
-                <table class="table table-striped">
+                <table class="table">
                     <thead class="card-header card-header-table">
                     <tr>
                         <th>#</th>
                         <th>Persoana</th>
                         <th>Acțiunea</th>
-                        <th>Tip</th>
-                        <th>Ora</th>
-                        <th>Detalii</th>
+                        <th class="d-none d-md-table-cell">Tip</th>
+                        <th class="d-none d-md-table-cell">Ora</th>
+                        <th class="d-none d-md-table-cell">Detalii</th>
                     </tr>
                     </thead>
                     <tbody>
                     {% for s in snapshots %}
-                        <tr>
+                        <tr style="{{ loop.index % 2 == 0 ? 'background-color: rgba(0,0,0,.05);' }}">
                             <td>{{ loop.index }}</td>
-                            <td>{{ s.author.name }}</td>
-                            <td>{{ s.type|snapshot_verb }}</td>
-                            <td><span class="badge badge-secondary">{{ s.class|snapshot_type }}</span></td>
-                            <td>{{ s.createdAt|date('H:i:s') }}</td>
-                            <td>{{ s.content|snapshot_content }}</td>
+                            <td>
+                                {{ s.author.name }}
+                                <span class="d-md-none">{{ s.createdAt|date('H:i:s') }}</span>
+                            </td>
+                            <td>
+                                {{ s.type|snapshot_verb }}
+                                <span class="badge badge-secondary d-md-none">{{ s.class|snapshot_type }}</span>
+                            </td>
+                            <td class="d-none d-md-table-cell"><span class="badge badge-secondary">{{ s.class|snapshot_type }}</span></td>
+                            <td class="d-none d-md-table-cell">{{ s.createdAt|date('H:i:s') }}</td>
+                            <td class="d-none d-md-table-cell">{{ s.content|snapshot_content }}</td>
+                        </tr>
+                        <tr class="d-md-none" style="{{ loop.index % 2 == 0 ? 'background-color: rgba(0,0,0,.05);' }}">
+                            <td colspan="6">{{ s.content|snapshot_content }}</td>
                         </tr>
                     {% else %}
                         <tr>
@@ -51,7 +60,7 @@
             </div>
         </div>
 
-        <div class="col-4">
+        <div class="col-12 col-md-4 order-first order-md-last">
             <ul class="list-group mb-3">
                 <li class="list-group-item disabled list-group-flush">Început zi</li>
                 <li class="list-group-item"><strong>{{ day.author.name }}</strong> a deschis la <strong>{{ day.startedAt|date('H:s')|default('') }}</strong></li>

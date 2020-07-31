@@ -3,7 +3,7 @@
     <td>{{ e.amount|num_for }}</td>
     <td>{{ e.notes }}</td>
     {% if canModify %}
-        <td style="width: 100px;">
+        <td style="width: 100px;" class="d-none d-md-table-cell">
             {{ include('blocks/_edit_button.html.twig', { href: path('expense_edit', {'id': e.id }) }) }}
             {{ include('blocks/_delete_button.html.twig', { route: 'expense_delete', 'id': e.id, item: 'ieșirea' }) }}
         </td>
