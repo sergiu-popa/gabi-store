@@ -55,6 +55,14 @@
                         <td colspan="1">{{ p.totalEnterAmount|num_for }}</td>
                         <td colspan="2">{{ p.totalExitAmount|num_for }}</td>
                     </tr>
+                    <tr class="total d-md-none" style="background: #fff;">
+                        <td colspan="2">
+                            <strong>Profit</strong>: {{ p.totalGrossProfit|num_for }}
+                            <span class="text-muted">({{ p.totalGrossProfitPercent|num_for(1) }}%)</span>
+                        </td>
+                        <td colspan="1">{{ p.totalEnterAmount|num_for }}</td>
+                        <td colspan="2">{{ p.totalExitAmount|num_for }}</td>
+                    </tr>
                 {% endif %}
                 </tbody>
             </table>
