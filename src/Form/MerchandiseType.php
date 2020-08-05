@@ -81,7 +81,6 @@ class MerchandiseType extends AbstractType
                 $provider = $this->providerRepository->find($provider);
                 $merchandise->setProvider($provider);
 
-                $merchandises = $this->repository->findAll();
                 $similarMerchandise = $this->repository->findSimilar($provider);
                 if($similarMerchandise) {
                     $merchandise->setPaymentType($similarMerchandise->getPaymentType());

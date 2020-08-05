@@ -6,6 +6,7 @@ use App\Entity\Merchandise;
 use App\Entity\Provider;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -40,22 +41,6 @@ class MerchandiseRepository extends ServiceEntityRepository
     /**
      * @return Merchandise[]
      */
-    public function findAll(): array
-    {
-        // TODO pagination please
-        return $this->createQueryBuilder('m')
-            ->select('m, p, c')
-            ->join('m.provider', 'p')
-            ->join('m.category', 'c')
-            ->setMaxResults(25)
-            ->orderBy('m.date', 'DESC')
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @return Merchandise[]
-     */
     public function getForYearAndMonth(int $year, string $month)
     {
         $qb = $this->createQueryBuilder('m');
@@ -64,10 +49,7 @@ class MerchandiseRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    /**
-     * @return Merchandise[]
-     */
-    public function searchMerchandise($query, $provider = null)
+    public function searchMerchandise($query, $provider = null): QueryBuilder
     {
         $qb = $this->createQueryBuilder('m')
             ->select('m, p')
@@ -81,9 +63,7 @@ class MerchandiseRepository extends ServiceEntityRepository
                 ->setParameter('provider', $provider);
         }
 
-        return $qb->orderBy('m.provider')
-            ->addOrderBy('m.date', 'DESC')
-            ->addOrderBy('m.enterPrice', 'DESC');
+        return $qb->addOrderBy('m.date', 'DESC');
     }
 
     public function getYearlySum($groupByCategory = false)
