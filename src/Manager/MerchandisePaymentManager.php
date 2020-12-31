@@ -51,7 +51,7 @@ class MerchandisePaymentManager
 
         $difference = abs($merchandise->getTotalEnterValue() - $previousTotalEnterValue);
 
-        if($difference !== 0) {
+        if($difference > 0) {
             if ($merchandise->getTotalEnterValue() > $previousTotalEnterValue) {
                 $payment->incrementAmount($difference);
             } else {

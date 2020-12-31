@@ -58,7 +58,7 @@ class ProviderDebtManager
         $debt = $this->debtRepository->findForDateAndProvider($merchandise);
         $difference = abs($merchandise->getTotalEnterValue() - $previousTotalEnterValue);
 
-        if($difference !== 0) {
+        if ($difference > 0) {
             if ($merchandise->getTotalEnterValue() > $previousTotalEnterValue) {
                 $debt->incrementAmount($difference);
             } else {
