@@ -44,7 +44,7 @@ class DebtPayment implements \JsonSerializable, SnapshotableInterface
             'cantitate' => $this->amount,
             'data' => $this->date->format('Y-m-d'),
             'platit partial' => $this->paidPartially,
-            'datorie' => $this->debt->getId()
+            'datorie id' => $this->debt->getId()
         ];
     }
 

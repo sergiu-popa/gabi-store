@@ -95,7 +95,7 @@ class AppExtension extends AbstractExtension
         $types = [
             'Balance' => 'sold',
             'Debt' => 'datorie',
-            'DebtPayment' => 'plata marfă',
+            'DebtPayment' => 'plata datorie',
             'Expense' => 'ieșire',
             'Merchandise' => 'intrare marfă',
             'MerchandisePayment' => 'plată marfă',
