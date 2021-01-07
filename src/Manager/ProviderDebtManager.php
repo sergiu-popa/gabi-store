@@ -4,7 +4,9 @@ namespace App\Manager;
 
 use App\Entity\DebtPayment;
 use App\Entity\Merchandise;
+use App\Entity\Provider;
 use App\Entity\ProviderDebt;
+use App\Repository\DebtPaymentRepository;
 use App\Repository\ProviderDebtRepository;
 use App\Repository\ProviderRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -81,6 +83,11 @@ class ProviderDebtManager
     public function findUnpaid()
     {
         return $this->providerRepository->findUnpaid();
+    }
+
+    public function findDebtsWithPayments(Provider $provider)
+    {
+        return $this->debtRepository->findForProvider($provider);
     }
 
     public function findUnpaidTotalAmount(): float

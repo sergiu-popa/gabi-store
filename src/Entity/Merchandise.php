@@ -70,6 +70,7 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
 
     /**
      * @ORM\Column(type="boolean")
+     * @Assert\NotBlank()
      * @Assert\Type("bool")
      * @var bool
      */

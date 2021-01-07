@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Istoric plăți datorii{% endblock %}
+
+{% block body %}
+    <h1>{{ provider.name }}
+        <small>Istoric datorii  <a href="{{ path('provider_debt_index') }}">înapoi la listă</a></small>
+    </h1>
+
+    <div class="row">
+        {% for debt in debts %}
+            <div class="col-12">
+                <div class="card my-3">
+                    <div class="card-header">{{ debt.date|date("j") }} {{ debt.date|roDate('MMMM') }} {{ debt.date|date("Y") }} (#{{ debt.id }})</div>
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Suma</th>
+                            <th>Achitat</th>
+                            <th>Ce este</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        <tr>
+                            <td style="width: 300px;">{{ debt.amount|num_for }}</td>
+                            <td style="width: 300px;">{{ debt.totalPaid|num_for }}</td>
+                            <td>{{ debt.paymentTypeLabel(true) }}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    {% if debt.payments|length > 0 %}
+                    <h5 style="margin-left: 15px;">Plati</h5>
+
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Suma</th>
+                            <th></th>
+                        </tr>
+                        </thead>
+                        <tbody>
+
+                        {% for p in debt.payments %}
+                            <tr>
+                                <td style="width: 300px;">{{ p.date|date("j") }} {{ p.date|roDate('MMMM') }} {{ p.date|date("Y") }}</td>
+                                <td style="width: 300px;">{{ p.amount|num_for }}</td>
+                                <td><span class="badge badge-{{ p.paidPartially ? 'secondary' : 'info' }}">{{ p.paidPartially ? 'parțială' : 'totală' }}</span></td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                    {% endif %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

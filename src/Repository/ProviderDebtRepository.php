@@ -39,4 +39,17 @@ class ProviderDebtRepository extends ServiceEntityRepository
             ->getQuery()
             ->getOneOrNullResult();
     }
+
+    public function findForProvider(Provider $provider): array
+    {
+        return $this->createQueryBuilder('d')
+            ->select('d, p')
+            ->leftJoin('d.payments', 'p')
+            ->andWhere('d.provider = :provider')
+            ->setParameter('provider', $provider)
+            ->andWhere('d.deletedAt IS NULL')
+            ->orderBy('d.date', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

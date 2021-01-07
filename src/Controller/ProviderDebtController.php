@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Provider;
 use App\Entity\ProviderDebt;
 use App\Form\ProviderDebtType;
 use App\Manager\ProviderDebtManager;
@@ -33,6 +34,17 @@ class ProviderDebtController extends AbstractController
         return $this->render('provider_debt.html.twig', [
             'providers' => $this->manager->findUnpaid(),
             'total' => $this->manager->findUnpaidTotalAmount()
+        ]);
+    }
+
+    /**
+     * @Route("/{id}/plati", name="provider_debt_payments_history", methods={"GET"})
+     */
+    public function paymentsHistory(Provider $provider): Response
+    {
+        return $this->render('provider_debt_payments.html.twig', [
+            'provider' => $provider,
+            'debts' => $this->manager->findDebtsWithPayments($provider)
         ]);
     }
 

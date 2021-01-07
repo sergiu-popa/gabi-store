@@ -9,7 +9,10 @@
         {% for p in providers %}
             <div class="col-12">
                 <div class="card my-3">
-                    <div class="card-header">{{ p.name }}</div>
+                    <div class="card-header">
+                        {{ p.name }}
+                        <a class="badge badge-info" href="{{ path('provider_debt_payments_history', {id: p.id}) }}">vezi istoric</a></small>
+                    </div>
 
                     <table class="table table-striped">
                         <thead>
@@ -25,7 +28,7 @@
                         <tbody>
                         {% for debt in p.debts %}
                             <tr>
-                                <td>{{ debt.date ? debt.date|date('Y-m-d') : '' }}</td>
+                                <td>{{ debt.date ? debt.date|date('d-m-Y') : '' }}</td>
                                 <td>{{ debt.amount|num_for }}</td>
                                 <td>{{ debt.totalPaid|num_for }}</td>
                                 <td>{{ debt.paymentTypeLabel(true) }}</td>

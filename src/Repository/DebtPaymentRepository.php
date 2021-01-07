@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\DebtPayment;
+use App\Entity\Provider;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
