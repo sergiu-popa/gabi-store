@@ -34,6 +34,7 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
     public function __construct($date = null)
     {
         $this->date = new \DateTime($date ?? 'now');
+        $this->isDebt = false;
     }
 
     /**
@@ -70,7 +71,6 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
 
     /**
      * @ORM\Column(type="boolean")
-     * @Assert\NotBlank()
      * @Assert\Type("bool")
      * @var bool
      */
