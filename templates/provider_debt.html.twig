@@ -18,8 +18,7 @@
                         <thead>
                         <tr>
                             <th>Data</th>
-                            <th>Suma</th>
-                            <th>Achitat</th>
+                            <th>Suma rămasă</th>
                             <th>Ce este</th>
                             <th></th>
                             <th></th>
@@ -30,7 +29,6 @@
                             <tr>
                                 <td>{{ debt.date ? debt.date|date('d-m-Y') : '' }}</td>
                                 <td>{{ debt.amount|num_for }}</td>
-                                <td>{{ debt.totalPaid|num_for }}</td>
                                 <td>{{ debt.paymentTypeLabel(true) }}</td>
                                 <td>
                                     <form action="{{ path('provider_debt_pay', {'id': debt.id}) }}" method="post">

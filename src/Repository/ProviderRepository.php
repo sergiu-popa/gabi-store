@@ -57,7 +57,7 @@ class ProviderRepository extends ServiceEntityRepository
             ->join('p.debts', 'd')
             ->where('d.paidFully = 0')
             ->getQuery()
-            ->getSingleScalarResult();
+            ->getSingleScalarResult() ?? 0.0;
     }
 
     /**
