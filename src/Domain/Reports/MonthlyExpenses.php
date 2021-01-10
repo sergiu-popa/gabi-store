@@ -58,7 +58,8 @@ class MonthlyExpenses
     public function getPercentages(): array
     {
         foreach($this->totalsByCategory as $categoryId => $totalCategory) {
-            $this->percentagesByCategory[$categoryId] = number_format($totalCategory / $this->total * 100, 1);
+
+            $this->percentagesByCategory[$categoryId] = $this->total > 0 ? number_format($totalCategory / $this->total * 100, 1): 0;
         }
 
         return $this->percentagesByCategory;

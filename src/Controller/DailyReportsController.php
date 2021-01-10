@@ -52,22 +52,26 @@ class DailyReportsController extends AbstractController
     }
 
     /**
-     * @Route("/reports/daily/expenses/{year}/{month}", name="report_expenses")
+     * @Route("/reports/daily/expenses", name="report_expenses")
      */
-    public function expenses($year = null, $month = null)
+    public function expenses(Request $request)
     {
-        $year = $year ?? date('Y');
-        $month = $month ?? date('m');
+        $year = $request->query->getInt('year', date('Y'));
+        $month = $request->query->getInt('month', date('m'));
 
         $em = $this->getDoctrine()->getManager();
         $expenses = $em->getRepository(Expense::class)->getForYearAndMonth($year, $month);
         $categories = $em->getRepository(ExpenseCategory::class)->findAll();
 
-        $month = new MonthlyExpenses($year, $month, $categories, $expenses);
+        $monthlyExpenses = new MonthlyExpenses($year, $month, $categories, $expenses);
 
         return $this->render('reports/daily/expenses.html.twig', [
+            'years' => range(date('Y'), 2016),
+            'year' => $year,
+            'months' => Months::get(),
+            'month' => $month,
             'categories' => $categories,
-            'month' => $month
+            'monthlyExpenses' => $monthlyExpenses
         ]);
     }
 

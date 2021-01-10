@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Raport iesiri{% endblock %}
+{% block title %}Raport iesiri zilnic{% endblock %}
 
 
 {% block header %}
@@ -8,7 +8,27 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Raport ieșiri</h1>
+    <h1>Raport ieșiri zilnic</h1>
+
+    <form method="get" class="form-inline">
+        <div class="form-group mr-2">
+            <select class="form-control" name="month">
+                {% for m, name in months %}
+                    <option value="{{ m }}" {{ month == m ? 'selected="selected"' }}>{{ name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group mr-2">
+            <select class="form-control" name="year">
+                {% for y in years %}
+                    <option value="{{ y }}" {{ y == year ? 'selected="selected"' }}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="btn btn-outline-primary">Selectează</button>
+    </form>
 
     <div class="card my-3 p-4">
         <div id="chart"></div>
@@ -25,7 +45,7 @@
             </tr>
             </thead>
             <tbody>
-            {% for index, day in month.days %}
+            {% for index, day in monthlyExpenses.days %}
                 <tr>
                     <th scope="row">{{ index }}</th>
                     {% for c in categories %}
@@ -38,7 +58,7 @@
             <tr>
                 <td></td>
                 {% for c in categories %}
-                    <td>{{ month.totalsByCategory[c.id]|num_for|dash }}</td>
+                    <td>{{ monthlyExpenses.totalsByCategory[c.id]|num_for|dash }}</td>
                 {% endfor %}
             </tr>
             </tfoot>
@@ -84,8 +104,8 @@
                     {% for c in categories %}
                     {
                         name: '{{ c.name }}',
-                        y: {{ month.percentages[c.id] }},
-                        {% if month.percentages[c.id] == month.maxPercentage %}
+                        y: {{ monthlyExpenses.percentages[c.id] }},
+                        {% if monthlyExpenses.percentages[c.id] == monthlyExpenses.maxPercentage %}
                         sliced: true,
                         selected: true
                         {% endif %}
