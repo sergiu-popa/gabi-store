@@ -26,6 +26,11 @@ h1 small a {color: #787878}
 /** Navbar */
 .navbar form .form-contro::placeholder {color: #ccc;}
 .navbar form .form-control {background: #7b7b7b4d; color: #ccc; border-color: #757575; width: 150px;}
+.dropdown-item.disabled, .dropdown-item:disabled {
+    color: #1674c8;
+    pointer-events: none;
+    background-color: transparent;
+}
 
 /** Day summary */
 #summary .list-group-item {flex: 1; padding: .75rem 1rem;}

@@ -1,0 +1,102 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Raport ieșiri lunar{% endblock %}
+
+{% block header %}
+    <script src="https://code.highcharts.com/highcharts.src.js"></script>
+{% endblock %}
+
+{% block body %}
+    <h1>Raport ieșiri lunar</h1>
+
+    <form method="get" class="form-inline">
+        <div class="form-group mr-2">
+            <select class="form-control" name="year">
+                {% for y in years %}
+                    <option value="{{ y }}" {{ y == year ? 'selected="selected"' }}>{{ y }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button class="btn btn-outline-primary">Selectează</button>
+    </form>
+
+    <div class="card my-3 p-4">
+        <div id="chart"></div>
+    </div>
+
+    <div class="card my-3">
+        <table class="table table-striped">
+            <thead class="card-header card-header-table">
+            <tr>
+                <th scope="col">Luna</th>
+                {% for c in categories %}
+                    <th>{{ c.name }}</th>
+                {% endfor %}
+            </tr>
+            </thead>
+            <tbody>
+            {% for month, name in months %}
+                <tr>
+                    <th scope="row" style="width: 70px;">{{ month }}</th>
+                    {% for c in categories %}
+                        <td>{{ expenses[month] is defined ? expenses[month][c.id]|num_for|dash : '-' }}</td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+            </tbody>
+            <tfoot>
+            <tr>
+                <td></td>
+                {% for c in categories %}
+                    <td>{{ expenses.totals[c.id]|num_for|dash }}</td>
+                {% endfor %}
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        Highcharts.chart('chart', {
+            title: {
+                text: ''
+            },
+            subtitle: {
+                text: ''
+            },
+            yAxis: {
+                title: {
+                    text: ''
+                }
+            },
+            legend: {
+                layout: 'horizontal',
+                align: 'center',
+                verticalAlign: 'bottom'
+            },
+            plotOptions: {
+                series: {
+                    pointPlacement: 'on'
+                }
+            },
+            xAxis: {
+                categories: [{% for month in months %}'{{ month }}'{{ not loop.last ? ', ' }}{% endfor %}]
+            },
+
+            series: [
+                {% for c in categories %}
+                {
+                    name: '{{ c.name }}',
+                    data: [{% for month, name in months %}{{ expenses[month] is defined ? expenses[month][c.id]|num_for(0, '') : 0 }}{{ not loop.last ? ', ' }}{% endfor %}]
+                }{{ not loop.last ? ', ' }}
+                {% endfor %}
+            ],
+
+            credits: {
+                enabled: false
+            }
+        });
+    </script>
+{% endblock %}

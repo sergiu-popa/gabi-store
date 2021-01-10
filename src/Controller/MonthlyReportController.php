@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Expense;
+use App\Entity\ExpenseCategory;
 use App\Entity\Merchandise;
 use App\Entity\MerchandiseCategory;
 use App\Entity\MerchandisePayment;
@@ -53,9 +54,9 @@ class MonthlyReportController extends AbstractController
     }
 
     /**
-     * @Route("/reports/monthly/expenses", name="monthly_expenses_report")
+     * @Route("/reports/monthly/merchandise-categories", name="monthly_merchandise_categories_report")
      */
-    public function expenses(Request $request)
+    public function merchandise(Request $request)
     {
         $year = $request->query->getInt('year', date('Y'));
 
@@ -71,6 +72,26 @@ class MonthlyReportController extends AbstractController
             'months' => Months::get(),
             'merchandise' => $merchandise,
             'categories' => $categories
+        ]);
+    }
+
+    /**
+     * @Route("/reports/monthly/expenses", name="monthly_expenses_report")
+     */
+    public function expenses(Request $request)
+    {
+        $year = $request->query->getInt('year', date('Y'));
+
+        $em = $this->getDoctrine()->getManager();
+        $categories = $em->getRepository(ExpenseCategory::class)->findAll();
+        $expenses = $em->getRepository(Expense::class)->getMonthlyCategories($year, $categories);
+
+        return $this->render('reports/monthly/expenses.html.twig', [
+            'years' => range(date('Y'), 2016),
+            'year' => $year,
+            'months' => Months::get(),
+            'expenses' => $expenses,
+            'categories' => $categories,
         ]);
     }
 }

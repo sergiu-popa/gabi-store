@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Expense;
+use App\Util\Months;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\DBAL\Connection;
 use Doctrine\Persistence\ManagerRegistry;
@@ -81,5 +82,48 @@ class ExpenseRepository extends ServiceEntityRepository
             ->fetchAll();
 
         return array_column($result, 'total', 'month');
+    }
+
+    public function getMonthlyCategories(int $year, array $categories)
+    {
+        $result = $this->conn->createQueryBuilder()
+            ->select("DATE_FORMAT(date, '%m') as month, category_id, SUM(amount) as total")
+            ->from('expense')
+            ->where("date BETWEEN ? and ?")
+            ->andWhere('deleted_at is NULL')
+            ->groupBy('month, category_id')
+            ->orderBy('date', 'ASC')
+            ->setParameter(0, $year . '-01-01')
+            ->setParameter(1, $year . '-12-31')
+            ->execute()
+            ->fetchAll();
+
+        $data = [];
+
+        foreach ($result as $row) {
+            $month = $row['month'];
+            $category = $row['category_id'];
+
+            $data[$month][$category] = $row['total'];
+
+            if(isset($data['totals'][$category])) {
+                $data['totals'][$category] += $row['total'];
+            } else {
+                $data['totals'][$category] = $row['total'];
+            }
+        }
+
+        // Fill empty categories
+        foreach ($data as $month => $totals) {
+            foreach ($categories as $category) {
+                $categoryId = $category->getId();
+
+                if (!array_key_exists($categoryId, $totals)) {
+                    $data[$month][$categoryId] = 0;
+                }
+            }
+        }
+
+        return $data;
     }
 }

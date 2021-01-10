@@ -73,7 +73,8 @@
                     {% if is_granted('ROLE_ADMIN') %}
                         <h6 class="dropdown-header">Pe luni</h6>
                         <a class="dropdown-item {{ route == 'monthly_report' ? 'disabled' }}" href="{{ path('monthly_report') }}">General</a>
-                        <a class="dropdown-item {{ route == 'monthly_expenses_report' ? 'disabled' }}" href="{{ path('monthly_expenses_report') }}">Categorii marfă</a>
+                        <a class="dropdown-item {{ route == 'monthly_expenses_report' ? 'disabled' }}" href="{{ path('monthly_expenses_report') }}">Ieșiri</a>
+                        <a class="dropdown-item {{ route == 'monthly_merchandise_categories_report' ? 'disabled' }}" href="{{ path('monthly_merchandise_categories_report') }}">Categorii marfă</a>
                         <div class="dropdown-divider"></div>
 
                         <h6 class="dropdown-header">Pe ani</h6>
