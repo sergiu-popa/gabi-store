@@ -29,6 +29,17 @@ class BalanceRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    public function findFirstAfterDate(\DateTime $date)
+    {
+        return $this->createQueryBuilder('b')
+            ->where('b.date > :date')
+            ->setParameter('date', $date->format('Y-m-d'))
+            ->orderBy('b.date', 'ASC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findByDay(\DateTime $date)
     {
         return $this->createQueryBuilder('b')

@@ -4,10 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Provider;
 use App\Entity\ProviderDebt;
-use App\Form\ProviderDebtType;
 use App\Manager\ProviderDebtManager;
-use App\Repository\ProviderDebtRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;

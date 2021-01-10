@@ -2,51 +2,64 @@
 
 namespace App\Controller;
 
+use App\Entity\Balance;
 use App\Entity\Expense;
+use App\Entity\ExpenseCategory;
 use App\Entity\Merchandise;
 use App\Entity\MerchandisePayment;
 use App\Entity\Money;
+use App\Manager\ProviderDebtManager;
+use App\Util\Months;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 
 class MonthlySituationController extends AbstractController
 {
     /**
-     * @Route("/monthly/situation/{year}/{month}", name="monthly_situation")
+     * @Route("/monthly/situation", name="monthly_situation")
      */
-    public function month($year = null, $month = null)
+    public function month(Request $request, ProviderDebtManager $providerDebtManager)
     {
-        $year = $year ?? date('Y');
-        $month = $month ?? date('m');
+        $year = $request->query->getInt('year', date('Y'));
+        $month = $request->query->get('month', date('m'));
 
-        // TODO get total for month
         $em = $this->getDoctrine()->getManager();
         $money = $em->getRepository(Money::class)->getMonthlySum($year);
-        $expense = $em->getRepository(Expense::class)->getMonthlySum($year);
+        $expenses = $em->getRepository(Expense::class)->getMonthlySum($year);
         $payments = $em->getRepository(MerchandisePayment::class)->getMonthlySum($year);
         $merchandise = $em->getRepository(Merchandise::class)->getMonthlySum($year);
 
-        /*
-        O pagina (care ramana salvata) cu istoricul acelei luni:
+        $moneyTotal = $money[$month] ?? 0;
+        $expensesTotal = $expenses[$month] ?? 0;
+        $paymentsTotal = $payments[$month] ?? 0;
+        $merchandiseTotal = $merchandise[$month] ?? 0;
+        $debtTotal = $providerDebtManager->findUnpaidTotalAmount();
 
-        Cifrele mai de la raporte - total vanzare, monetar, iesiri diverse, total marfa facturi, bonuri, profit brut …
-        Va contine media adaosului comercial
-        Va contine totalul iesirilor diverse pe categorii: salarii, motorina, consumabile magazin, etc.
-        Bonusul acordat catre angajati
-        Datorii furnizori.
-        Sold inceputul de luna si sold la final de luna - adica cu ce sold s-a inceput si cu ce s-ld s-a terminat.
+        $expensesCategories = $em->getRepository(ExpenseCategory::class)->findAll();
+        $expensesByCategory = $em->getRepository(Expense::class)->getMonthlyCategories($year, $expensesCategories);
 
-        Iar in partea de jos sa fie urmatoarea chestie:
-        Socoteala finala:
-        Total iesiri diverse+ monetar = a. (un numar)
-        Total sold final- total sold initial = b ( un numar)
-        Si acum, ecuatia finala:
-        Total profit brut - a = b (daca ecuatia asta nu da asa, atunci inseamna ca avem o problema) - de videntia care este diferenta intre Tolta profit -a si valoarea lui b.
-        Daca nu ai inteles, ne mai auzim pe zoom sa iti explic.
-        */
+        $balanceRepository = $em->getRepository(Balance::class);
+        $firstDayOfMonth = new \DateTime(sprintf('first day of %s %d', Months::getByNumber($month), $year));
+        $initialBalance = $balanceRepository->findByDay($firstDayOfMonth) ?? $balanceRepository->findFirstAfterDate($firstDayOfMonth);
+        $lastDayOfMonth = new \DateTime(sprintf('last day of %s %d', Months::getByNumber($month), $year));
+        $lastBalance = $balanceRepository->findByDay($lastDayOfMonth) ?? $balanceRepository->findLastBeforeDate($lastDayOfMonth);
 
         return $this->render('monthly_situation.html.twig', [
-
+            'years' => range(date('Y'), 2016),
+            'year' => $year,
+            'months' => Months::get(),
+            'month' => $month,
+            'sales' => $moneyTotal + $expensesTotal + $paymentsTotal[1] + $paymentsTotal[2],
+            'moneyTotal' => $moneyTotal,
+            'expenseTotal' => $expensesTotal,
+            'paymentsTotal' => $paymentsTotal,
+            'merchandiseTotal' => $merchandiseTotal,
+            'debtTotal' => $debtTotal,
+            'expensesCategories' => $expensesCategories,
+            'expensesByCategory' => $expensesByCategory[$month] ?? 0,
+            'initialBalance' => $initialBalance->getAmount(),
+            'lastBalance' => $lastBalance->getAmount()
         ]);
     }
 }

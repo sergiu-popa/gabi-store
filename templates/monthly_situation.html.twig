@@ -3,12 +3,101 @@
 {% block title %}Situatia lunara{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <div class="col-12">
+        <h1>Situatia lunară <small>{{ "now"|roDate('MMMM')|upper }}</small></h1>
 
-<div class="example-wrapper">
-    <h1>Situatia lunara</h1>
-</div>
+        <form method="get" class="form-inline">
+            <div class="form-group mr-2">
+                <select class="form-control" name="month">
+                    {% for m, name in months %}
+                        <option value="{{ m }}" {{ month == m ? 'selected="selected"' }}>{{ name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="form-group mr-2">
+                <select class="form-control" name="year">
+                    {% for y in years %}
+                        <option value="{{ y }}" {{ y == year ? 'selected="selected"' }}>{{ y }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <button class="btn btn-outline-primary">Selectează</button>
+        </form>
+
+        <div class="card my-3">
+            <table class="table table-striped">
+                <thead class="card-header card-header-table">
+                <tr>
+                    <th scope="col">Vanzare zi</th>
+                    <th scope="col">Monetar</th>
+                    <th scope="col">Iesiri diverse</th>
+                    <th scope="col">Marfa facturi</th>
+                    <th scope="col">Marfa bonuri</th>
+                    <th scope="col">Profit Brut</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="background-color: #fff;">
+                    <td>{{ sales|num_for }}</td>
+                    <td>{{ moneyTotal|num_for }}</td>
+                    <td>{{ expenseTotal|num_for }}</td>
+                    <td>{{ paymentsTotal[1]|num_for }}</td>
+                    <td>{{ paymentsTotal[2]|num_for }}</td>
+                    <td>{{ merchandiseTotal|num_for }}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2>Ieșiri</h2>
+
+        <div class="card my-3">
+            <table class="table table-striped">
+                <thead class="card-header card-header-table">
+                <tr>
+                    {% for c in expensesCategories %}
+                        <th scope="col">{{ c.name }}</th>
+                    {% endfor %}
+                </tr>
+                </thead>
+                <tbody>
+                <tr style="background-color: #fff;">
+                    {% for c in expensesCategories %}
+                        <td>{{ expensesByCategory[c.id]|num_for }}</td>
+                    {% endfor %}
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="row">
+            <div class="col-12 col-md-8">
+                <ul class="list-group mb-3">
+                    <li class="list-group-item disabled">Socoteli</li>
+                    {% set A = expenseTotal + moneyTotal %}
+                    <li class="list-group-item"><strong>A:</strong> Total iesiri diverse ({{ expenseTotal|num_for }}) + monetar ({{ moneyTotal|num_for }}) = {{ A|num_for }}</li>
+
+                    {% set B = lastBalance - initialBalance %}
+                    <li class="list-group-item"><strong>B:</strong> Total sold final ({{ lastBalance|num_for }}) - total sold initial ({{ initialBalance|num_for }}) = {{ B|num_for }}</li>
+
+                    {% set F = merchandiseTotal - A %}
+                    <li class="list-group-item"><strong>Ecuatie finala:</strong> Total profit brut ({{ merchandiseTotal|num_for }}) - A ({{ A|num_for }}) = {{ (merchandiseTotal - A)|num_for }}</li>
+
+                    {% if B != F %}
+                        <li class="list-group-item" style="color: #f00;"><strong>Diferenta</strong>: {{ (F - B)|abs|num_for }}</li>
+                    {% endif %}
+                </ul>
+            </div>
+            <div class="col-12 col-md-4">
+                <ul class="list-group mb-3">
+                    <li class="list-group-item disabled">Alte date</li>
+                    <li class="list-group-item"><strong>Datorii ramase furnizori</strong>: {{ debtTotal|num_for }}</li>
+                    <li class="list-group-item"><strong>Media adaos comercial</strong>: #TODO</li>
+                    <li class="list-group-item"><strong>Bonus angajati</strong>: #TODO</li>
+                </ul>
+            </div>
+        </div>
+    </div>
 {% endblock %}
