@@ -59,6 +59,8 @@ class MerchandiseManager
         } else {
             $this->paymentManager->update($previousTotalEnterValue, $merchandise);
         }
+
+        $this->em->flush();
     }
 
     public function delete(Merchandise $merchandise)
