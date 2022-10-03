@@ -23,7 +23,7 @@ class MerchandiseCategoryRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.deletedAt IS NULL')
-            ->orderBy('c.name', 'ASC');
+            ->orderBy('c.code', 'ASC');
     }
 
     /**
@@ -38,7 +38,6 @@ class MerchandiseCategoryRepository extends ServiceEntityRepository
             ->orderBy('c.name', 'ASC')
             ->groupBy('c.id')
             ->getQuery()
-            ->getResult()
-            ;
+            ->getResult();
     }
 }
