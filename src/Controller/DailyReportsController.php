@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DailyReportsController extends AbstractController
 {
     /**
-     * @Route("/reports/daily/{year}/{month}", name="report_sales", requirements={"year":"\d+"})
+     * @Route("/reports/daily/{?year}/{?month}", name="report_sales", requirements={"year":"\d+"})
      */
     public function sales($year = null, $month = null)
     {
@@ -76,9 +76,10 @@ class DailyReportsController extends AbstractController
     }
 
     /**
-     * @Route("/reports/daily/providers/{provider}/{year}/{month}", name="report_providers")
+     * @Route("/reports/daily/providers/{provider}/{year}/{month}", name="report_providers",
+     *     defaults={"provider": null, "year": null, "month": null})
      */
-    public function payments($provider = null, $year = null, $month = null, Request $request)
+    public function payments($provider, $year, $month, Request $request)
     {
         $year = $request->query->getInt('year', date('Y'));
         $month = $request->query->getInt('month', date('m'));

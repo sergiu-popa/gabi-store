@@ -30,9 +30,9 @@ class SnapshotController extends AbstractController
 
     /**
      * Returns all the snapshots for a specific date.
-     * @Route("/istoric/{date}", name="day_history")
+     * @Route("/istoric/{date}", name="day_history", defaults={"date": null})
      */
-    public function log($date = null, Request $request, DayManager $dayManager)
+    public function log(?string $date, Request $request, DayManager $dayManager)
     {
         $date = (new \DateTime($date ?? 'now'))->setTime(0, 0, 0);
         $day = $dayManager->getDay($date);

@@ -63,4 +63,30 @@ class MerchandiseControllerTest extends WebTestCase
 
         $this->assertResponseIsSuccessful();
     }
+
+    /**
+     * @test
+     */
+    public function update_merchandise_exit_price()
+    {
+        $merchandise = MerchandiseFactory::new()->create([
+            'paymentType' => MerchandisePayment::TYPE_INVOICE,
+            'isDebt' => true
+        ]);
+
+        // Act
+        $formUri = sprintf('/merchandise/%d/edit', $merchandise->getId());
+        $this->client->request('GET', $formUri);
+        $this->client->submitForm('test-submit', [
+            'merchandise[exitPrice]' => 100.0,
+        ]);
+
+        // Assert
+        $updated = self::$container->get(MerchandiseRepository::class)->find($merchandise->getId());
+
+        static::assertSame($updated->getExitPrice(), 100.0);
+        static::assertNotEquals($merchandise->getExitPrice(), $updated->getExitPrice());
+
+        $this->assertResponseIsSuccessful();
+    }
 }
