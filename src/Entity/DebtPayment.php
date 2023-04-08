@@ -38,7 +38,7 @@ class DebtPayment implements \JsonSerializable, SnapshotableInterface
         $this->paidPartially = true;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'cantitate' => $this->amount,

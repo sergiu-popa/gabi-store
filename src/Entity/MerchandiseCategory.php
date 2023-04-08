@@ -39,7 +39,7 @@ class MerchandiseCategory implements \JsonSerializable, SnapshotableInterface
         $this->merchandise = new ArrayCollection();
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'name' => $this->name

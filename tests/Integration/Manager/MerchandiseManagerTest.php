@@ -27,7 +27,7 @@ class MerchandiseManagerTest extends WebTestCase
     /** @var \Symfony\Bundle\FrameworkBundle\KernelBrowser */
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = static::createClient();
 

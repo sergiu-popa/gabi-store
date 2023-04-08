@@ -44,7 +44,7 @@ class Expense implements \JsonSerializable, SnapshotableInterface
         return $this;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'descriere' => $this->notes,

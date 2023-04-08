@@ -76,7 +76,7 @@ class Merchandise implements \JsonSerializable, SnapshotableInterface
      */
     private $isDebt;
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'furnizor' => $this->provider->getName(),

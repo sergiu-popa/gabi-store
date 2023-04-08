@@ -6,7 +6,6 @@
          backupGlobals="false"
          colors="true"
          bootstrap="tests/bootstrap.php"
-         defaultTestSuite="integration"
 >
     <php>
         <ini name="error_reporting" value="-1" />
@@ -15,16 +14,6 @@
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
         <server name="SYMFONY_PHPUNIT_VERSION" value="7.5" />
     </php>
-
-    <logging>
-        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true" />
-
-        <log type="junit" target="build/test/coverage.xml" />
-        <log type="coverage-html" target="build/test/coverage" lowUpperBound="50" highLowerBound="90" />
-        <log type="testdox-text" target="build/test/testdox.txt" />
-        <log type="testdox-html" target="build/test/testdox.html" />
-        <log type="coverage-clover" target="build/test/clover.xml" />
-    </logging>
 
     <testsuites>
         <testsuite name="unit">
@@ -39,17 +28,19 @@
     </testsuites>
 
     <filter>
-        <whitelist>
-            <directory>src</directory>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">src</directory>
             <exclude>
-                <directory>src/DataFixtures</directory>
                 <file>src/Kernel.php</file>
             </exclude>
         </whitelist>
     </filter>
 
+    <extensions>
+        <extension class="DAMA\DoctrineTestBundle\PHPUnit\PHPUnitExtension" />
+    </extensions>
+
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
-        <listener class="\DAMA\DoctrineTestBundle\PHPUnit\PHPUnitListener" />
     </listeners>
 </phpunit>

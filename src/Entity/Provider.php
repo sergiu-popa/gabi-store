@@ -73,7 +73,7 @@ class Provider implements \JsonSerializable, SnapshotableInterface
      */
     private $days = [];
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'nume' => $this->name,

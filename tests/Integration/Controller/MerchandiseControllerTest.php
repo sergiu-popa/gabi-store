@@ -18,7 +18,7 @@ class MerchandiseControllerTest extends WebTestCase
     /** @var \Symfony\Bundle\FrameworkBundle\KernelBrowser */
     private $client;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->client = static::createClient();
         $this->client->loginUser(self::$container->get(UserRepository::class)->find(1));

@@ -26,7 +26,7 @@ class Money implements \JsonSerializable, SnapshotableInterface
         $this->date = new \DateTime();
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'cantitate' => $this->amount,

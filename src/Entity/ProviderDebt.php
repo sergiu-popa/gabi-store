@@ -80,7 +80,7 @@ class ProviderDebt implements \JsonSerializable, SnapshotableInterface
         return $total;
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'furnizor' => $this->provider->getName(),
