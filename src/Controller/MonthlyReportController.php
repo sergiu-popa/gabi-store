@@ -36,8 +36,8 @@ class MonthlyReportController extends AbstractController
             $data[$month] = [
                 'money' => $money[$month] ?? 0,
                 'expenses' => $expense[$month] ?? 0,
-                'payments_invoice' => $payments[$month][1] ?? 0,
-                'payments_bill' => $payments[$month][2] ?? 0,
+                'payments_invoice' => $payments[$month][MerchandisePayment::TYPE_INVOICE] ?? 0,
+                'payments_bill' => $payments[$month][MerchandisePayment::TYPE_BILL] ?? 0,
                 'profit' => $merchandise[$month] ?? 0
             ];
 

@@ -31,8 +31,8 @@ class AnnualReportController extends AbstractController
             $data[$year] = [
                 'money' => $money[$year] ?? 0,
                 'expenses' => $expense[$year] ?? 0,
-                'payments_invoice' => $payments[$year][1] ?? 0,
-                'payments_bill' => $payments[$year][2] ?? 0,
+                'payments_invoice' => $payments[$year][MerchandisePayment::TYPE_INVOICE] ?? 0,
+                'payments_bill' => $payments[$year][MerchandisePayment::TYPE_BILL] ?? 0,
                 'profit' => $merchandise[$year] ?? 0
             ];
 
